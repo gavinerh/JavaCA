@@ -3,3 +3,4 @@
 3. Reimplement the supervisor id in user attributes (use a string to get the email of supervisor)
 4. Create a counter to count the number of failed logins
 5. use AJAX for the validation of email for register
+6. create another object to store the session information: time logged in and name
