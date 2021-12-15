@@ -1,0 +1,5 @@
+1. Implement hashing function for password management
+2. Validation for register form and login form
+3. Reimplement the supervisor id in user attributes (use a string to get the email of supervisor)
+4. Create a counter to count the number of failed logins
+5. use AJAX for the validation of email for register

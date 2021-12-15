@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<form th:object="${user}" method="post" th:action="@{/register}">
+		<table>
+			<tr>
+				<td>Email:</td>
+				<td><input type=email th:field="*{email}" /></td>
+			</tr>
+			<tr th:if="${#fields.hasErrors('email')}">
+				<td th:errors="*{email}"></td>
+			</tr>
+			<tr>
+				<td>Password:</td>
+				<td><input type=password th:field="*{password}" /></td>
+			</tr>
+			<tr th:if="${#fields.hasErrors('password')}">
+				<td th:errors="*{password}"></td>
+			</tr>
+			<tr>
+				<td>Firstname:</td>
+				<td><input type=text th:field="*{firstName}" /></td>
+			</tr>
+			<tr th:if="${#fields.hasErrors('firstName')}">
+				<td th:errors="*{firstName}"></td>
+			</tr>
+			<tr>
+				<td>Lastname:</td>
+				<td><input type=text th:field="*{lastName}" /></td>
+			</tr>
+			<tr th:if="${#fields.hasErrors('lastName')}">
+				<td th:errors="*{lastName}"></td>
+			</tr>
+			<tr>
+				<td>Department:
+					<p th:if="${#fields.hasErrors('department')}"
+						th:errors="*{department}"></p>
+				</td>
+				<td><input type=text th:field="*{department}" /></td>
+			</tr>
+			<tr th:if="${#fields.hasErrors('department')}">
+				<td th:errors="*{department}"></td>
+			</tr>
+			<tr>
+				<td><input type=submit /></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
