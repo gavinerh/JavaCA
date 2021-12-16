@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @DynamicUpdate
