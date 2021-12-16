@@ -25,8 +25,12 @@ public class User {
 	private String department;
 	@Length(min = 8, message = "Must be more than 8 char")
 	private String password;
+	@DateTimeFormat(pattern = "dd/MM/YYYY','HH:mm:ss")
+        private Date lastloginDate;
 	@OneToOne
 	private User coveringOfficer;
+	@OneToMany(mappedBy="employee")
+        private Collection<Leave> leaves;
 	
 	public User() {}
 
