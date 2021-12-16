@@ -25,12 +25,6 @@ public class LeaveBalance {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public LeaveBalance(Integer balId, User user, LeaveType type) {
-		super();
-		this.balId = balId;
-		this.user = user;
-		this.type = type;
-	}
 	public LeaveBalance(Integer balId, User user, LeaveType type, int balance) {
 		super();
 		this.balId = balId;

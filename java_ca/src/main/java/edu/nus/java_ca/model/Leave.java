@@ -21,12 +21,14 @@ public class Leave {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer leaveId;
 	//uni directional so dont need to specify in User
-	@ManyToOne
+	@OneToOne
+	
 	private User user;
 	private LeaveStatus status;	//enum
 	private String reason;
 	private String workdissem;
-	
+	private LeaveType type;
+
 	@FutureOrPresent
 	@Column(name = "applieddate")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -45,7 +47,25 @@ public class Leave {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Leave(Integer leaveId, User user, LeaveStatus status, String reason, String workdissem,
+	public Leave(LeaveStatus ls) {
+		super();
+		this.status=ls;
+	}
+	public Leave(User user, LeaveStatus status, LeaveType type, String reason, String workdissem,
+			@FutureOrPresent @FutureOrPresent LocalDate appliedDate,
+			@FutureOrPresent @FutureOrPresent LocalDate startDate,
+			@FutureOrPresent @FutureOrPresent LocalDate endDate) {
+		super();
+		this.user = user;
+		this.status = status;
+		this.type=type;
+		this.reason = reason;
+		this.workdissem = workdissem;
+		this.appliedDate = appliedDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
+	public Leave(Integer leaveId, User user, LeaveStatus status, LeaveType type, String reason, String workdissem,
 			@FutureOrPresent @FutureOrPresent LocalDate appliedDate,
 			@FutureOrPresent @FutureOrPresent LocalDate startDate,
 			@FutureOrPresent @FutureOrPresent LocalDate endDate) {
@@ -53,6 +73,7 @@ public class Leave {
 		this.leaveId = leaveId;
 		this.user = user;
 		this.status = status;
+		this.type=type;
 		this.reason = reason;
 		this.workdissem = workdissem;
 		this.appliedDate = appliedDate;
@@ -60,7 +81,6 @@ public class Leave {
 		this.endDate = endDate;
 	}
 
-	
 	public Integer getLeaveId() {
 		return leaveId;
 	}
@@ -78,6 +98,12 @@ public class Leave {
 	}
 	public void setStatus(LeaveStatus status) {
 		this.status = status;
+	}
+	public LeaveType getType() {
+		return type;
+	}
+	public void setType(LeaveType type) {
+		this.type = type;
 	}
 	public String getReason() {
 		return reason;

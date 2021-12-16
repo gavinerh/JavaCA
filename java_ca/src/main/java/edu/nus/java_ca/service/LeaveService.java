@@ -11,6 +11,7 @@ public interface LeaveService {
 	public void cancelLeave(Leave l);
 	
 	//for managers only
+	public List findLeaveByUserId(Long id);
 	public List<Leave> listLeaveToApprove();
 	public void approveLeave(Leave l);
 	public void rejectLeave(Leave l);
