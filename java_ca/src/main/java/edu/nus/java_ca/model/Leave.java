@@ -21,7 +21,7 @@ public class Leave {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer leaveId;
 	//uni directional so dont need to specify in User
-	@OneToOne
+	@ManyToOne
 	private User user;
 	private LeaveStatus status;	//enum
 	private String reason;
