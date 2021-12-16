@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+	<h1>Leave List: To Approve</h1>
+	<!-- Textbox to enter user ID which takes him to history view -->
+	<a href="empl-leavehistory.html" th:href="@{/leave/hist}">Employee Leave History</a>
+
+	<h2 th:if="${not #lists.isEmpty(leaves)}">Leave List: To Approve</h2>
+	<table th:if="${not #lists.isEmpty(leaves)}" >
+		<tr >
+			<th>Leave Id</th>
+			<th>Employee's Name</th>>
+			<th>Leave Type</th>
+			<th>Leave Balance</th>
+			<th>Leave Application Date</th>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<th>Reason</th>
+			<th>Work Dissemination(if any)</th>
+
+			<th>Status</th>
+			<th>Approve</th>
+			<th>Reject</th>
+		</tr>
+		<tr th:each="leave:${leaves}" >
+			<td th:text=${leave.leaveId}>Id</td>
+			<td th:text="${leave.leave.user.firstname}"> Name</td>
+			<td th:text=${leave.type}>Leave Type</td>
+			<td th:text=${leave.bal}>Leave Balance</td>
+			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
+			<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Start Date</td>
+			<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
+			<td th:text=${leave.reason}>Reason</td>
+			<td th:text=${leave.workdissem}>Work Dissemination</td>
+
+			<td th:text=${leave.status}>status</td>
+			<td ><a href="approveLeave.html"
+				th:href="@{/leave/approve/}+${leave.leaveId}" 
+				th:if="${leave.status == T(sg.iss.laps.model.LeaveStatus).APPROVED}">Approved</a></td>
+			<td ><a href="rejectLeave.html"
+				th:href="@{/leave/rejected/}+${leave.leaveId}" 
+				th:if="${leave.status == T(sg.iss.laps.model.LeaveStatus).REJECTED}">Rejected</a></td>	
+				
+		</tr>
+	</table>
+    <br/>
+	<div th:replace="fragments/general.html :: footer"></div>
+	
+</body>
+</html>
