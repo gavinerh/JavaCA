@@ -29,8 +29,6 @@ public class User {
         private Date lastloginDate;
 	@OneToOne
 	private User coveringOfficer;
-	@OneToMany(mappedBy="employee")
-        private Collection<Leave> leaves;
 	
 	public User() {}
 
