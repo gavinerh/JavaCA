@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/general.html :: headerfiles"/>
 
 <body>
+	<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>
 
 	<h1>Leave List: To Approve</h1>
 	<!-- Textbox to enter user ID which takes him to history view -->
@@ -26,9 +29,9 @@
 		</tr>
 		<tr th:each="leave:${leaves}" >
 			<td th:text=${leave.leaveId}>Id</td>
-			<td th:text="${leave.leave.user.firstname}"> Name</td>
+			<td th:text="${leave.user.firstname}"> Name</td>
 			<td th:text=${leave.type}>Leave Type</td>
-			<td th:text=${leave.bal}>Leave Balance</td>
+		<!--	<td th:text=${leave.user.bal}>Leave Balance</td> -->
 			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
 			<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Start Date</td>
 			<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
