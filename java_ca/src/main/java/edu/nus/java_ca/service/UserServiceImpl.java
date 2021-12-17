@@ -34,6 +34,17 @@ public class UserServiceImpl implements UserService{
 	public void saveUser(User user) {
 		uRepo.saveAndFlush(user);
 	}
+
+	@Override
+	public User findByUserId(Long id) {
+		return uRepo.findById(id).get();
+	}
+
+	@Override
+	public void deleteUser(User user) {
+		uRepo.delete(user);
+		
+	}
 	
 
 }

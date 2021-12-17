@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import edu.nus.java_ca.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE u.email = :email")
 	List<User> findByUserEmail(@Param("email") String email);
 	
