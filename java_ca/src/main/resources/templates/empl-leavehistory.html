@@ -11,7 +11,7 @@
 	<h1>Eployee's Personal Leave History</h1>
 	
 		<!-- input form field to enter empl id --> 
-		<form action="#" th:object="${leave}" th:action="@{/leave/empl-search}"
+		<form action="#" th:object="${leave}" th:action="@{/leave/search}"
 		method="post">
 		<fieldset>
 			<input type="hidden" th:field="*{user.userId}">

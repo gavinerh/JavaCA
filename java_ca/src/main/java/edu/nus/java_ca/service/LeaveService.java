@@ -12,6 +12,7 @@ public interface LeaveService {
 	
 	//for managers only
 	public List findLeaveByUserId(Long id);
+	public List<Leave> listAllLeaves();
 	public List<Leave> listLeaveToApprove();
 	public void approveLeave(Leave l);
 	public void rejectLeave(Leave l);

@@ -16,7 +16,7 @@
 			<th>Leave Id</th>
 			<th>Employee's Name</th>>
 			<th>Leave Type</th>
-			<th>Leave Balance</th>
+		<!--	<th>Leave Balance</th> -->
 			<th>Leave Application Date</th>
 			<th>Start Date</th>
 			<th>End Date</th>
@@ -29,9 +29,9 @@
 		</tr>
 		<tr th:each="leave:${leaves}" >
 			<td th:text=${leave.leaveId}>Id</td>
-			<td th:text="${leave.user.firstname}"> Name</td>
+			<td th:text="${leave.user.firstName}"> Name</td>
 			<td th:text=${leave.type}>Leave Type</td>
-		<!--	<td th:text=${leave.user.bal}>Leave Balance</td> -->
+		<!--	<td th:text=${leavebal.user.balance}>Leave Balance</td> -->
 			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
 			<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Start Date</td>
 			<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
@@ -41,11 +41,15 @@
 			<td th:text=${leave.status}>status</td>
 			<td ><a href="approveLeave.html"
 				th:href="@{/leave/approve/}+${leave.leaveId}" 
-				th:if="${leave.status == T(sg.iss.laps.model.LeaveStatus).APPROVED}">Approved</a></td>
-			<td ><a href="rejectLeave.html"
-				th:href="@{/leave/rejected/}+${leave.leaveId}" 
-				th:if="${leave.status == T(sg.iss.laps.model.LeaveStatus).REJECTED}">Rejected</a></td>	
+				th:utext="#{leave.approve}" >Approved<a></td>
 				
+				<!--th:if="${leave.status == T(sg.iss.laps.model.LeaveStatus).APPROVED}"--> 
+			
+			<td ><a href="rejectLeave.html"
+				th:href="@{/leave/reject/}+${leave.leaveId}" 
+				th:utext="#{leave.reject}">Rejected</a></td>	
+				
+			<!-- th:if="${leave.status == T(sg.iss.laps.model.LeaveStatus).REJECTED}" --> 
 		</tr>
 	</table>
     <br/>
