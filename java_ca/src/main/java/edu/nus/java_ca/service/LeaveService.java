@@ -2,7 +2,7 @@ package edu.nus.java_ca.service;
 
 import java.util.List;
 
-import sg.iss.laps.model.Leave;
+import edu.nus.java_ca.model.Leave;
 
 public interface LeaveService {
 	

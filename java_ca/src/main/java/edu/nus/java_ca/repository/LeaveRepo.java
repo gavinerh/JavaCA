@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import sg.iss.laps.model.Leave;
-import sg.iss.laps.model.LeaveStatus;
+import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.model.LeaveStatus;
 
 public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 

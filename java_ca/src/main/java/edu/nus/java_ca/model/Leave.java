@@ -15,7 +15,7 @@ import javax.validation.constraints.FutureOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name ="leave")
+@Table(name ="leave2")
 public class Leave {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -7,9 +7,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import sg.iss.laps.model.Leave;
-import sg.iss.laps.model.LeaveStatus;
-import sg.iss.laps.repository.LeaveRepo;
+import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.model.LeaveStatus;
+import edu.nus.java_ca.repository.LeaveRepo;
 
 @Service //need to impl component type to be recognized as spring bean
 public class LeaveServiceImpl implements LeaveService{

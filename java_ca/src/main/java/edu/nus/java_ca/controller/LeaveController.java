@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import sg.iss.laps.model.Leave;
-import sg.iss.laps.service.LeaveBalanceService;
-import sg.iss.laps.service.LeaveService;
-import sg.iss.laps.service.LeaveServiceImpl;
+import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.service.LeaveService;
+import edu.nus.java_ca.service.LeaveServiceImpl;
 
 @Controller
 @RequestMapping("/leave")
