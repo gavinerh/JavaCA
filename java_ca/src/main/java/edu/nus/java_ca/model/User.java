@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -19,17 +22,27 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long userId;
+	@Length(min=1, message = "Email cannot be empty.")
 	private String email;
+	@Length(min=1, message = "Firstname cannot be empty.")
 	private String firstName;
+	@Length(min=1, message="Lastname cannot be empty")
 	private String lastName;
+	@DateTimeFormat(pattern = "dd/MM/YYYY','HH:mm:ss")
 	private Date lastLoginDate;
-	private String department;
-	@Length(min = 8, message = "Must be more than 8 char")
+	@Enumerated(EnumType.STRING)
+	private Department department;
+	@Enumerated(EnumType.STRING)
+	private Position position;
+	@Length(min = 8, message = "Password must be more than 8 char long")
 	private String password;
 @DateTimeFormat(pattern = "dd/MM/YYYY','HH:mm:ss")
       private Date lastloginDate;
+	
+
+	
 	@OneToOne
-	private User coveringOfficer;
+	private User approvingOfficer;
 	
 	public User() {}
 
@@ -73,12 +86,20 @@ public class User {
 		this.lastLoginDate = lastLoginDate;
 	}
 
-	public String getDepartment() {
+	public Department getDepartment() {
 		return department;
 	}
 
-	public void setDepartment(String department) {
+	public void setDepartment(Department department) {
 		this.department = department;
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 
 	public String getPassword() {
@@ -89,12 +110,12 @@ public class User {
 		this.password = password;
 	}
 
-	public User getCoveringOfficer() {
-		return coveringOfficer;
+	public User getApprovingOfficer() {
+		return approvingOfficer;
 	}
 
-	public void setCoveringOfficer(User coveringOfficer) {
-		this.coveringOfficer = coveringOfficer;
+	public void setApprovingOfficer(User coveringOfficer) {
+		this.approvingOfficer = coveringOfficer;
 	}
 
 	@Override
@@ -113,6 +134,15 @@ public class User {
 		User other = (User) obj;
 		return Objects.equals(userId, other.userId);
 	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", lastLoginDate=" + lastLoginDate + ", department=" + department + ", position=" + position
+				+ ", password=" + password + ", coveringOfficer=" + approvingOfficer + "]";
+	}
+
+
 	
 
 	
