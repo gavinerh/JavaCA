@@ -1,7 +1,5 @@
 package edu.nus.java_ca.controller;
 
-import java.time.Instant;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.http.HttpSession;
@@ -11,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
@@ -36,7 +36,7 @@ public class HomeController {
 	public String preLogin(Model model) {
 		User user = new User();
 		model.addAttribute("user", user);
-		return "unloggedIn";
+		return "login/unloggedIn";
 	}
 	
 	// display register new user form
@@ -56,7 +56,8 @@ public class HomeController {
 			return "register/registerSuccess";
 		}
 		// add validation
-		binding.addError(null);
+		ObjectError err = new ObjectError("Username error", "Email is already used");
+		binding.addError(err);
 		return "register/register";
 	}
 	
@@ -84,14 +85,12 @@ public class HomeController {
 			// set lastlogin date
 			result.setLastLoginDate(new Date());
 			uService.saveUser(result);
-			return "redirect:/home";
+			//check the position of the staff
+			return getRedirectURL(result);
 		}
 		return "login/failedLogin";
 	}
-	
-//	private boolean isLoggedIn(HttpSession session) {
-//		
-//	}
+
 	
 	// page after login
 	@RequestMapping("/home")
@@ -109,5 +108,17 @@ public class HomeController {
 		}
 		sess.removeSession(session, status);
 		return "redirect:/";
+	}
+	
+	private String getRedirectURL(User user) {
+		switch(user.getPosition()) {
+		case Admin:
+			return "redirect:/admin";
+		case Manager:
+			return "redirect:/manager";
+		case Staff:
+			return "redirect:/staff";
+		}
+		return null;
 	}
 }
