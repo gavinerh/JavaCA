@@ -9,41 +9,41 @@
 		<table>
 			<tr>
 				<td>Email:</td>
-				<td><input type=email th:field="*{email}" /></td>
+				<td><input type=email th:field="*{email}" required /></td>
 			</tr>
-			<tr th:if="${#fields.hasErrors('email')}">
-				<td th:errors="*{email}"></td>
-			</tr>
+			
 			<tr>
 				<td>Password:</td>
 				<td><input type=password th:field="*{password}" /></td>
-			</tr>
-			<tr th:if="${#fields.hasErrors('password')}">
-				<td th:errors="*{password}"></td>
 			</tr>
 			<tr>
 				<td>Firstname:</td>
 				<td><input type=text th:field="*{firstName}" /></td>
 			</tr>
-			<tr th:if="${#fields.hasErrors('firstName')}">
-				<td th:errors="*{firstName}"></td>
-			</tr>
 			<tr>
 				<td>Lastname:</td>
 				<td><input type=text th:field="*{lastName}" /></td>
 			</tr>
-			<tr th:if="${#fields.hasErrors('lastName')}">
-				<td th:errors="*{lastName}"></td>
+			<tr>
+				<td>Department:</td>
+				<td><select name="department">
+						<option
+							th:each="departmentOpt : ${T(edu.nus.java_ca.model.Department).values()}"
+							th:value="${departmentOpt}" th:text="${departmentOpt}"></option>
+				</select></td>
 			</tr>
 			<tr>
-				<td>Department:
-					<p th:if="${#fields.hasErrors('department')}"
-						th:errors="*{department}"></p>
-				</td>
-				<td><input type=text th:field="*{department}" /></td>
+				<td>Position:</td>
+				<td><select name="position">
+						<option
+							th:each="positionOpt : ${T(edu.nus.java_ca.model.Position).values()}"
+							th:value="${positionOpt}" th:text="${positionOpt}"></option>
+				</select></td>
 			</tr>
-			<tr th:if="${#fields.hasErrors('department')}">
-				<td th:errors="*{department}"></td>
+			<tr th:if="${#fields.hasAnyErrors()}">
+				<td colspan="2"><ul>
+						<li th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+					</ul></td>
 			</tr>
 			<tr>
 				<td><input type=submit /></td>
