@@ -1,6 +1,7 @@
 package edu.nus.java_ca.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -113,7 +114,7 @@ public class HomeController {
 	private String getRedirectURL(User user) {
 		switch(user.getPosition()) {
 		case Admin:
-			return "redirect:/admin";
+			return "redirect:/AdminUser";
 		case Manager:
 			return "redirect:/manager";
 		case Staff:

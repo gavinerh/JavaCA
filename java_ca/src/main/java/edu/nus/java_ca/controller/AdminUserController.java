@@ -1,15 +1,22 @@
 package edu.nus.java_ca.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
+import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.repository.UserRepository;
 
@@ -25,7 +32,7 @@ public class AdminUserController {
 	UserRepository urepo;
 	
 	@Autowired
-	private UserService Uservice;
+	UserService Uservice;
 	
 	@Autowired
 	public void setUserService(UserServiceImpl UserviceImpl) {
@@ -38,27 +45,51 @@ public class AdminUserController {
 		return "users";
 	}
 	
-	@RequestMapping(value = "/add")
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String addForm(Model model) {
 		model.addAttribute("user", new User());
-		return "User-form";
+		return "admin/user-form";
 	}
-	@RequestMapping(value = "/save")
+	
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String saveMember(@ModelAttribute("user") @Valid User user, 
 			BindingResult bindingResult,  Model model) {
 		if (bindingResult.hasErrors()) {
-			return "member-form";
+			return "admin/user-form";
 		}
 		Uservice.saveUser(user);
-		return "forward:/AdminUser/Ulist";
+		return "forward:/AdminUser/";
 	}
 	@RequestMapping(value = "/delete/{id}")
 	public String deleteMember(@PathVariable("id") Long id) {
 		
 		Uservice.deleteUser(Uservice.findByUserId(id));
-		return "forward:/AdminUser/list";
+		return "forward:/AdminUser/";
 	}
 	
+	@RequestMapping({"/", ""})
+	public String dashboard(Model model) {
+		List<User> userlist = Uservice.findAll();
+		model.addAttribute("userlist", userlist);
+		return "admin/users"; //folder is admin, users is the html
+	}
+	
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	public String editUserPage(@PathVariable Long id, Model model) {
+		User user = Uservice.findByUserId(id);
+		model.addAttribute(user);
+		return "admin/user-form";
+	}
+
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
+	public String editUser(@ModelAttribute @Valid User user, BindingResult result, 
+			@PathVariable String id) {
+		if (result.hasErrors()) {
+			return "admin/user-form";
+		}
+		Uservice.saveUser(user);
+		return "forward:/AdminUser/";
+	}
 	
 	
 	

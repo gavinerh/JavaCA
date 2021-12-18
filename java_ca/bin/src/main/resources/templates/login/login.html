@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<form method="post" th:action="@{'/authenticate'}">
+		<table>
+			<thead>
+				<th>Email:</th>
+				<th>Password:</th>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type=text name="email" /></td>
+					<td><input type=password name="password"/></td>
+			</tbody>
+			<tr>
+				<td><input type=submit /></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
