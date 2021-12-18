@@ -20,7 +20,7 @@ public class SessionManagementImpl implements SessionManagement{
 	@Override
 	public void createSession(HttpSession session, User user) {
 		// create new session base object for storing in spring session object
-		SessionClass s = new SessionClass(user.getLastName(), new Date());
+		SessionClass s = new SessionClass(user.getEmail(), new Date());
 		session.setAttribute("uSession", s);
 	}
 
