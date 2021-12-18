@@ -36,10 +36,8 @@ public class User {
 	private Position position;
 	@Length(min = 8, message = "Password must be more than 8 char long")
 	private String password;
-@DateTimeFormat(pattern = "dd/MM/YYYY','HH:mm:ss")
-      private Date lastloginDate;
-	
-
+//@DateTimeFormat(pattern = "dd/MM/YYYY','HH:mm:ss")
+//      private Date lastloginDate;
 	
 	@OneToOne
 	private User approvingOfficer;
