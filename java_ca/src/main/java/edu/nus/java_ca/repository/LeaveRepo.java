@@ -12,7 +12,7 @@ import edu.nus.java_ca.model.LeaveStatus;
 public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 
 	@Query("SELECT l FROM Leave l where l.leaveId = :Id")
-	Leave findLeaveById(@Param("Id") Long d);
+	Leave findLeaveById(@Param("Id") Long Id);
 
 //this is for checking EMPL LEAVE HISTORY
 //	@Query("SELECT l FROM Leave l where l.user.userid = :Id")
@@ -24,6 +24,6 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 			+ "AND l.status= :UPDATED")
 	public ArrayList<Leave> findLeaveToApprove(@Param("APPLIED") LeaveStatus a, 
 			@Param("UPDATED") LeaveStatus u);
-	@Query("SELECT c from Leaves c WHERE c.status='APPLIED' OR c.status='APPROVED' OR c.status='UPDATED'")
+	@Query("SELECT c from Leave c WHERE c.status='APPLIED' OR c.status='APPROVED' OR c.status='UPDATED'")
 	ArrayList<Leave> findAppliedLeaves();
 }
