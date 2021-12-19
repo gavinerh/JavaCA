@@ -26,15 +26,15 @@
 		</fieldset>
 
 		<fieldset>
-			Start Date: <input type="text" th:field="*{startDate}"
+			Start Date: <input type="date" th:field="*{startDate}"
 				placeholder="dd/MM/yyyy"
-				th:text="${#dates.format(leave.startDate, 'dd/MM/yyyy')}" />
+				th:text="${#temporals.format(leave.startDate, 'dd/MM/yyyy')}" />
 			<p th:if="${#fields.hasErrors('startDate')}">Invalid date format</p>
 		</fieldset>
 		<fieldset>
-			End Date: <input type="text" th:field="*{endDate}"
+			End Date: <input type="date" th:field="*{endDate}"
 				placeholder="dd/MM/yyyy"
-				th:text="${#dates.format(leave.endDate, 'dd/MM/yyyy')}" />
+				th:text="${#temporals.format(leave.endDate, 'dd/MM/yyyy')}" />
 			<p th:if="${#fields.hasErrors('endDate')}">Invalid date format</p>
 		</fieldset>
 		<fieldset>

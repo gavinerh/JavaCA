@@ -1,16 +1,19 @@
 package edu.nus.java_ca.model;
 
+
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.FutureOrPresent;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,24 +25,25 @@ public class Leave {
 	private Integer leaveId;
 	//uni directional so dont need to specify in User
 	@OneToOne
-	
 	private User user;
+	@Column(name = "status", columnDefinition = "ENUM('APPLIED', 'APPROVED', 'UPDATED', 'CANCELLED', 'REJECTED','DELETED')")
+	@Enumerated(EnumType.STRING)
 	private LeaveStatus status;	//enum
 	private String reason;
 	private String workdissem;
-	private LeaveType type;
+	private String type;
 	private String contactdetail;
 	
 	@Column(name = "applieddate")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate appliedDate;
 	
 	@Column(name = "startdate")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate startDate;
 	
 	@Column(name = "enddate")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate endDate;
 
 	
@@ -51,7 +55,7 @@ public class Leave {
 		super();
 		this.status=ls;
 	}
-	public Leave(User user, LeaveStatus status, LeaveType type, String reason, String workdissem,
+	public Leave(User user, LeaveStatus status, String type, String reason, String workdissem,
 			 LocalDate appliedDate,
 			 LocalDate startDate,
 			 LocalDate endDate) {
@@ -65,10 +69,10 @@ public class Leave {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
-	public Leave(Integer leaveId, User user, LeaveStatus status, LeaveType type, String reason, String workdissem,
-			 LocalDate appliedDate,
-			 LocalDate startDate,
-			 LocalDate endDate) {
+	public Leave(Integer leaveId, User user, LeaveStatus status, String type, String reason, String workdissem,
+			LocalDate appliedDate,
+			LocalDate startDate,
+			LocalDate endDate) {
 		super();
 		this.leaveId = leaveId;
 		this.user = user;
@@ -99,10 +103,10 @@ public class Leave {
 	public void setStatus(LeaveStatus status) {
 		this.status = status;
 	}
-	public LeaveType getType() {
+	public String getType() {
 		return type;
 	}
-	public void setType(LeaveType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 	public String getReason() {

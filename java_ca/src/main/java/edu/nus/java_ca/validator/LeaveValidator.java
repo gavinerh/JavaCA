@@ -1,9 +1,12 @@
 package edu.nus.java_ca.validator;
 
+import java.util.Calendar;
+
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import edu.nus.java_ca.model.*;
+
+import edu.nus.java_ca.model.Leave;
 
 public class LeaveValidator implements Validator {
 
@@ -17,7 +20,8 @@ public class LeaveValidator implements Validator {
 	public void validate(Object target, Errors e) {
 		// TODO Auto-generated method stub
 		Leave l = (Leave) target;
-		if ((l.getStartDate()!=null && l.getEndDate()!=null)&&(l.getStartDate().isAfter(l.getEndDate()))) {
+
+		if ((l.getStartDate()!=null && l.getEndDate()!=null)&&(l.getStartDate().compareTo(l.getEndDate())>=0)) {
 		
 			e.rejectValue("startDate", "error.startDate", "**StartDate must be Before EndDate**");
 			e.rejectValue("endDate", "error.endDate", "**EndDate must be After StartDate**");
@@ -28,7 +32,7 @@ public class LeaveValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "startDate", "error.startDate", "**Start Date is required.**");
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "endDate", "error.endDate", "**End Date is required.**");
 		if((l.getEndDate()!=null && l.getStartDate()!=null)) {
-			
+
 			int i = l.getStartDate().getDayOfWeek().getValue();
 			int j = l.getEndDate().getDayOfWeek().getValue();
 			if ((i==6||i==7)) {
