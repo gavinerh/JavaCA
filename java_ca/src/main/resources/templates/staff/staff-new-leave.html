@@ -12,6 +12,11 @@
 
 		<!-- FORM -->
 		<div class="pt-3 col-md-7 col-lg-8">
+<style>
+    .error {
+        color: red;
+    }
+</style>
 			<h4 class="mb-3">Apply New Leave</h4>
 			<!-- create hidden id tag-->
 			<form action="#" th:object="${leave}" th:action="@{/staff/leave/new}"
@@ -30,28 +35,28 @@
 					<div class="col-md-6">
 						<label for="startDate" class="form-label">Start Date</label>
 						<input th:field="*{startDate}" placeholder="dd/MM/yyyy"
-				th:text="${#dates.format(leave.startDate, 'dd/MM/yyyy')}"
-							type="text" class="form-control" id="startDate" required />
-							<p th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></p>
+				th:text="${#temporals.format(leave.startDate, 'dd/MM/yyyy')}"
+							type="date" class="form-control" id="startDate" />
+							<p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
 					</div>
 
 					<div class="col-md-6">
 						<label for="endDate" class="form-label">End Date</label> 
-						<input type="text" th:field="*{endDate}" placeholder="dd/MM/yyyy"
-				th:text="${#dates.format(leave.endDate, 'dd/MM/yyyy')}"
-							class="form-control" id="endDate" required />
-							<p th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></p>
+						<input type="date" th:field="*{endDate}" placeholder="dd/MM/yyyy"
+				th:text="${#temporals.format(leave.endDate, 'dd/MM/yyyy')}"
+							class="form-control" id="endDate" />
+							<p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
 					</div>
 
 					<div class="col-sm-6">
 						<label for="reason" class="form-label">Reason</label> <input
 							th:field="*{reason}" type="text" class="form-control" id="reason">
-						<p th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}"></p>
+						<p th:if="${#fields.hasErrors('reason')}" th:errorclass="error" th:errors="*{reason}"></p>
 					</div>
 
 					<div class="col-sm-6">
 						<label for="firstName" class="form-label">Contact Details</label>
-						<input th:field="*{contactdetail}" th:value="123456" type="tel" class="form-control" id="contactdetail" />
+						<input th:field="*{contactdetail}"  type="tel" class="form-control" id="contactdetail" />
 						<p th:if="${#fields.hasErrors('contactdetail')}" th:errors="*{contactdetail}"></p>
 					</div>
 
