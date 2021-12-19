@@ -40,7 +40,7 @@ public class UserRepositoryTest {
 		u1.setFirstName("test");
 		u1.setLastName("test");
 		u1.setPassword("password");
-		u1.setDepartment("test");
+		//u1.setDepartment("test");
 		uRepo.saveAndFlush(u1);
 		System.out.println("Added one user");
 	}

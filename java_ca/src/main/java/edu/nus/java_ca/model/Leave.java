@@ -28,19 +28,19 @@ public class Leave {
 	private String reason;
 	private String workdissem;
 	private LeaveType type;
-
-	@FutureOrPresent
+	private String contactdetail;
+	
 	@Column(name = "applieddate")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private @FutureOrPresent LocalDate appliedDate;
-	@FutureOrPresent
+	private LocalDate appliedDate;
+	
 	@Column(name = "startdate")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private @FutureOrPresent LocalDate startDate;
-	@FutureOrPresent
+	private LocalDate startDate;
+	
 	@Column(name = "enddate")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	private @FutureOrPresent LocalDate endDate;
+	private LocalDate endDate;
 
 	
 	public Leave() {
@@ -52,9 +52,9 @@ public class Leave {
 		this.status=ls;
 	}
 	public Leave(User user, LeaveStatus status, LeaveType type, String reason, String workdissem,
-			@FutureOrPresent @FutureOrPresent LocalDate appliedDate,
-			@FutureOrPresent @FutureOrPresent LocalDate startDate,
-			@FutureOrPresent @FutureOrPresent LocalDate endDate) {
+			 LocalDate appliedDate,
+			 LocalDate startDate,
+			 LocalDate endDate) {
 		super();
 		this.user = user;
 		this.status = status;
@@ -66,9 +66,9 @@ public class Leave {
 		this.endDate = endDate;
 	}
 	public Leave(Integer leaveId, User user, LeaveStatus status, LeaveType type, String reason, String workdissem,
-			@FutureOrPresent @FutureOrPresent LocalDate appliedDate,
-			@FutureOrPresent @FutureOrPresent LocalDate startDate,
-			@FutureOrPresent @FutureOrPresent LocalDate endDate) {
+			 LocalDate appliedDate,
+			 LocalDate startDate,
+			 LocalDate endDate) {
 		super();
 		this.leaveId = leaveId;
 		this.user = user;
@@ -149,6 +149,12 @@ public class Leave {
 			return false;
 		Leave other = (Leave) obj;
 		return Objects.equals(leaveId, other.leaveId);
+	}
+	public String getContactdetail() {
+		return contactdetail;
+	}
+	public void setContactdetail(String contactdetail) {
+		this.contactdetail = contactdetail;
 	}
 
 	

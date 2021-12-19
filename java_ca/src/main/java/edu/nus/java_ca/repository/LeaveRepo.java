@@ -24,4 +24,6 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 			+ "AND l.status= :UPDATED")
 	public ArrayList<Leave> findLeaveToApprove(@Param("APPLIED") LeaveStatus a, 
 			@Param("UPDATED") LeaveStatus u);
+	@Query("SELECT c from Leaves c WHERE c.status='APPLIED' OR c.status='APPROVED' OR c.status='UPDATED'")
+	ArrayList<Leave> findAppliedLeaves();
 }

@@ -1,5 +1,6 @@
 package edu.nus.java_ca.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.nus.java_ca.model.Leave;
@@ -17,5 +18,8 @@ public interface LeaveService {
 	public void approveLeave(Leave l);
 	public void rejectLeave(Leave l);
 	public Leave findLeaveById(Integer id);
+	ArrayList<Leave> findAppliedLeaves();
+	Leave createLeave(Leave l);
+	Leave changeLeave(Leave l);
 	
 }

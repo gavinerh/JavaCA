@@ -1,5 +1,6 @@
 package edu.nus.java_ca.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -63,5 +64,26 @@ public class LeaveServiceImpl implements LeaveService{
 		return lrepo.findById(id).get();
 	}
 
+	@Override
+	@Transactional
+	public ArrayList<Leave> findAppliedLeaves() {
+		// TODO Auto-generated method stub
+		return lrepo.findAppliedLeaves();
+	}
+
+	@Override
+	@Transactional
+	public Leave createLeave(Leave l) {
+		// TODO Auto-generated method stub
+		return lrepo.saveAndFlush(l);
+	}
+
+	@Override
+	@Transactional
+	public Leave changeLeave(Leave l) {
+		// TODO Auto-generated method stub
+		return lrepo.saveAndFlush(l);
+	}
+	
 	
 }

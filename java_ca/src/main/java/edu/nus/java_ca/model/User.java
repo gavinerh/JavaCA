@@ -143,13 +143,13 @@ public class User {
 
 
 	public Date getLastloginDate() {
-		return lastloginDate;
+		return lastLoginDate;
 	}
 
 
 
 	public void setLastloginDate(Date lastloginDate) {
-		this.lastloginDate = lastloginDate;
+		this.lastLoginDate = lastloginDate;
 	}
 
 

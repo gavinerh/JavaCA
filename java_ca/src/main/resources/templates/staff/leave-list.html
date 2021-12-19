@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	
+	<h1>Leave List</h1>
+
+	<h2 th:if="${#lists.isEmpty(leaves)}">No Leave Applied</h2>
+	<table th:if="${not #lists.isEmpty(leaves)}" >
+		<tr >
+			<th >Leave Id</th>
+			<th >Start Date</th>
+			<th >End Date</th>
+			<th >Reason</th>
+			<th >Status</th>
+			<th >Leave Type</th>
+			<th >Work Dissemination</th>
+			<th >Contact Details</th >
+			<th >Edit Leave</th >
+			<th >Delete Leave</th>
+		</tr>
+		<tr th:each="leave:${leaves}" class="table-row">
+			<td th:text=${leave.leaveId}>Id</td>
+			<td th:text="${#dates.format(leave.startDate, 'dd/MM/yyyy')}">Start Date</td>
+			<td th:text="${#dates.format(leave.endDate, 'dd/MM/yyyy')}">End Date</td>
+			<td th:text=${leave.reason}>reason</td>
+			<td th:text=${leave.status}>status</td>
+			<td th:text=${leave.type}>type</td>
+			<td th:text=${leave.workdissem}>Work Dissem</td>
+			<td th:text=${leave.contactdetail}>Contact detail</td>
+			
+			<td>
+			<div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<a href="#"
+				th:href="@{/staff/leave/edit/}+${leave.leavesId}">Edit</a>
+			</div>
+			</td>
+			<td>
+			<div <div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<a href="#"
+				th:href="@{/staff/leave/delete/}+${leave.leavesId}">Delete</a>
+			</div>
+			</td>
+			<td>
+			<div
+				th:if="${#strings.equals(leave.status, 'APPROVED')}">
+				<a th:href="@{/staff/leave/cancel/}+${leave.leavesId}">Cancel</a>
+			</div>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
