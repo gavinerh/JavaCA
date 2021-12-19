@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 
 @Repository
@@ -24,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Modifying
 	@Query("update User u set u.lastLoginDate = ?1 where u.userId = ?2")
 	void updateLoginDate(Date date, UUID userId);
+	
+	List<User> findByPosition(Position position);
 }

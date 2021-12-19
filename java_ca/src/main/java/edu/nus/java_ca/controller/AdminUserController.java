@@ -46,9 +46,11 @@ public class AdminUserController {
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String addForm(Model model) {
-		model.addAttribute("user", new User());
-		return "admin/user-form";
+	public ModelAndView addUser() {
+		ModelAndView mav = new ModelAndView("admin/user-form", "user", new User());
+		List<User> managerList = Uservice.findByPosition(Position.Manager);
+		mav.addObject("managerlist", managerList);
+		return mav;
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -75,7 +77,7 @@ public class AdminUserController {
 	}
 	
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public String editUserPage(@PathVariable Long id, Model model) {
+	public String editUser(@PathVariable Long id, Model model) {
 		User user = Uservice.findByUserId(id);
 		model.addAttribute(user);
 		return "admin/user-form";
@@ -90,7 +92,5 @@ public class AdminUserController {
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}
-	
-	
 	
 }
