@@ -1,6 +1,7 @@
 package edu.nus.java_ca.controller;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -33,7 +34,11 @@ public class StaffController {
 	  protected void initBinder(WebDataBinder binder) {
 		binder.addValidators(new LeaveValidator());
 	  }
-	 
+	final Set<String> weekends = Set.of("SATURDAY","SUNDAY");
+	//Set of holidays in singapore 2021
+	final Set<LocalDate> holidays = Set.of(LocalDate.of(2021,1,1),LocalDate.of(2021,2,12),LocalDate.of(2021,2,13),LocalDate.of(2021,4,2),
+			LocalDate.of(2021,5,1),LocalDate.of(2021,5,13),LocalDate.of(2021,2,26),LocalDate.of(2021,7,20),LocalDate.of(2021,8,9),
+			LocalDate.of(2021,11,4),LocalDate.of(2021,12,25));
 	@Autowired
 	private LeaveService lservice;
 	@Autowired
@@ -65,9 +70,16 @@ public class StaffController {
 	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model) {
 		if (result.hasErrors())
 			return("staff/staff-new-leave");
-		leave.setStatus(LeaveStatus.APPLIED);
+		Long count;
+		count = leave.getStartDate().datesUntil(leave.getEndDate())
+				.count();
+		if(count<=14) {count = leave.getStartDate().datesUntil(leave.getEndDate())
+		        .filter(t -> !weekends.contains(t.getDayOfWeek().name()))
+		        .filter(t -> !holidays.contains(t))
+		        .count();}
 		LocalDate now = LocalDate.now();
 		leave.setAppliedDate(now);
+		leave.setStatus(LeaveStatus.APPLIED);
 		lservice.createLeave(leave);
 		String message = "New course " + leave.getLeaveId()+" Created";
 		System.out.println(message);
