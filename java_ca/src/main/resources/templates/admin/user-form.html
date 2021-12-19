@@ -55,6 +55,14 @@
 								th:text="${selectOption.firstName}"></option>
                 </select>
               </div>
+               <div class="col-md-6">
+                <label for="authority" class="form-label">authority</label>
+                <select name="authority" class="form-select" id="authority" required>
+                  <option th:each="authorityOpt : ${T(edu.nus.java_ca.model.Authority).values()}"
+							th:value="${authorityOpt}" th:text="${authorityOpt}" ></option>
+                </select>
+              </div>
+              
               
               <input type="hidden" th:field="*{userId}" />
               
