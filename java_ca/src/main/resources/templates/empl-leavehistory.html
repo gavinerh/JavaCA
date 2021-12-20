@@ -10,7 +10,21 @@
 	<div th:replace="fragments/general.html :: menu"></div>
 
 	<h1>Eployee's Personal Leave History</h1>
-		<!-- some sessions code -->		 
+		<!-- some sessions code -->		
+		
+				<!-- some sessions code -->
+		 
+		<form action="#" th:object="${leave}" th:action="@{/leave/search}"
+		 method="post">
+	  		<fieldset>
+				Employee ID: <input type="text" th:field="*{user.userId}" />
+				<p th:if="${#fields.hasErrors('user.userId')}" th:errors="*{user.userId}"></p>
+			</fieldset>
+			<fieldset>
+				<input type="submit" value="Search"/>
+			</fieldset>
+			
+		</form> 
 
 	<h2 th:if="${not #lists.isEmpty(emleaves)}">Leaves: </h2>
 	<table th:if="${not #lists.isEmpty(emleaves)}" >
