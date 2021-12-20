@@ -11,10 +11,10 @@ public class JavaCaApplication {
 		SpringApplication.run(JavaCaApplication.class, args);
 	}
 
-//	@Bean
-//	CommandLineRunner runner() {
-//		return args -> {
-//
-//		};
-//	}
+	@Bean
+	CommandLineRunner runner() {
+		return args -> {
+
+		};
+	}
 }
