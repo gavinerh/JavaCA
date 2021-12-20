@@ -9,15 +9,18 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @DynamicUpdate
+@SQLDelete(sql = "UPDATE user SET deleted = true WHERE user_id=?")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,8 +42,9 @@ public class User {
 //@DateTimeFormat(pattern = "dd/MM/YYYY','HH:mm:ss")
 //      private Date lastloginDate;
 	
-	@OneToOne
+	@ManyToOne
 	private User approvingOfficer;
+	private boolean deleted = Boolean.FALSE;
 	
 	public User() {}
 

@@ -53,5 +53,12 @@ public class UserServiceImpl implements UserService{
 		return uRepo.findByPosition(position);
 	}
 	
+	@Override
+	public void deleteUserById(Long id) {
+		// TODO Auto-generated method stub
+		uRepo.deleteById(id);
+		
+	}
+	
 
 }

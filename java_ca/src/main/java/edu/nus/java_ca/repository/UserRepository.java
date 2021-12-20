@@ -33,5 +33,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("update User u set u.lastLoginDate = ?1 where u.userId = ?2")
 	void updateLoginDate(Date date, UUID userId);
 	
+	@Query("SELECT u FROM User u WHERE u.position = :position AND u.deleted = false")
 	List<User> findByPosition(Position position);
+	
+	@Query("SELECT u FROM User u WHERE u.deleted = false")
+	List<User> findAll();
 }
