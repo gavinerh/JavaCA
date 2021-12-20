@@ -19,20 +19,10 @@
 	<!-- pull all leaves for this mth plus details -->
 	
 	<!-- dropdown box providing previous and next mth --> 
-	<form action="#" th:object="${leave}" th:action="@{/leave/view}"
+	<form action="#" th:object="${leave}" th:action="@{/leave/selectmth}"
 		 method="post">
 		<fieldset>
-		Select Month: <select name="mth" style="height: 25px; width: 160px">
-			<option th:each="mthlist:${mthlist}" th:value="${mthlist}"
-			th:text="${mthlist}"></option>
-			</select>
-	<!--Select Date: <input type="date" name="startDate" th:field="*{startDate}"/>	-->
-		</fieldset>
-		<fieldset>
-		Select Year: <select name="yr" style="height: 25px; width: 160px">
-			<option th:each="yrlist:${yrlist}" th:value="${yrlist}"
-			th:text="${yrlist}"></option>
-			</select>
+			Select Month: <input type="date" name="startDate" th:field="*{startDate}"/>	
 		</fieldset>
 		<fieldset>
 			<input type="submit" value="View"/>
