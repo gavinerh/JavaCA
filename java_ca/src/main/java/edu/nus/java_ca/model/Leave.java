@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -24,7 +25,7 @@ public class Leave {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer leaveId;
 	//uni directional so dont need to specify in User
-	@OneToOne
+	@ManyToOne
 	private User user;
 	@Column(name = "status", columnDefinition = "ENUM('APPLIED', 'APPROVED', 'UPDATED', 'CANCELLED', 'REJECTED','DELETED')")
 	@Enumerated(EnumType.STRING)
