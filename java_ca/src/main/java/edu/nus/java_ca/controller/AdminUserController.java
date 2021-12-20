@@ -1,6 +1,5 @@
 package edu.nus.java_ca.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,10 +37,11 @@ public class AdminUserController {
 		this.Uservice = UserviceImpl;
 	}
 	
-	@RequestMapping(value = "/Ulist")
-	public String list(Model model) {
-		model.addAttribute("users", Uservice.findAll());
-		return "users";
+	@RequestMapping({"/", ""})
+	public String dashboard(Model model) {
+		List<User> userlist = Uservice.findAll();
+		model.addAttribute("userlist", userlist);
+		return "admin/users"; //folder is admin, users is the html
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
@@ -54,7 +53,7 @@ public class AdminUserController {
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String saveMember(@ModelAttribute("user") @Valid User user, 
+	public String saveMember(@ModelAttribute("user") @Valid User user,
 			BindingResult bindingResult,  Model model) {
 		if (bindingResult.hasErrors()) {
 			return "admin/user-form";
@@ -62,6 +61,7 @@ public class AdminUserController {
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}
+	
 	@RequestMapping(value = "/delete/{id}")
 	public String deleteMember(@PathVariable("id") Long id) {
 		
@@ -69,23 +69,17 @@ public class AdminUserController {
 		return "forward:/AdminUser/";
 	}
 	
-	@RequestMapping({"/", ""})
-	public String dashboard(Model model) {
-		List<User> userlist = Uservice.findAll();
-		model.addAttribute("userlist", userlist);
-		return "admin/users"; //folder is admin, users is the html
-	}
-	
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public String editUser(@PathVariable Long id, Model model) {
-		User user = Uservice.findByUserId(id);
-		model.addAttribute(user);
-		return "admin/user-form";
+	public ModelAndView editUser(@PathVariable Long id) {
+		ModelAndView mav = new ModelAndView("admin/user-form", "user", Uservice.findByUserId(id));
+		List<User> managerList = Uservice.findByPosition(Position.Manager);
+		mav.addObject("managerlist", managerList);
+		return mav;
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String editUser(@ModelAttribute @Valid User user, BindingResult result, 
-			@PathVariable String id) {
+			@PathVariable Long id) {
 		if (result.hasErrors()) {
 			return "admin/user-form";
 		}
