@@ -1,5 +1,11 @@
-<!-- page for employee's leave history-->
-
+<!-- Movement Register Template -->
+<!-- This is a menu available for all users and 
+	upon clicking the hyperlink, 
+	the system displays details of all employees on leave 
+	during the current month and the category of leave. 
+	Users can also navigate to the previous and next month 
+	using a dropdown choice list. -->
+	
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/general.html :: headerfiles"/>
@@ -8,12 +14,23 @@
 <body>
 	<header th:insert="fragments/general.html :: header"> </header>
 	<div th:replace="fragments/general.html :: menu"></div>
-
-	<h1>Eployee's Personal Leave History</h1>
-		<!-- some sessions code -->		 
-
-	<h2 th:if="${not #lists.isEmpty(emleaves)}">Leaves: </h2>
-	<table th:if="${not #lists.isEmpty(emleaves)}" >
+	<h1>Movement Register</h1>
+	
+	<!-- pull all leaves for this mth plus details -->
+	
+	<!-- dropdown box providing previous and next mth --> 
+	<form action="#" th:object="${leave}" th:action="@{/leave/selectmth}"
+		 method="post">
+		<fieldset>
+			Select Month: <input type="date" name="startDate" th:field="*{startDate}"/>	
+		</fieldset>
+		<fieldset>
+			<input type="submit" value="View"/>
+		</fieldset>
+	</form>	
+	
+		<h2 th:if="${not #lists.isEmpty(mvtleaves)}">Leaves: </h2>
+	<table th:if="${not #lists.isEmpty(mvtleaves)}" >
 		<tr >
 			<th>Leave Id</th>
 			<th>Employee's Name</th>>
@@ -27,7 +44,7 @@
 			<th>Status</th>
 		</tr>
 		
-		<tr th:each="leave:${emleaves}" >
+		<tr th:each="leave:${mvtleaves}" >
 			<td th:text=${leave.leaveId}>Id</td>
 			<td th:text="${leave.user.firstName}"> Name</td>
 			<td th:text=${leave.type}>Leave Type</td>
@@ -39,8 +56,9 @@
 			<td th:text=${leave.workdissem}>Work Dissemination</td>
 			<td th:text=${leave.status}>status</td>			
 		</tr>
-	</table>
-   	<br />
+	</table>	
+	
+	<br />
 	<div th:replace="fragments/general.html :: footer"></div>
 	
 </body>

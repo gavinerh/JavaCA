@@ -1,18 +1,27 @@
 package edu.nus.java_ca.controller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.nus.java_ca.model.Leave;
-import edu.nus.java_ca.service.LeaveService;
-import edu.nus.java_ca.service.LeaveServiceImpl;
+import sg.iss.laps.model.Leave;
+import sg.iss.laps.model.User;
+import sg.iss.laps.service.UserService;
+import sg.iss.laps.service.LeaveBalanceService;
+import sg.iss.laps.service.LeaveService;
+import sg.iss.laps.service.LeaveServiceImpl;
 
 @Controller
 @RequestMapping("/leave")
@@ -21,41 +30,56 @@ public class LeaveController {
 	@Autowired
 	private LeaveService lservice;
 	@Autowired
+	private UserService uservice;
+	@Autowired
 	public void setLeaveService(LeaveServiceImpl lserviceImpl) {
 		this.lservice = lserviceImpl;
 	}
 	
 //	@Autowired
 //	private LeaveBalanceService lbservice;
-
-	
-//	Add
-//	Cancel
 	
 	@RequestMapping(value="/all")
 	public String listAll(Model model) {
 		model.addAttribute("leaves", lservice.listAllLeaves());
 		return "allleaves";
 	}
+
+	@RequestMapping(value="/mvt-reg")
+	public String viewMvtReg(Model model) {
+		model.addAttribute("leave", new Leave());	
+		return "mvt-reg";
+	}
+	@PostMapping(value="/view") 
+	public String viewMvtRegChooseMth(@RequestParam("startDate")
+	@DateTimeFormat(pattern="dd-MM-yyyy") LocalDate startDate, Model model) {
+		model.addAttribute("startDate", startDate);		
+		ArrayList<Leave> mls = (ArrayList<Leave>) lservice.findLeavesByDate(startDate);
+		model.addAttribute("mvtleaves", mls);
+		return "forward:/leave/mvt-reg";
+	}
 	
 	//initial view of leave history of respective employee
-	@RequestMapping(value="/empl-leavehistory")
+	@RequestMapping(value="/empl-search")
 	public String empLeaveHistSearchPage(Model model) {
-		Leave l = new Leave();
-		model.addAttribute("leave", l);
-		return "empl-leavehistory";
+		model.addAttribute("leave", new Leave());
+		return "empl-search";
 	}
-	//after entering employee Id, list shold appear
-	@RequestMapping(value="/search") //from empl-leavehistory search input box
-	public String searchResult(@ModelAttribute("id") @Valid Leave l, 
-			BindingResult bindingResult, Model model) {
+	//after entering employee Id, cross map to staff history 
+	@PostMapping(value="/search")
+	public String searchLeavesByUserId(@ModelAttribute("leave") 
+		@ Valid Leave ls, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			return "empl-leavehistory";
+			return "empl-search";
 		}
-		model.addAttribute("emleaves", lservice.findLeaveByUserId(l.getUser().getUserId()));
+//		model.addAttribute("leave", new Leave());
+		User u = uservice.findUserById(ls.getUser().getUserId());
+		ArrayList<Leave> lls = (ArrayList<Leave>) 
+				lservice.listLeavesByUserId(u.getUserId());
+		model.addAttribute("emleaves", lls);
 		return "forward:/leave/empl-leavehistory";
 	}
-	
+		
 	//manager actions
 	@RequestMapping(value = "/list")
 	public String list(Model model) {
