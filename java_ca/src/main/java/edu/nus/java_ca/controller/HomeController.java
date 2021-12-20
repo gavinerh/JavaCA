@@ -33,12 +33,12 @@ public class HomeController {
 	SessionManagement sess;
 	
 	// display pre-login page
-	@RequestMapping({"/", ""})
-	public String preLogin(Model model) {
-		User user = new User();
-		model.addAttribute("user", user);
-		return "login/unloggedIn";
-	}
+//	@RequestMapping({"/", ""})
+//	public String preLogin(Model model) {
+//		User user = new User();
+//		model.addAttribute("user", user);
+//		return "login/unloggedIn";
+//	}
 	
 	// display register new user form
 	@RequestMapping("/register")
@@ -64,7 +64,7 @@ public class HomeController {
 	
 
 	// display login form for user to login
-	@RequestMapping("/login")
+	@RequestMapping({"/", "", "/login"})
 	public String login(HttpSession session, SessionStatus status) {
 		if(sess.isLoggedIn(session, status)) {
 			return "redirect:/home";
@@ -116,9 +116,9 @@ public class HomeController {
 		case Admin:
 			return "redirect:/AdminUser";
 		case Manager:
-			return "redirect:/manager";
+			return "redirect:/manager/list";
 		case Staff:
-			return "redirect:/staff";
+			return "redirect:/staff/list";
 		}
 		return null;
 	}
