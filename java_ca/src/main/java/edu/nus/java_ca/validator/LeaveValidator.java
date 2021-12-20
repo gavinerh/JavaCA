@@ -27,9 +27,10 @@ public class LeaveValidator implements Validator {
 			e.rejectValue("endDate", "error.endDate", "**EndDate must be After StartDate**");
 		}
 	
-		ValidationUtils.rejectIfEmptyOrWhitespace(e, "reason", "error.reason","**Reason Is Required.**");
-		ValidationUtils.rejectIfEmptyOrWhitespace(e, "startDate", "error.startDate", "**Start Date is required.**");
-		ValidationUtils.rejectIfEmptyOrWhitespace(e, "endDate", "error.endDate", "**End Date is required.**");
+		ValidationUtils.rejectIfEmptyOrWhitespace(e, "reason", "error.reason","**Reason is Required.**");
+		ValidationUtils.rejectIfEmptyOrWhitespace(e, "startDate", "error.startDate", "**Start Date is Required.**");
+		ValidationUtils.rejectIfEmptyOrWhitespace(e, "endDate", "error.endDate", "**End Date is Required.**");
+		ValidationUtils.rejectIfEmptyOrWhitespace(e, "type", "error.type","**Leave Type is Required.**");
 		
 		if(l.getStartDate()!=null) {
 			int i = l.getStartDate().getDayOfWeek().getValue();

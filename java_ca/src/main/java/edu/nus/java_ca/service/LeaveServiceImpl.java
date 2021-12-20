@@ -3,6 +3,7 @@ package edu.nus.java_ca.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -22,6 +23,11 @@ public class LeaveServiceImpl implements LeaveService{
 	@Autowired
 	LeaveRepo lrepo;
 	
+	final Set<String> weekends = Set.of("SATURDAY","SUNDAY");
+	//Set of holidays in singapore 2021
+	final Set<LocalDate> holidays = Set.of(LocalDate.of(2021,1,1),LocalDate.of(2021,2,12),LocalDate.of(2021,2,13),LocalDate.of(2021,4,2),
+			LocalDate.of(2021,5,1),LocalDate.of(2021,5,13),LocalDate.of(2021,2,26),LocalDate.of(2021,7,20),LocalDate.of(2021,8,9),
+			LocalDate.of(2021,11,4),LocalDate.of(2021,12,25));
 	
 	@Autowired
 	UserRepository uRepo;
@@ -99,5 +105,32 @@ public class LeaveServiceImpl implements LeaveService{
 		return lrepo.findById(id).get();
 	}
 
-	
+	@Transactional
+	public Long countLeaves(LocalDate s, LocalDate e) {
+		Long count;
+		count = s.datesUntil(e.plusDays(1))
+				.count();
+
+		if(count<=14) {
+			count = s.datesUntil(e.plusDays(1))
+			        .filter(t -> !weekends.contains(t.getDayOfWeek().name()))
+			        .filter(t -> !holidays.contains(t))
+			        .count();
+		}
+		return count;
+	}
+	@Override
+	@Transactional
+	public Leave findByStartDateAndEndDate(LocalDate s, LocalDate e) {
+		// TODO Auto-generated method stub
+		return lrepo.findByStartDateAndEndDate(s, e);
+	}
+	@Transactional
+	public Boolean checkDupes(LocalDate s, LocalDate e) {
+		Leave c = findByStartDateAndEndDate(s,e);
+		if(c!=null) {
+			return true;}
+		
+		return false;
+	}
 }

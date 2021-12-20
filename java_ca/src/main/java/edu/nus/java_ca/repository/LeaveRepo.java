@@ -34,13 +34,9 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	@Query("SELECT c from Leave c WHERE c.status='APPLIED' OR c.status='APPROVED' OR c.status='UPDATED'")
 	ArrayList<Leave> findAppliedLeaves();
 	
-	
-	
-	
-	
-	
 	@Query("SELECT l  FROM  Leave l WHERE l.user = :user")
 	public ArrayList<Leave>  findLeaveByUser(@Param("user")User user);
 
+	Leave findByStartDateAndEndDate(LocalDate s, LocalDate e);
 	
 }

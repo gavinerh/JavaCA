@@ -21,8 +21,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.nus.java_ca.model.Leave;
 import edu.nus.java_ca.model.LeaveStatus;
+import edu.nus.java_ca.model.SessionClass;
+import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
+import edu.nus.java_ca.service.UserService;
+import edu.nus.java_ca.service.UserServiceImpl;
 import edu.nus.java_ca.validator.LeaveValidator;
 
 
@@ -34,16 +38,24 @@ public class StaffController {
 	  protected void initBinder(WebDataBinder binder) {
 		binder.addValidators(new LeaveValidator());
 	  }
-	final Set<String> weekends = Set.of("SATURDAY","SUNDAY");
-	//Set of holidays in singapore 2021
-	final Set<LocalDate> holidays = Set.of(LocalDate.of(2021,1,1),LocalDate.of(2021,2,12),LocalDate.of(2021,2,13),LocalDate.of(2021,4,2),
-			LocalDate.of(2021,5,1),LocalDate.of(2021,5,13),LocalDate.of(2021,2,26),LocalDate.of(2021,7,20),LocalDate.of(2021,8,9),
-			LocalDate.of(2021,11,4),LocalDate.of(2021,12,25));
+	
 	@Autowired
 	private LeaveService lservice;
 	@Autowired
 	public void setLeaveService (LeaveServiceImpl lservice) {
 		this.lservice = lservice;
+	}
+	@Autowired
+	private UserService uservice;
+	@Autowired
+	public void setUserService (UserServiceImpl uservice) {
+		this.uservice = uservice;
+	}
+	private User user(HttpSession ses) {
+		SessionClass session = (SessionClass)ses.getAttribute("uSession");
+		String email = session.getEmail();
+		User user = uservice.findByUserEmail(email);
+		return user;
 	}
 	
 	@RequestMapping(value = "/logout")
@@ -67,19 +79,21 @@ public class StaffController {
 	}
 
 	@PostMapping(value = "/leave/new")
-	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model) {
-		if (result.hasErrors())
+	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses) {
+		if (result.hasErrors()){
+			return("staff/staff-new-leave");}
+		
+		if(lservice.checkDupes(leave.getStartDate(), leave.getEndDate())) {
+			model.addAttribute("errormsg", "**You've already Applied the same period**");
 			return("staff/staff-new-leave");
-		Long count;
-		count = leave.getStartDate().datesUntil(leave.getEndDate())
-				.count();
-		if(count<=14) {count = leave.getStartDate().datesUntil(leave.getEndDate())
-		        .filter(t -> !weekends.contains(t.getDayOfWeek().name()))
-		        .filter(t -> !holidays.contains(t))
-		        .count();}
+		}
+	
+		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate());
+		System.out.println("Total leave days: "+count);
 		LocalDate now = LocalDate.now();
 		leave.setAppliedDate(now);
 		leave.setStatus(LeaveStatus.APPLIED);
+		leave.setUser(user(ses));
 		lservice.createLeave(leave);
 		String message = "New course " + leave.getLeaveId()+" Created";
 		System.out.println(message);
