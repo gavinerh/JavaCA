@@ -16,7 +16,7 @@ import edu.nus.java_ca.repository.LeaveRepo;
 
 @Service //need to impl component type to be recognized as spring bean
 public class LeaveServiceImpl implements LeaveService{
-
+ 
 	@Autowired
 	LeaveRepo lrepo;
 

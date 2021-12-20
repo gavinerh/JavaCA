@@ -8,7 +8,7 @@ import edu.nus.java_ca.model.Leave;
 
 public interface LeaveService {
 	
-
+ 
 	//for applying
 	Leave createLeave(Leave l);
 	Leave changeLeave(Leave l);

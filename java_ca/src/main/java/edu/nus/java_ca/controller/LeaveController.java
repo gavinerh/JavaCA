@@ -44,7 +44,7 @@ public class LeaveController {
 		model.addAttribute("leaves", lservice.listAllLeaves());
 		return "allleaves";
 	}
-
+ 
 	@RequestMapping(value="/mvt-reg")
 	public String viewMvtReg(Model model) {
 		model.addAttribute("leave", new Leave());	

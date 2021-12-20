@@ -23,7 +23,7 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	@Query("SELECT l FROM Leave l" 
 			+ " WHERE l.status=:APPLIED " 
 			+ "AND l.status= :UPDATED")
-	
+	 
 	public ArrayList<Leave> findLeaveToApprove(@Param("APPLIED") LeaveStatus a, 
 			@Param("UPDATED") LeaveStatus u);
 
