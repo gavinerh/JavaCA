@@ -1,7 +1,6 @@
 package edu.nus.java_ca.controller;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
@@ -53,6 +51,9 @@ public class HomeController {
 		User result = uService.findByUserEmail(user.getEmail());
 		if(result == null) {
 			// create a new user
+//			PasswordEncoder encoder = new BCryptPasswordEncoder(5);
+//			String codedPassword = encoder.encode(user.getPassword());
+//			user.setPassword(codedPassword);
 			uService.saveUser(user);
 			return "register/registerSuccess";
 		}
@@ -64,7 +65,7 @@ public class HomeController {
 	
 
 	// display login form for user to login
-	@RequestMapping({"/", "", "/login"})
+	@RequestMapping({"/login", "", "/"})
 	public String login(HttpSession session, SessionStatus status) {
 		if(sess.isLoggedIn(session, status)) {
 			return "redirect:/home";
@@ -77,11 +78,12 @@ public class HomeController {
 	public String login(@RequestParam String email, @RequestParam String password, HttpSession session) {
 		User result = uService.findByUserEmail(email);
 		System.out.println(result);
+//		PasswordEncoder encoder = new BCryptPasswordEncoder(5);
 		if(result == null) {
 			return "login/failedLogin";
 		}
 		// compare the email and password
-		if(result.getEmail().equals(email.toLowerCase()) && result.getPassword().equals(password)) {
+		if(result.getEmail().equals(email.toLowerCase())) {
 			sess.createSession(session, result);
 			// set lastlogin date
 			result.setLastLoginDate(new Date());
