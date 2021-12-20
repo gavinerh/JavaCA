@@ -52,7 +52,7 @@
                 <label th:for="*{approvingOfficer}" class="form-label">Approving Officer</label>
                 <select th:field="*{approvingOfficer.userId}" name="approvingOfficer" class="form-select" id="approvingOfficer">
                   <option th:each="selectOption : ${managerlist}" th:value="${selectOption.userId}"
-								th:text="${selectOption.firstName}"></option>
+								th:text="${selectOption.firstName} + ' ' + ${selectOption.lastName}"></option>
                 </select>
               </div>
                <div class="col-md-6">
