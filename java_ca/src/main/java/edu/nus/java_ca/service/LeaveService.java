@@ -4,10 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import sg.iss.laps.model.Leave;
+import edu.nus.java_ca.model.Leave;
 
 public interface LeaveService {
 	
+ 
 	//for applying
 	Leave createLeave(Leave l);
 	Leave changeLeave(Leave l);
@@ -21,8 +22,6 @@ public interface LeaveService {
 	public void approveLeave(Leave l);
 	public void rejectLeave(Leave l);
 	public Leave findLeaveById(Integer id);
-//	public List<Leave> findLeavesByDate(LocalDate d);
-	public List<Leave> findLeavesByYearandMonth(int yy, int mm);
-	
+	public List<Leave> findLeavesByDate(LocalDate d);
 	
 }

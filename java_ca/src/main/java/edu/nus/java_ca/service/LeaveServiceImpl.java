@@ -10,15 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
-import sg.iss.laps.model.Leave;
-import sg.iss.laps.model.LeaveStatus;
-import sg.iss.laps.repository.LeaveRepo;
+import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.model.LeaveStatus;
+import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.repository.LeaveRepo;
+import edu.nus.java_ca.repository.UserRepository;
 
 @Service //need to impl component type to be recognized as spring bean
 public class LeaveServiceImpl implements LeaveService{
-
+ 
 	@Autowired
 	LeaveRepo lrepo;
+	
+	
+	@Autowired
+	UserRepository uRepo;
 
 	//Base function	
 	@Transactional
@@ -46,21 +52,19 @@ public class LeaveServiceImpl implements LeaveService{
 		lrepo.save(l);		
 	}
 	
-//	@Transactional
-//	public List<Leave> findLeavesByDate(LocalDate d) {
-//		List<Leave> LeavesbyDate = lrepo.findLeaveByDate(d);
-//		return LeavesbyDate;
-//	}
 	@Transactional
-	public List<Leave> findLeavesByYearandMonth(int yy, int mm){
-		List<Leave> LeavesByMMYY = lrepo.getByYearandMonth(yy, mm);
-		return LeavesByMMYY;			
+	public List<Leave> findLeavesByDate(LocalDate d) {
+		List<Leave> mthLeave = lrepo.findLeaveByDate(d);
+		return mthLeave;
 	}
-
+	
 	//Manager's function
 	@Transactional
 	public List<Leave> listLeavesByUserId(Long id) {
-		List<Leave> EmplLeave = lrepo.findLeaveByUserId(id);
+		
+	 User user1 = uRepo.findByUserId(id);
+		
+		List<Leave> EmplLeave = lrepo.findLeaveByUser(user1);
 		return EmplLeave;
 	}
 
