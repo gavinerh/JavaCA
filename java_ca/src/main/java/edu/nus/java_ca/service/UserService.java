@@ -15,4 +15,5 @@ public interface UserService {
 	User findByUserId(Long id);
 	void deleteUser(User user);
 	List<User> findByPosition(Position position);
+	void deleteUserById(Long id);
 }

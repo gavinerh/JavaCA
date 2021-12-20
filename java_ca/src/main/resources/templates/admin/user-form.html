@@ -51,6 +51,7 @@
               <div class="col-md-6">
                 <label th:for="*{approvingOfficer}" class="form-label">Approving Officer</label>
                 <select th:field="*{approvingOfficer.userId}" name="approvingOfficer" class="form-select" id="approvingOfficer">
+                <option value="" disabled selected>Select</option>
                   <option th:each="selectOption : ${managerlist}" th:value="${selectOption.userId}"
 								th:text="${selectOption.firstName} + ' ' + ${selectOption.lastName}"></option>
                 </select>
