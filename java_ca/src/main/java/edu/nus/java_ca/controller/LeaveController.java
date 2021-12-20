@@ -16,12 +16,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import sg.iss.laps.model.Leave;
-import sg.iss.laps.model.User;
-import sg.iss.laps.service.UserService;
-import sg.iss.laps.service.LeaveBalanceService;
-import sg.iss.laps.service.LeaveService;
-import sg.iss.laps.service.LeaveServiceImpl;
+
+import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.service.UserService;
+import edu.nus.java_ca.service.LeaveBalanceService;
+import edu.nus.java_ca.service.LeaveService;
+import edu.nus.java_ca.service.LeaveServiceImpl;
+
+
+
+
 
 @Controller
 @RequestMapping("/leave")
@@ -73,7 +78,7 @@ public class LeaveController {
 			return "empl-search";
 		}
 //		model.addAttribute("leave", new Leave());
-		User u = uservice.findUserById(ls.getUser().getUserId());
+		User u = uservice.findByUserId(ls.getUser().getUserId());
 		ArrayList<Leave> lls = (ArrayList<Leave>) 
 				lservice.listLeavesByUserId(u.getUserId());
 		model.addAttribute("emleaves", lls);

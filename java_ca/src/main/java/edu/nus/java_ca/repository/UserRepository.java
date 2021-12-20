@@ -22,6 +22,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //	@Query("UPDATE User u SET u.lastLoginDate = :date WHERE u.userId = :id")
 //	int updateUserLoginDate(@Param("date") Date date, @Param("id") UUID id);
 	
+	@Query("SELECT u FROM User u WHERE u.userId = :userId")
+	User  findByUserId(@Param("userId") Long userId);
+	
+	
+	
+	
+	
 	@Modifying
 	@Query("update User u set u.lastLoginDate = ?1 where u.userId = ?2")
 	void updateLoginDate(Date date, UUID userId);

@@ -12,13 +12,19 @@ import org.springframework.stereotype.Service;
 
 import edu.nus.java_ca.model.Leave;
 import edu.nus.java_ca.model.LeaveStatus;
+import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.repository.LeaveRepo;
+import edu.nus.java_ca.repository.UserRepository;
 
 @Service //need to impl component type to be recognized as spring bean
 public class LeaveServiceImpl implements LeaveService{
  
 	@Autowired
 	LeaveRepo lrepo;
+	
+	
+	@Autowired
+	UserRepository uRepo;
 
 	//Base function	
 	@Transactional
@@ -55,7 +61,10 @@ public class LeaveServiceImpl implements LeaveService{
 	//Manager's function
 	@Transactional
 	public List<Leave> listLeavesByUserId(Long id) {
-		List<Leave> EmplLeave = lrepo.findLeaveByUserId(id);
+		
+	 User user1 = uRepo.findByUserId(id);
+		
+		List<Leave> EmplLeave = lrepo.findLeaveByUser(user1);
 		return EmplLeave;
 	}
 
