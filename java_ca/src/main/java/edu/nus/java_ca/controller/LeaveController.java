@@ -1,7 +1,11 @@
 package edu.nus.java_ca.controller;
 
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -23,9 +27,6 @@ import edu.nus.java_ca.service.UserService;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
-
-
-
 
 
 @Controller
@@ -53,37 +54,40 @@ public class LeaveController {
 	@RequestMapping(value="/mvt-reg")
 	public String viewMvtReg(Model model) {
 		model.addAttribute("leave", new Leave());	
+		List<Integer> mthlist = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11);
+		int year = Year.now().getValue();
+		List<Integer> yrlist = Arrays.asList(year-1, year, year+1);
+		model.addAttribute("mthlist", mthlist);
+		model.addAttribute("yrlist", yrlist);
 		return "mvt-reg";
 	}
 	@PostMapping(value="/view") 
-	public String viewMvtRegChooseMth(@RequestParam("startDate")
-	@DateTimeFormat(pattern="dd-MM-yyyy") LocalDate startDate, Model model) {
-		model.addAttribute("startDate", startDate);		
-		ArrayList<Leave> mls = (ArrayList<Leave>) lservice.findLeavesByDate(startDate);
+	public String viewMvtRegChooseMth(@RequestParam("mth")String mth, 
+			@RequestParam("yr")String yr, Model model) throws ParseException {				
+		int mthparsed = Integer.parseInt(mth);
+		int yrparsed = Integer.parseInt(yr);
+		List<Leave> mls = lservice.findLeavesByYearandMonth
+				(yrparsed, mthparsed);
 		model.addAttribute("mvtleaves", mls);
 		return "forward:/leave/mvt-reg";
 	}
 	
 	//initial view of leave history of respective employee
-	@RequestMapping(value="/empl-search")
-	public String empLeaveHistSearchPage(Model model) {
-		model.addAttribute("leave", new Leave());
-		return "empl-search";
-	}
-	//after entering employee Id, cross map to staff history 
-	@PostMapping(value="/search")
-	public String searchLeavesByUserId(@ModelAttribute("leave") 
-		@ Valid Leave ls, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			return "empl-search";
+		@RequestMapping(value="/empl-leavehistory")
+		public String empLeaveHistSearchPage(Model model) {
+			model.addAttribute("leave", new Leave());
+			return "empl-leavehistory";
 		}
-//		model.addAttribute("leave", new Leave());
-		User u = uservice.findByUserId(ls.getUser().getUserId());
-		ArrayList<Leave> lls = (ArrayList<Leave>) 
-				lservice.listLeavesByUserId(u.getUserId());
-		model.addAttribute("emleaves", lls);
-		return "forward:/leave/empl-leavehistory";
-	}
+		//after entering employee Id, cross map to staff history 
+		@PostMapping(value="/search")
+		public String searchLeavesByUserId(@RequestParam("user.userId") 
+			String UserId, Model model) {
+			ArrayList<Leave> lls = (ArrayList<Leave>) 
+					lservice.listLeavesByUserId(Long.parseLong(UserId));
+			model.addAttribute("emleaves", lls);
+			return "forward:/leave/empl-leavehistory";
+		}
+		
 		
 	//manager actions
 	@RequestMapping(value = "/list")

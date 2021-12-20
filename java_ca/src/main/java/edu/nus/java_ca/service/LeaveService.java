@@ -23,5 +23,6 @@ public interface LeaveService {
 	public void rejectLeave(Leave l);
 	public Leave findLeaveById(Integer id);
 	public List<Leave> findLeavesByDate(LocalDate d);
+	public List<Leave> findLeavesByYearandMonth(int yy, int mm);
 	
 }
