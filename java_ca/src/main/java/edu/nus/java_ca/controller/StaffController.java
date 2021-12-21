@@ -26,7 +26,6 @@ import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
 import edu.nus.java_ca.service.UserService;
-import edu.nus.java_ca.service.UserServiceImpl;
 import edu.nus.java_ca.validator.LeaveValidator;
 
 
@@ -38,24 +37,18 @@ public class StaffController {
 	  protected void initBinder(WebDataBinder binder) {
 		binder.addValidators(new LeaveValidator());
 	  }
-	
+	final Set<String> weekends = Set.of("SATURDAY","SUNDAY");
+	//Set of holidays in singapore 2021
+	final Set<LocalDate> holidays = Set.of(LocalDate.of(2021,1,1),LocalDate.of(2021,2,12),LocalDate.of(2021,2,13),LocalDate.of(2021,4,2),
+			LocalDate.of(2021,5,1),LocalDate.of(2021,5,13),LocalDate.of(2021,2,26),LocalDate.of(2021,7,20),LocalDate.of(2021,8,9),
+			LocalDate.of(2021,11,4),LocalDate.of(2021,12,25));
 	@Autowired
 	private LeaveService lservice;
 	@Autowired
-	public void setLeaveService (LeaveServiceImpl lservice) {
-		this.lservice = lservice;
-	}
-	@Autowired
 	private UserService uservice;
 	@Autowired
-	public void setUserService (UserServiceImpl uservice) {
-		this.uservice = uservice;
-	}
-	private User user(HttpSession ses) {
-		SessionClass session = (SessionClass)ses.getAttribute("uSession");
-		String email = session.getEmail();
-		User user = uservice.findByUserEmail(email);
-		return user;
+	public void setLeaveService (LeaveServiceImpl lservice) {
+		this.lservice = lservice;
 	}
 	
 	@RequestMapping(value = "/logout")
@@ -79,21 +72,25 @@ public class StaffController {
 	}
 
 	@PostMapping(value = "/leave/new")
-	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses) {
-		if (result.hasErrors()){
-			return("staff/staff-new-leave");}
+	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession sessions) {
+		SessionClass session = (SessionClass)sessions.getAttribute("uSession");
+		String emailString = session.getEmail();
+		User user = uservice.findByUserEmail(emailString);
 		
-		if(lservice.checkDupes(leave.getStartDate(), leave.getEndDate())) {
-			model.addAttribute("errormsg", "**You've already Applied the same period**");
+		if (result.hasErrors())
 			return("staff/staff-new-leave");
-		}
-	
-		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate());
-		System.out.println("Total leave days: "+count);
+		Long count;
+		count = leave.getStartDate().datesUntil(leave.getEndDate())
+				.count();
+		if(count<=14) {count = leave.getStartDate().datesUntil(leave.getEndDate())
+		        .filter(t -> !weekends.contains(t.getDayOfWeek().name()))
+		        .filter(t -> !holidays.contains(t))
+		        .count();}
 		LocalDate now = LocalDate.now();
 		leave.setAppliedDate(now);
 		leave.setStatus(LeaveStatus.APPLIED);
-		leave.setUser(user(ses));
+		leave.setUser(user);
+		
 		lservice.createLeave(leave);
 		String message = "New course " + leave.getLeaveId()+" Created";
 		System.out.println(message);
@@ -101,11 +98,10 @@ public class StaffController {
 	}
 
 	@GetMapping(value = "/leave/edit/{id}")
-	public ModelAndView editLeavePage(@PathVariable ("id")Integer id) {
+	public ModelAndView editLeavePage(@PathVariable ("id")long id) {
 		ModelAndView mav = new ModelAndView("staff/leave-edit");
 		Leave leave = lservice.findLeaveById(id);
 		mav.addObject("leave", leave);
-		
 		return mav;
 	}
 
@@ -121,14 +117,14 @@ public class StaffController {
 		return "forward:/staff/leave/list";
 	}
 	@RequestMapping(value = "/leave/delete/{id}")
-	public String deleteLeave(@PathVariable("id") Integer id) {
+	public String deleteLeave(@PathVariable("id") Long id) {
 		Leave l = lservice.findLeaveById(id);
 		l.setStatus(LeaveStatus.DELETED);
 		lservice.changeLeave(l);
 		return "forward:/staff/leave/list";
 	}
 	@RequestMapping(value = "/leave/cancel/{id}")
-	public String cancelLeave(@PathVariable("id") Integer id) {
+	public String cancelLeave(@PathVariable("id") Long id) {
 		Leave l = lservice.findLeaveById(id);
 		l.setStatus(LeaveStatus.CANCELLED);
 		lservice.changeLeave(l);

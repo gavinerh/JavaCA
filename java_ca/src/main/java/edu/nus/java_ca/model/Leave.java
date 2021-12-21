@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -22,9 +23,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Leave {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer leaveId;
+	private Long leaveId;
 	//uni directional so dont need to specify in User
-	@OneToOne
+	@ManyToOne
 	private User user;
 	@Column(name = "status", columnDefinition = "ENUM('APPLIED', 'APPROVED', 'UPDATED', 'CANCELLED', 'REJECTED','DELETED')")
 	@Enumerated(EnumType.STRING)
@@ -85,7 +86,7 @@ public class Leave {
 		this.endDate = endDate;
 	}
 
-	public Integer getLeaveId() {
+	public Long getLeaveId() {
 		return leaveId;
 	}
 	public void setLeaveId(Integer leaveId) {

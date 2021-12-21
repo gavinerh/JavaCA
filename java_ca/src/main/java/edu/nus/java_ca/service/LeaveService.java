@@ -21,7 +21,7 @@ public interface LeaveService {
 	public List<Leave> listLeaveToApprove();
 	public void approveLeave(Leave l);
 	public void rejectLeave(Leave l);
-	public Leave findLeaveById(Integer id);
+	public Leave findLeaveById(Long id);
 	public List<Leave> findLeavesByDate(LocalDate d);
 	//for staff
 	Leave findByStartDateAndEndDate(LocalDate s, LocalDate e);

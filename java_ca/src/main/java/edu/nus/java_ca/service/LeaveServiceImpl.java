@@ -101,8 +101,8 @@ public class LeaveServiceImpl implements LeaveService{
 	}
 	
 	@Transactional
-	public Leave findLeaveById(Integer id) {
-		return lrepo.findById(id).get();
+	public Leave findLeaveById(Long id) {
+		return lrepo.findLeaveById(id);
 	}
 
 	@Transactional
