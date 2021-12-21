@@ -1,11 +1,12 @@
 package edu.nus.java_ca.model;
 
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,20 +46,20 @@ public class User {
 	@ManyToOne
 	private User approvingOfficer;
 	private boolean deleted = Boolean.FALSE;
-
-	@OneToOne
-	private LeaveBalance lb;
+	/**Container for LeaveBalance**/
+	@OneToMany(mappedBy = "user", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	Collection<LeaveBalance> lb = new ArrayList<LeaveBalance>();
 
 	public User() {
 	}
 
-	public LeaveBalance getLb() {
+	public void addLeaveBalance(LeaveBalance lb) {
+		this.lb.add(lb);
+	}
+	public Collection<LeaveBalance> getLb() {
 		return lb;
 	}
 
-	public void setLb(LeaveBalance lb) {
-		this.lb = lb;
-	}
 
 	public Long getUserId() {
 		return userId;

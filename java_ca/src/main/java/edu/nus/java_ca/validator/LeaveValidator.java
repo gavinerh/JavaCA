@@ -1,7 +1,5 @@
 package edu.nus.java_ca.validator;
 
-import java.util.Calendar;
-
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;

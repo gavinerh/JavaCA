@@ -88,7 +88,7 @@ public class LeaveController {
 	//manager actions
 	@RequestMapping(value = "/list")
 	public String list(Model model) {
-		model.addAttribute("leaves", lservice.listLeaveToApprove());
+		//model.addAttribute("leaves", lservice.listLeaveToApprove());
 		return "leave-toapprove";
 	}
 	
