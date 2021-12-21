@@ -23,5 +23,8 @@ public interface LeaveService {
 	public void rejectLeave(Leave l);
 	public Leave findLeaveById(Long id);
 	public List<Leave> findLeavesByDate(LocalDate d);
-	
+	//for staff
+	Leave findByStartDateAndEndDate(LocalDate s, LocalDate e);
+	Long countLeaves(LocalDate s, LocalDate e);
+	Boolean checkDupes(LocalDate s, LocalDate e);
 }

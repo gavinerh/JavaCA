@@ -36,7 +36,7 @@
 
 
 <!-- Custom styles for this template -->
-<link th:href="@{/dashboard.css}" rel="stylesheet">
+<link th:href="@{/css/dashboard.css}" rel="stylesheet">
 <link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
 <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
 	crossorigin>
@@ -114,7 +114,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" th:href="@{/AdminLeave}">
                 <span data-feather="edit"></span>
                 Manage Leave Entitlement
               </a>
@@ -148,7 +148,7 @@
 		<script type="text/javascript"
 			th:src="@{https://unpkg.com/feather-icons@4.28.0/dist/feather.min.js}"></script>
 
-		<script type="text/javascript" th:src="@{/dashboard.js}"></script>
+		<script type="text/javascript" th:src="@{/css/dashboard.js}"></script>
 	</div>
 </body>
 

@@ -23,12 +23,15 @@
 				method="post">
 				<div class="row g-3">
 					<div class="col-md-6">
-						<label for="type" class="form-label">Leave Type</label> <select
+						<label for="type" class="form-label">Leave Type</label><select
 							th:field="*{type}" class="form-select" id="type">
+							<option th:value="''" th:text="---Choose----"></option>
 							<option th:value="Annual" th:text="Annual"></option>
 							<option th:value="Medical" th:text="Medical"></option>
 							<option th:value="Compensation" th:text="Compensation"></option>
 						</select>
+						<p th:if="${#fields.hasErrors('type')}" th:class="error" th:errors="*{type}"></p>
+						
 					</div>
 				</div>
 				<div class="mt-1 row g-3">
@@ -66,7 +69,12 @@
 							id="floatingTextarea"></textarea>
 							<p th:if="${#fields.hasErrors('workdissem')}" th:errors="*{workdissem}"></p>
 					</div>
-
+					
+					<div class="col-sm-6">
+	
+						<p th:if="${errormsg != null}" th:class="error" th:text="${errormsg}"></p>
+					</div>
+					
 					<div class="col-12">
 						<input class="btn btn-primary me-2" type="submit" value="Submit" />
 						<input class="btn btn-secondary" type="reset" value="Reset" />
