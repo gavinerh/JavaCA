@@ -36,7 +36,7 @@
 
 
 <!-- Custom styles for this template -->
-<link th:href="@{/dashboard.css}" rel="stylesheet">
+<link th:href="@{/css/dashboard.css}" rel="stylesheet">
 <link rel="preconnect" th:href="@{https://fonts.googleapis.com}">
 <link rel="preconnect" th:href="@{https://fonts.gstatic.com}"
 	crossorigin>
@@ -103,23 +103,36 @@
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>Manager's Menu</span>
           </h6>
-          <ul class="nav flex-column mb-2">
+           <ul class="nav flex-column mb-2">
+             <li class="nav-item">
+              <a class="nav-link" href="/leave/leaves/mvt-reg">
+                <span data-feather="eye"></span>
+                Movement Register
+              </a>
+            </li>
+            <ul class="nav flex-column mb-2">
+             <li class="nav-item">
+              <a class="nav-link"href="/leave/leaves/all">
+                <span data-feather="eye"></span>
+                View ALL Leave
+              </a>
+            </li>
             <li class="nav-item">
-              <a class="nav-link" th:href="@{/leave/home}">
+              <a class="nav-link" href="/leave/leaves/empl-leavehistory">
+                <span data-feather="eye"></span>
+                View Employee's Leave
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/leave/leaves/list">
                 <span data-feather="edit"></span>
                 Manage Leave Applications
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
-                <span data-feather="eye"></span>
-                View Employee's Leave
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
                 <span data-feather="file-text"></span>
-                Report
+                ?Report
               </a>
             </li>
           </ul>
