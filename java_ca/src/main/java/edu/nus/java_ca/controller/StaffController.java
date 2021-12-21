@@ -110,7 +110,7 @@ public class StaffController {
 	}
 
 	@GetMapping(value = "/leave/edit/{id}")
-	public ModelAndView editLeavePage(@PathVariable ("id")Integer id) {
+	public ModelAndView editLeavePage(@PathVariable ("id")long id) {
 		ModelAndView mav = new ModelAndView("staff/leave-edit");
 		Leave leave = lservice.findLeaveById(id);
 		mav.addObject("leave", leave);
@@ -130,14 +130,14 @@ public class StaffController {
 		return "forward:/staff/leave/list";
 	}
 	@RequestMapping(value = "/leave/delete/{id}")
-	public String deleteLeave(@PathVariable("id") Integer id) {
+	public String deleteLeave(@PathVariable("id") long id) {
 		Leave l = lservice.findLeaveById(id);
 		l.setStatus(LeaveStatus.DELETED);
 		lservice.changeLeave(l);
 		return "forward:/staff/leave/list";
 	}
 	@RequestMapping(value = "/leave/cancel/{id}")
-	public String cancelLeave(@PathVariable("id") Integer id) {
+	public String cancelLeave(@PathVariable("id") long id) {
 		Leave l = lservice.findLeaveById(id);
 		l.setStatus(LeaveStatus.CANCELLED);
 		lservice.changeLeave(l);

@@ -21,7 +21,7 @@ public class LeaveValidator implements Validator {
 		// TODO Auto-generated method stub
 		Leave l = (Leave) target;
 
-		if ((l.getStartDate()!=null && l.getEndDate()!=null)&&(l.getStartDate().compareTo(l.getEndDate())>=0)) {
+		if ((l.getStartDate()!=null && l.getEndDate()!=null)&&(l.getStartDate().compareTo(l.getEndDate())>0)) {
 		
 			e.rejectValue("startDate", "error.startDate", "**StartDate must be Before EndDate**");
 			e.rejectValue("endDate", "error.endDate", "**EndDate must be After StartDate**");

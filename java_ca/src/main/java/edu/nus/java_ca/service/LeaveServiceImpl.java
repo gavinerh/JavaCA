@@ -120,18 +120,54 @@ public class LeaveServiceImpl implements LeaveService{
 		}
 		return count;
 	}
+	
+	
+	@Transactional
+	public Boolean checkDupes(LocalDate s, LocalDate e, User u) {
+		ArrayList<Leave> c = findByUser(u);
+		int count = (int)c.stream()
+				.filter(x-> (x.getStartDate().isBefore(s) && x.getEndDate().isAfter(e)) ||
+						(x.getStartDate().isEqual(s) && x.getEndDate().isEqual(e)) ||
+						(x.getStartDate().isEqual(s) && x.getEndDate().isAfter(e)))
+				.count();
+		if(count>0) {
+			return true;}
+		return false;
+	}
+
+	@Override
+	@Modifying
+	@Transactional
+	public Boolean deductleave(Leave l, User u, Integer i) {
+		// TODO Auto-generated method stub
+		if(l.getType().equalsIgnoreCase("Annual")) {
+			Integer in = u.getLb().getAnnual();
+			Integer bal = in - i;
+			if(bal>=0) {
+			u.getLb().setAnnual(bal);
+			return true;}
+		}
+		else if(l.getType().equalsIgnoreCase("medical")) {
+			Integer in = u.getLb().getMedical();
+			Integer bal = in - i;
+			if(bal>=0) {
+			u.getLb().setMedical(bal);
+			return true;}
+		}
+		else if(l.getType().equalsIgnoreCase("compensation")) {
+			Integer in = u.getLb().getCompensation();
+			Integer bal = in - i;
+			if(bal>=0) {
+			u.getLb().setCompensation(bal);
+			return true;}
+		}
+		return false;
+	}
+
 	@Override
 	@Transactional
-	public Leave findByStartDateAndEndDate(LocalDate s, LocalDate e) {
+	public ArrayList<Leave> findByUser(User u) {
 		// TODO Auto-generated method stub
-		return lrepo.findByStartDateAndEndDate(s, e);
-	}
-	@Transactional
-	public Boolean checkDupes(LocalDate s, LocalDate e) {
-		Leave c = findByStartDateAndEndDate(s,e);
-		if(c!=null) {
-			return true;}
-		
-		return false;
+		return lrepo.findByUser(u);
 	}
 }
