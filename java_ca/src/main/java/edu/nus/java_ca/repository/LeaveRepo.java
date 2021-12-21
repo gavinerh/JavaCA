@@ -14,7 +14,7 @@ import edu.nus.java_ca.model.User;
 public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 
 	@Query("SELECT l FROM Leave l where l.leaveId = :Id")
-	public ArrayList<Leave> findLeaveById(@Param("Id") Long d);
+	Leave findLeaveById(@Param("Id") Long d);
 
 	//this is for checking EMPL LEAVE HISTORY
 	@Query("SELECT l FROM Leave l where l.user.userId = :uid")
@@ -22,28 +22,18 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	//public ArrayList<Leave> findLeaveByUser_UserIdLike(Long id);
 	
 	@Query("SELECT l FROM Leave l" 
-			+ " WHERE l.status=:APPLIED " 
-			+ "AND l.status= :UPDATED")
-	 
-	public ArrayList<Leave> findLeaveToApprove(@Param("APPLIED") LeaveStatus a, 
-			@Param("UPDATED") LeaveStatus u);
+			+ " WHERE l.status=:applied " 
+			+ "OR l.status= :updated")
+	public ArrayList<Leave> findLeaveToApprove(@Param("applied") LeaveStatus a, 
+			@Param("updated") LeaveStatus u);
 
 	@Query("SELECT l FROM Leave l WHERE year(l.startDate)=?1 AND month(l.startDate)=?2")
 	public ArrayList<Leave> getByYearandMonth(int year, int month);
 	
 	@Query("SELECT l FROM Leave l WHERE :date between l.startDate AND l.endDate")
 	public ArrayList<Leave> findLeaveByDate(@Param("date") LocalDate date);
-	
+
 	@Query("SELECT c from Leave c WHERE c.status='APPLIED' OR c.status='APPROVED' OR c.status='UPDATED'")
 	ArrayList<Leave> findAppliedLeaves();
-	
-	
-	
-	
-	
-	
-	@Query("SELECT l  FROM  Leave l WHERE l.user = :user")
-	public ArrayList<Leave>  findLeaveByUser(@Param("user")User user);
-
 	
 }

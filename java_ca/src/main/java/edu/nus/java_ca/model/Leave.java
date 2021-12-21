@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -21,10 +22,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name ="leave2")
 public class Leave {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer leaveId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long leaveId;
 	//uni directional so dont need to specify in User
-	@OneToOne
+	@ManyToOne
 	private User user;
 	@Column(name = "status", columnDefinition = "ENUM('APPLIED', 'APPROVED', 'UPDATED', 'CANCELLED', 'REJECTED','DELETED')")
 	@Enumerated(EnumType.STRING)
@@ -69,7 +70,7 @@ public class Leave {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
-	public Leave(Integer leaveId, User user, LeaveStatus status, String type, String reason, String workdissem,
+	public Leave(Long leaveId, User user, LeaveStatus status, String type, String reason, String workdissem,
 			LocalDate appliedDate,
 			LocalDate startDate,
 			LocalDate endDate) {
@@ -85,10 +86,10 @@ public class Leave {
 		this.endDate = endDate;
 	}
 
-	public Integer getLeaveId() {
+	public Long getLeaveId() {
 		return leaveId;
 	}
-	public void setLeaveId(Integer leaveId) {
+	public void setLeaveId(Long leaveId) {
 		this.leaveId = leaveId;
 	}
 	public User getUser() {
@@ -139,6 +140,12 @@ public class Leave {
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
+	public String getContactdetail() {
+		return contactdetail;
+	}
+	public void setContactdetail(String contactdetail) {
+		this.contactdetail = contactdetail;
+	}
 	@Override
 	public int hashCode() {
 		return Objects.hash(leaveId);
@@ -154,12 +161,13 @@ public class Leave {
 		Leave other = (Leave) obj;
 		return Objects.equals(leaveId, other.leaveId);
 	}
-	public String getContactdetail() {
-		return contactdetail;
+	@Override
+	public String toString() {
+		return "Leave [leaveId=" + leaveId + ", user=" + user + ", status=" + status + ", reason=" + reason
+				+ ", workdissem=" + workdissem + ", type=" + type + ", contactdetail=" + contactdetail
+				+ ", appliedDate=" + appliedDate + ", startDate=" + startDate + ", endDate=" + endDate + "]";
 	}
-	public void setContactdetail(String contactdetail) {
-		this.contactdetail = contactdetail;
-	}
+	
 
 	
 

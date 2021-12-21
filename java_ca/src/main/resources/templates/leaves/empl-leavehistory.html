@@ -2,29 +2,34 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragment/general.html :: headerfiles"/>
-<meta charset="ISO-8859-1">
+<head th:replace="fragments/general.html :: headerfiles"/>
 
 <body>
-	<header th:insert="fragment/general.html :: header"> </header>
-	<div th:replace="fragment/general.html :: menu"></div>
+	<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>
 
 	<h1>Eployee's Personal Leave History</h1>
-		<!-- some sessions code -->		
-		
-				<!-- some sessions code -->
-		 
+	
+		<!-- input form field to enter empl id --> 
 		<form action="#" th:object="${leave}" th:action="@{/leave/search}"
-		 method="post">
-	  		<fieldset>
-				Employee ID: <input type="text" th:field="*{user.userId}" />
-				<p th:if="${#fields.hasErrors('user.userId')}" th:errors="*{user.userId}"></p>
-			</fieldset>
-			<fieldset>
-				<input type="submit" value="Search"/>
-			</fieldset>
-			
-		</form> 
+		method="post">
+		<fieldset>
+			<input type="hidden" th:field="*{user.userId}">
+		</fieldset>
+  		<fieldset>
+		<fieldset>
+			Employee ID: <input type="text" th:field="*{user.userId}">
+			<p th:if="${#fields.hasErrors('user.userId')}" th:errors="*{user.userId}"></p>
+		</fieldset>
+			</select>
+		</fieldset>
+		<fieldset>
+			<input type="submit" value="Search"/>
+		</fieldset>
+
+<br /><br />
+
+	<a href="empl-leavehistory.html" th:href="@{/leave/hist}">Employee Leave History</a>
 
 	<h2 th:if="${not #lists.isEmpty(emleaves)}">Leaves: </h2>
 	<table th:if="${not #lists.isEmpty(emleaves)}" >
@@ -32,7 +37,7 @@
 			<th>Leave Id</th>
 			<th>Employee's Name</th>>
 			<th>Leave Type</th>
-		<!--	<th>Leave Balance</th> -->
+			<th>Leave Balance</th>
 			<th>Leave Application Date</th>
 			<th>Start Date</th>
 			<th>End Date</th>
@@ -40,10 +45,9 @@
 			<th>Work Dissemination</th>
 			<th>Status</th>
 		</tr>
-		
 		<tr th:each="leave:${emleaves}" >
 			<td th:text=${leave.leaveId}>Id</td>
-			<td th:text="${leave.user.firstName}"> Name</td>
+			<td th:text="${leave.user.firstname}"> Name</td>
 			<td th:text=${leave.type}>Leave Type</td>
 		<!--	<td th:text=${leave.user.bal}>Leave Balance</td> -->
 			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
@@ -51,11 +55,12 @@
 			<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
 			<td th:text=${leave.reason}>Reason</td>
 			<td th:text=${leave.workdissem}>Work Dissemination</td>
-			<td th:text=${leave.status}>status</td>			
+			<td th:text=${leave.status}>status</td>
+				
 		</tr>
 	</table>
-   	<br />
-	<div th:replace="fragment/general.html :: footer"></div>
+    <br/>
+	<div th:replace="fragments/general.html :: footer"></div>
 	
 </body>
 </html>

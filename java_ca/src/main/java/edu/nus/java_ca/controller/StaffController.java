@@ -21,8 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.nus.java_ca.model.Leave;
 import edu.nus.java_ca.model.LeaveStatus;
+import edu.nus.java_ca.model.SessionClass;
+import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
+import edu.nus.java_ca.service.UserService;
 import edu.nus.java_ca.validator.LeaveValidator;
 
 
@@ -41,6 +44,8 @@ public class StaffController {
 			LocalDate.of(2021,11,4),LocalDate.of(2021,12,25));
 	@Autowired
 	private LeaveService lservice;
+	@Autowired
+	private UserService uservice;
 	@Autowired
 	public void setLeaveService (LeaveServiceImpl lservice) {
 		this.lservice = lservice;
@@ -67,7 +72,11 @@ public class StaffController {
 	}
 
 	@PostMapping(value = "/leave/new")
-	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model) {
+	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession sessions) {
+		SessionClass session = (SessionClass)sessions.getAttribute("uSession");
+		String emailString = session.getEmail();
+		User user = uservice.findByUserEmail(emailString);
+		
 		if (result.hasErrors())
 			return("staff/staff-new-leave");
 		Long count;
@@ -80,6 +89,8 @@ public class StaffController {
 		LocalDate now = LocalDate.now();
 		leave.setAppliedDate(now);
 		leave.setStatus(LeaveStatus.APPLIED);
+		leave.setUser(user);
+		
 		lservice.createLeave(leave);
 		String message = "New course " + leave.getLeaveId()+" Created";
 		System.out.println(message);
@@ -87,11 +98,10 @@ public class StaffController {
 	}
 
 	@GetMapping(value = "/leave/edit/{id}")
-	public ModelAndView editLeavePage(@PathVariable ("id")Integer id) {
+	public ModelAndView editLeavePage(@PathVariable ("id")long id) {
 		ModelAndView mav = new ModelAndView("staff/leave-edit");
 		Leave leave = lservice.findLeaveById(id);
 		mav.addObject("leave", leave);
-		
 		return mav;
 	}
 
@@ -107,14 +117,14 @@ public class StaffController {
 		return "forward:/staff/leave/list";
 	}
 	@RequestMapping(value = "/leave/delete/{id}")
-	public String deleteLeave(@PathVariable("id") Integer id) {
+	public String deleteLeave(@PathVariable("id") Long id) {
 		Leave l = lservice.findLeaveById(id);
 		l.setStatus(LeaveStatus.DELETED);
 		lservice.changeLeave(l);
 		return "forward:/staff/leave/list";
 	}
 	@RequestMapping(value = "/leave/cancel/{id}")
-	public String cancelLeave(@PathVariable("id") Integer id) {
+	public String cancelLeave(@PathVariable("id") Long id) {
 		Leave l = lservice.findLeaveById(id);
 		l.setStatus(LeaveStatus.CANCELLED);
 		lservice.changeLeave(l);

@@ -21,7 +21,8 @@
 		<tr th:each="leave:${leaves}" class="table-row">
 			<td th:text=${leave.leaveId}>Id</td>
 			<td th:text="${#temporals.format(leave.startDate, 'dd/MM/yyyy')}">Start Date</td>
-			<td th:text="${#temporals.format(leave.endDate, 'dd/MM/yyyy')}">End Date</td>
+			<td th:text="${#temporals.format(leave.endDate, 'dd/MM/yyyy')}">End Date</td
+			>
 			<td th:text=${leave.reason}>reason</td>
 			<td th:text=${leave.status}>status</td>
 			<td th:text=${leave.type}>type</td>

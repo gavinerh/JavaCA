@@ -32,17 +32,17 @@
             <tbody>
               <tr th:each="user:${userlist}">
                 <th th:text=${user.userId} scope="row">1</th>
-                <td th:text="${user.firstName} + ' ' + ${user.lastName}">staff name</td>
-                <td th:text=${user.position}>position</td>
-				<td th:text="${user.approvingOfficer?.firstName} ?: 'n/a'">approving officer</td>                
-				<td><a th:href="@{/AdminUser/edit/}+${user.userId}"><span data-feather="edit"></span></a></td>
+                <td th:text=${user.firstName}>staff name</td>
+                <td th:text=${user.position}>Staff</td>
+                <td>[approving officer name]</td>
+                <td><a th:href="@{/AdminUser/edit/}+${user.userId}"><span data-feather="edit"></span></a></td>
                 <td><a th:href="@{/AdminUser/delete/}+${user.userId}"><span data-feather="trash-2"></span></a></td>
               </tr>
               
             </tbody>
           </table>
 
-          </table>
+        
         </div>
         </main>
 

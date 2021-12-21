@@ -51,23 +51,35 @@ public class LeaveServiceImpl implements LeaveService{
 		l.setStatus(LeaveStatus.CANCELLED);
 		lrepo.save(l);		
 	}
-	
+		
+	//Movement Register
+//	@Transactional
+//	public List<Leave> findLeavesByDate(LocalDate d) {
+//		List<Leave> LeavesbyDate = lrepo.findLeaveByDate(d);
+//		return LeavesbyDate;
+//	}
 	@Transactional
 	public List<Leave> findLeavesByYearandMonth(int yy, int mm){
 		List<Leave> LeavesByMMYY = lrepo.getByYearandMonth(yy, mm);
 		return LeavesByMMYY;			
 	}
-
+	
 	//Manager's function
+//	@Transactional
+//	public List<Leave> listLeavesByUserId(Long id) {
+//		
+//	 User user1 = uRepo.findByUserId(id);
+//		
+//		List<Leave> EmplLeave = lrepo.findLeaveByUser(user1);
+//		return EmplLeave;
+//	}
+
 	@Transactional
 	public List<Leave> listLeavesByUserId(Long id) {
-		
-	 User user1 = uRepo.findByUserId(id);
-		
-		List<Leave> EmplLeave = lrepo.findLeaveByUser(user1);
+		List<Leave> EmplLeave = lrepo.findLeaveByUserId(id);
 		return EmplLeave;
 	}
-
+	
 	@Override
 	@Transactional
 	public ArrayList<Leave> findAppliedLeaves() {
@@ -95,8 +107,8 @@ public class LeaveServiceImpl implements LeaveService{
 	}
 	
 	@Transactional
-	public Leave findLeaveById(Integer id) {
-		return lrepo.findById(id).get();
+	public Leave findLeaveById(Long id) {
+		return lrepo.findLeaveById(id);
 	}
 
 	

@@ -29,6 +29,9 @@ import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
 
 
+
+
+
 @Controller
 @RequestMapping("/leave")
 public class LeaveController {
@@ -51,6 +54,7 @@ public class LeaveController {
 		return "allleaves";
 	}
  
+	//Movement Register
 	@RequestMapping(value="/mvt-reg")
 	public String viewMvtReg(Model model) {
 		model.addAttribute("leave", new Leave());	
@@ -72,22 +76,22 @@ public class LeaveController {
 		return "forward:/leave/mvt-reg";
 	}
 	
+	//Subordinate leave history
 	//initial view of leave history of respective employee
-		@RequestMapping(value="/empl-leavehistory")
-		public String empLeaveHistSearchPage(Model model) {
-			model.addAttribute("leave", new Leave());
-			return "empl-leavehistory";
-		}
-		//after entering employee Id, cross map to staff history 
-		@PostMapping(value="/search")
-		public String searchLeavesByUserId(@RequestParam("user.userId") 
-			String UserId, Model model) {
-			ArrayList<Leave> lls = (ArrayList<Leave>) 
-					lservice.listLeavesByUserId(Long.parseLong(UserId));
-			model.addAttribute("emleaves", lls);
-			return "forward:/leave/empl-leavehistory";
-		}
-		
+	@RequestMapping(value="/empl-leavehistory")
+	public String empLeaveHistSearchPage(Model model) {
+		model.addAttribute("leave", new Leave());
+		return "empl-leavehistory";
+	}
+	//after entering employee Id, cross map to staff history 
+	@PostMapping(value="/search")
+	public String searchLeavesByUserId(@RequestParam("user.userId") 
+		String UserId, Model model) {
+		ArrayList<Leave> lls = (ArrayList<Leave>) 
+				lservice.listLeavesByUserId(Long.parseLong(UserId));
+		model.addAttribute("emleaves", lls);
+		return "forward:/leave/empl-leavehistory";
+	}
 		
 	//manager actions
 	@RequestMapping(value = "/list")
@@ -97,7 +101,7 @@ public class LeaveController {
 	}
 	
 	@RequestMapping(value = "/approve/{id}")
-	public String approveLeave(@PathVariable("id") Integer id) {
+	public String approveLeave(@PathVariable("id") Long id) {
 		lservice.approveLeave(lservice.findLeaveById(id));
 		//leave balance has to be reduced for corresponding user
 		return "forward:/leave/list";
@@ -105,7 +109,7 @@ public class LeaveController {
 	
 	//rejection require comment
 	@RequestMapping(value = "/reject/{id}")
-	public String rejectLeave(@PathVariable("id") Integer id) {
+	public String rejectLeave(@PathVariable("id") Long id) {
 		lservice.rejectLeave(lservice.findLeaveById(id));
 		return "forward:/leave/list";
 	}
