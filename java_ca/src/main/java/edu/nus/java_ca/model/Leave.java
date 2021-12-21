@@ -70,7 +70,7 @@ public class Leave {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
-	public Leave(Integer leaveId, User user, LeaveStatus status, String type, String reason, String workdissem,
+	public Leave(Long leaveId, User user, LeaveStatus status, String type, String reason, String workdissem,
 			LocalDate appliedDate,
 			LocalDate startDate,
 			LocalDate endDate) {
@@ -89,7 +89,7 @@ public class Leave {
 	public Long getLeaveId() {
 		return leaveId;
 	}
-	public void setLeaveId(Integer leaveId) {
+	public void setLeaveId(Long leaveId) {
 		this.leaveId = leaveId;
 	}
 	public User getUser() {

@@ -36,6 +36,7 @@
             <tbody>
     
          <tr th:each="leaves:${pendingleave}" class="table-row">
+         <td></td>
 			<td th:text="${leaves.user.firstName}">staff Name</td>
 			<td th:text="${leaves.user.position}">position</td> 
 			<td th:text="${#temporals.format(leaves.startDate, 'dd/MM/yyyy')}">Start Date</td>
@@ -47,15 +48,15 @@
 			<td th:text=${leaves.contactdetail}>Contact detail</td>
 			
 			<td>
-			<div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<div th:if="${#strings.equals(leaves.status, 'APPLIED')}">
 			<a href="#"
-				th:href="@{/manager/leave/approve/}+${leave.leaveId}">Approve</a>
+				th:href="@{/manager/leave/approve/}+${leaves.leaveId}">Approve</a>
 			</div>
 			</td>
 			<td>
-			<div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<div th:if="${#strings.equals(leaves.status, 'APPLIED')}">
 			<a href="#"
-				th:href="@{/manager/leave/reject/}+${leave.leaveId}">Reject</a>
+				th:href="@{/manager/leave/reject/}+${leaves.leaveId}">Reject</a>
 			</div>
 			</td>
 			

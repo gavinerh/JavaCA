@@ -60,7 +60,7 @@ public class ManagerApproveController {
 		User user = uservice.findByUserEmail(emailString);
 		Department department = user.getDepartment();
 		
-		ArrayList <Leave> pendingleave = (ArrayList<Leave>) lservice.listLeaveToApprove();
+		ArrayList <Leave> pendingleave = (ArrayList<Leave>) lservice.listAllLeaves();
 
 		model.addAttribute("pendingleave", pendingleave);
 		
