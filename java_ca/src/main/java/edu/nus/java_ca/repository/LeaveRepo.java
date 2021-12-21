@@ -23,8 +23,8 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	ArrayList<Leave> findLeaveByUser_UserIdLike(Long userId);
 	
 	@Query("SELECT l FROM Leave l" 
-			+ " WHERE l.status=:APPLIED " 
-			+ "OR l.status= :UPDATED" + " AND l.user = (SELECT u  FROM User u WHERE u.department =:DEPARTMENT)")
+			+ " WHERE (l.status=:APPLIED " 
+			+ "OR l.status= :UPDATED) " + " AND l.user in (SELECT u  FROM User u WHERE u.department =:DEPARTMENT)")
 	 public ArrayList<Leave> findLeaveToApprove(@Param("APPLIED") LeaveStatus a, 
 			@Param("UPDATED") LeaveStatus u, @Param ("DEPARTMENT")  Department department);
 
