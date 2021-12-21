@@ -11,9 +11,13 @@ import edu.nus.java_ca.model.User;
 
 public interface LeaveBalanceRepo extends JpaRepository<LeaveBalance, Integer> {
 	
-	List<LeaveBalance> findByBalId(Long balId);
+	LeaveBalance findByBalId(Integer balId);
 
 	LeaveBalance findByUserAndLeavetype(User u, String s);
 	
 	ArrayList<LeaveBalance> findByUser(User u);
+	
+	List<LeaveBalance> findAll();
+	
+	List<LeaveBalance> findByLeavetype(String leavetype);
 }

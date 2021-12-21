@@ -16,12 +16,12 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
 	@Autowired
 	LeaveBalanceRepo lbrepo;
 	
-	@Override
-	@Transactional
-	public List<LeaveBalance> findByBalId(Long balId) {
-		// TODO Auto-generated method stub
-		return lbrepo.findByBalId(balId);
-	}
+//	@Override
+//	@Transactional
+//	public List<LeaveBalance> findByBalId(Long balId) {
+//		// TODO Auto-generated method stub
+//		return lbrepo.findByBalId(balId);
+//	}
 
 	@Override
 	@Transactional
@@ -37,7 +37,7 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
 		return lbrepo.findAll();
 	}
 	@Transactional
-	public void saveLeavebalance(LeaveBalance lb) {
+	public void saveLeaveBalance(LeaveBalance lb) {
 		lbrepo.saveAndFlush(lb);
 	}
 
@@ -45,6 +45,18 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
 	public ArrayList<LeaveBalance> findByUser(User u) {
 		// TODO Auto-generated method stub
 		return lbrepo.findByUser(u);
+	}
+
+	@Override
+	public List<LeaveBalance> findByLeavetype(String leavetype) {
+		// TODO Auto-generated method stub
+		return lbrepo.findByLeavetype(leavetype);
+	}
+
+	@Override
+	public LeaveBalance findByBalId(Integer id) {
+		// TODO Auto-generated method stub
+		return lbrepo.findByBalId(id);
 	}
 	
 

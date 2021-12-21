@@ -8,12 +8,18 @@ import edu.nus.java_ca.model.User;
 
 public interface LeaveBalanceService {
 	
-	List<LeaveBalance> findByBalId(Long balId);
+	//List<LeaveBalance> findByBalId(Long balId);
 
 	LeaveBalance findByUserAndLeavetype(User u, String s);
 	
 	List<LeaveBalance> findall();
 	
 	ArrayList<LeaveBalance> findByUser(User u);
+	
+	List<LeaveBalance> findByLeavetype(String leavetype);
+	
+	LeaveBalance findByBalId(Integer id);
+	
+	void saveLeaveBalance(LeaveBalance lb);
 
 }

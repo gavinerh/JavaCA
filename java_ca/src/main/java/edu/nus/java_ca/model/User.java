@@ -48,7 +48,7 @@ public class User {
 	private boolean deleted = Boolean.FALSE;
 	
 	/**Container for LeaveBalance**/
-	@OneToMany(mappedBy = "user", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "user", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	Collection<LeaveBalance> lb = new ArrayList<LeaveBalance>();
 
 	public User() {

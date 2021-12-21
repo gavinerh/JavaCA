@@ -21,7 +21,7 @@ public class LeaveBalance {
 	private Integer balId;
 	private String leavetype;
 	private Integer balance;
-	@ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userid")
 	private User user;
 
@@ -85,6 +85,13 @@ public class LeaveBalance {
 			return false;
 		LeaveBalance other = (LeaveBalance) obj;
 		return Objects.equals(balId, other.balId);
+	}
+	
+	public LeaveBalance(String leavetype, Integer balance, User user) {
+		super();
+		this.leavetype = leavetype;
+		this.balance = balance;
+		this.user = user;
 	}
 
 }
