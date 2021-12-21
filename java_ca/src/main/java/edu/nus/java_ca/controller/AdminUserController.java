@@ -2,7 +2,9 @@ package edu.nus.java_ca.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.xml.transform.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.nus.java_ca.model.Position;
@@ -20,6 +23,7 @@ import edu.nus.java_ca.repository.UserRepository;
 
 
 import edu.nus.java_ca.service.UserServiceImpl;
+import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
 
 @Controller
@@ -33,17 +37,31 @@ public class AdminUserController {
 	UserService Uservice;
 	
 	@Autowired
+	SessionManagement sess;
+	
+	@Autowired
 	public void setUserService(UserServiceImpl UserviceImpl) {
 		this.Uservice = UserviceImpl;
 	}
 	
 	@RequestMapping({"/", ""})
-	public String dashboard(Model model) {
+	public String dashboard(Model model,HttpSession session, SessionStatus status) {
+	
+		
+		
+	String	em = sess.getUserEmail(session);
+User result = Uservice.findByUserEmail(em);
+	System.out.println(result.getLastName());
+	model.addAttribute("usernow", result);
+		
 		List<User> userlist = Uservice.findAll();
+		userlist.remove(result);
+		
 		model.addAttribute("userlist", userlist);
 		return "admin/users"; //folder is admin, users is the html
-	}
-	
+		}
+		
+	//1234
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public ModelAndView addUser() {
 		ModelAndView mav = new ModelAndView("admin/user-form", "user", new User());
@@ -64,6 +82,11 @@ public class AdminUserController {
 	
 	@RequestMapping(value = "/delete/{id}")
 	public String deleteMember(@PathVariable("id") Long id) {
+//		if (id==) {
+//			return "forward:/AdminUser/";
+//		}
+		
+		
 		
 		Uservice.deleteUser(Uservice.findByUserId(id));
 		return "forward:/AdminUser/";
