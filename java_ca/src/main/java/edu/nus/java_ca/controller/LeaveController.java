@@ -48,14 +48,14 @@ public class LeaveController {
 //	@Autowired
 //	private LeaveBalanceService lbservice;
 	
-	@RequestMapping(value="/all")
+	@RequestMapping(value="/leaves/all")
 	public String listAll(Model model) {
 		model.addAttribute("leaves", lservice.listAllLeaves());
-		return "allleaves";
+		return "leaves/allleaves";
 	}
  
 	//Movement Register
-	@RequestMapping(value="/mvt-reg")
+	@RequestMapping(value="/leaves/mvt-reg")
 	public String viewMvtReg(Model model) {
 		model.addAttribute("leave", new Leave());	
 		List<Integer> mthlist = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11);
@@ -63,7 +63,7 @@ public class LeaveController {
 		List<Integer> yrlist = Arrays.asList(year-1, year, year+1);
 		model.addAttribute("mthlist", mthlist);
 		model.addAttribute("yrlist", yrlist);
-		return "mvt-reg";
+		return "leaves/mvt-reg";
 	}
 	@PostMapping(value="/view") 
 	public String viewMvtRegChooseMth(@RequestParam("mth")String mth, 
@@ -73,15 +73,15 @@ public class LeaveController {
 		List<Leave> mls = lservice.findLeavesByYearandMonth
 				(yrparsed, mthparsed);
 		model.addAttribute("mvtleaves", mls);
-		return "forward:/leave/mvt-reg";
+		return "forward:/leave/leaves/mvt-reg";
 	}
 	
 	//Subordinate leave history
 	//initial view of leave history of respective employee
-	@RequestMapping(value="/empl-leavehistory")
+	@RequestMapping(value="/leaves/empl-leavehistory")
 	public String empLeaveHistSearchPage(Model model) {
 		model.addAttribute("leave", new Leave());
-		return "empl-leavehistory";
+		return "leaves/empl-leavehistory";
 	}
 	//after entering employee Id, cross map to staff history 
 	@PostMapping(value="/search")
@@ -90,28 +90,28 @@ public class LeaveController {
 		ArrayList<Leave> lls = (ArrayList<Leave>) 
 				lservice.listLeavesByUserId(Long.parseLong(UserId));
 		model.addAttribute("emleaves", lls);
-		return "forward:/leave/empl-leavehistory";
+		return "forward:/leave/leaves/empl-leavehistory";
 	}
 		
 	//manager actions
-	@RequestMapping(value = "/list")
+	@RequestMapping(value = "/leaves/list")
 	public String list(Model model) {
 		model.addAttribute("leaves", lservice.listLeaveToApprove());
-		return "leave-toapprove";
+		return "leaves/leave-toapprove";
 	}
 	
 	@RequestMapping(value = "/approve/{id}")
 	public String approveLeave(@PathVariable("id") Long id) {
 		lservice.approveLeave(lservice.findLeaveById(id));
 		//leave balance has to be reduced for corresponding user
-		return "forward:/leave/list";
+		return "forward:/leave/leaves/list";
 	}
 	
 	//rejection require comment
 	@RequestMapping(value = "/reject/{id}")
 	public String rejectLeave(@PathVariable("id") Long id) {
 		lservice.rejectLeave(lservice.findLeaveById(id));
-		return "forward:/leave/list";
+		return "forward:/leave/leaves/list";
 	}
 
 	
