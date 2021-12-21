@@ -101,7 +101,7 @@ public class StaffController {
 		leave.setAppliedDate(now);
 		leave.setStatus(LeaveStatus.APPLIED);
 		leave.setUser(u);
-		lbrepo.saveAndFlush(u.getLb());
+	
 		lservice.createLeave(leave);
 		String message = "New course " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
