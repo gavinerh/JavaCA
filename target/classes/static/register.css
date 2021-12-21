@@ -1,0 +1,36 @@
+
+.form-signin input[type="text"] {
+  margin-bottom: 0px;
+  margin-top: 0px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.select-options{
+	display: inline-block;
+	width: 40%;'
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 0px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.form-signin select {
+  margin-bottom: 0px;
+  margin-top: 10px;
+  display: inline-block;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* my sylesheet additions */
+h5{
+	display: inline-block;
+}
+
+.my-brand {
+  font-size: 5rem;
+  font-family: "Modak", cursive;
+}
