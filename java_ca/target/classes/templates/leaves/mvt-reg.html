@@ -1,8 +1,13 @@
-<!-- page for employee's leave history-->
-
+<!-- Movement Register Template -->
+<!-- This is a menu available for all users and 
+	upon clicking the hyperlink, 
+	the system displays details of all employees on leave 
+	during the current month and the category of leave. 
+	Users can also navigate to the previous and next month 
+	using a dropdown choice list. -->
+	
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head th:replace="fragment/layout-admin.html :: html_head" />
 
 <body>
@@ -15,25 +20,33 @@
           class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
           <h1 class="h2"></h1>
 
-	<h1>Employee's Personal Leave History</h1>
-		<!-- some sessions code -->		
+	<h1>Movement Register</h1>	
+	<!-- some sessions code -->
 	  </div>
 	<div class="table-responsive">
-	 
-		<form action="#" th:object="${leave}" th:action="@{/leave/search}"
-		 method="post">
-	  		<fieldset>
-				Employee ID: <input type="text" th:field="*{user.userId}" />
-				<p th:if="${#fields.hasErrors('user.userId')}" th:errors="*{user.userId}"></p>
-			</fieldset>
-			<fieldset>
-				<input type="submit" value="Search"/>
-			</fieldset>
-			
-		</form> 
 
-	<h2 th:if="${not #lists.isEmpty(emleaves)}">Leaves: </h2>
-	<table th:if="${not #lists.isEmpty(emleaves)}" >
+		<form action="#" th:object="${leave}" th:action="@{/leave/view}"
+		 method="post">
+		<fieldset>
+		Select Month: <select name="mth" style="height: 25px; width: 160px">
+			<option th:each="mthlist:${mthlist}" th:value="${mthlist}"
+			th:text="${mthlist}"></option>
+			</select>
+	<!--Select Date: <input type="date" name="startDate" th:field="*{startDate}"/>	-->
+		</fieldset>
+		<fieldset>
+		Select Year: <select name="yr" style="height: 25px; width: 160px">
+			<option th:each="yrlist:${yrlist}" th:value="${yrlist}"
+			th:text="${yrlist}"></option>
+			</select>
+		</fieldset>
+		<fieldset>
+			<input type="submit" value="View"/>
+		</fieldset>
+	</form>	
+	
+		<h2 th:if="${not #lists.isEmpty(mvtleaves)}">Leaves: </h2>
+	<table th:if="${not #lists.isEmpty(mvtleaves)}" >
 		<tr >
 			<th>Leave Id</th>
 			<th>Employee's Name</th>>
@@ -47,7 +60,7 @@
 			<th>Status</th>
 		</tr>
 		
-		<tr th:each="leave:${emleaves}" >
+		<tr th:each="leave:${mvtleaves}" >
 			<td th:text=${leave.leaveId}>Id</td>
 			<td th:text="${leave.user.firstName}"> Name</td>
 			<td th:text=${leave.type}>Leave Type</td>
