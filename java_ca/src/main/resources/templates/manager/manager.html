@@ -36,12 +36,12 @@
             <tbody>
     
          <tr th:each="leaves:${pendingleave}" class="table-row">
-			<td th:text=${leaves.user.firstName}>staff Name</td>
-			<td th:text=${leaves.user.position}>position</td> 
+			<td th:text="${leaves.user.firstName}">staff Name</td>
+			<td th:text="${leaves.user.position}">position</td> 
 			<td th:text="${#temporals.format(leaves.startDate, 'dd/MM/yyyy')}">Start Date</td>
 			<td th:text="${#temporals.format(leaves.endDate, 'dd/MM/yyyy')}">End Date</td>
 			<td th:text=${leaves.reason}>reason</td>
-			<td th:text=${leaves.status}>status</td>
+			<td th:text="${leaves.status}">status</td>
 			<td th:text=${leaves.type}>type</td>
 			<td th:text=${leaves.workdissem}>Work Dissem</td>
 			<td th:text=${leaves.contactdetail}>Contact detail</td>

@@ -62,7 +62,7 @@ public class ManagerApproveController {
 		
 		Collection <Leave> pendingleave = lservice.listLeaveToApprove();
 
-		model.addAttribute("pendingleave", lservice.findAppliedLeaves());
+		model.addAttribute("pendingleave", pendingleave);
 		
 		return "manager/manager";
 	}

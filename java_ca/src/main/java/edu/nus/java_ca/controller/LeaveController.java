@@ -93,7 +93,7 @@ public class LeaveController {
 	}
 	
 	@RequestMapping(value = "/approve/{id}")
-	public String approveLeave(@PathVariable("id") Integer id) {
+	public String approveLeave(@PathVariable("id") Long id) {
 		lservice.approveLeave(lservice.findLeaveById(id));
 		//leave balance has to be reduced for corresponding user
 		return "forward:/leave/list";
@@ -101,7 +101,7 @@ public class LeaveController {
 	
 	//rejection require comment
 	@RequestMapping(value = "/reject/{id}")
-	public String rejectLeave(@PathVariable("id") Integer id) {
+	public String rejectLeave(@PathVariable("id") Long id) {
 		lservice.rejectLeave(lservice.findLeaveById(id));
 		return "forward:/leave/list";
 	}
