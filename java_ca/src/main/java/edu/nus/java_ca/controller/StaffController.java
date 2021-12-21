@@ -1,7 +1,7 @@
 package edu.nus.java_ca.controller;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -20,10 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.SessionClass;
 import edu.nus.java_ca.model.User;
-import edu.nus.java_ca.repository.LeaveBalanceRepo;
+import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
 import edu.nus.java_ca.service.UserService;
@@ -39,8 +40,9 @@ public class StaffController {
 	  protected void initBinder(WebDataBinder binder) {
 		binder.addValidators(new LeaveValidator());
 	  }
+	
 	@Autowired
-	LeaveBalanceRepo lbrepo;
+	LeaveBalanceService lbservice;
 	@Autowired
 	private LeaveService lservice;
 	@Autowired
@@ -74,17 +76,30 @@ public class StaffController {
 	}
 	
 	@GetMapping(value = "/leave/new")
-	public ModelAndView newLeave() {
+	public ModelAndView newLeave(HttpSession ses) {
 		ModelAndView mav = new ModelAndView("staff/staff-new-leave");
+		User u = user(ses);
+		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
+		ArrayList<String> s = new ArrayList<String>();
+		for(LeaveBalance b:lb) {
+			s.add(b.getLeavetype());
+		}
 		mav.addObject("leave", new Leave());
+		mav.addObject("types",s);
 		return mav;
 	}
 
 	@PostMapping(value = "/leave/new")
 	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses) {
+		User u = user(ses);
+		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
+		ArrayList<String> s = new ArrayList<String>();
+		for(LeaveBalance b:lb) {
+			s.add(b.getLeavetype());
+		}
+		model.addAttribute("types",s);
 		if (result.hasErrors()){
 			return("staff/staff-new-leave");}
-		User u = user(ses);
 		if(lservice.checkDupes(leave.getStartDate(), leave.getEndDate(),u)) {
 			model.addAttribute("errormsg", "**You've already Applied the same period**");
 			return("staff/staff-new-leave");
@@ -105,8 +120,8 @@ public class StaffController {
 		lservice.createLeave(leave);
 		String message = "New course " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
-		System.out.println(u.getLb());
-		return "forward:/staff/leave/list";}
+		u.getLb().forEach(System.out::println);
+		return "redirect:/home";}
 	}
 
 	@GetMapping(value = "/leave/edit/{id}")

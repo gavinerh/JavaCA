@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import edu.nus.java_ca.model.Department;
 import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.repository.LeaveBalanceRepo;
 import edu.nus.java_ca.repository.LeaveRepo;
 import edu.nus.java_ca.repository.UserRepository;
 
@@ -32,6 +34,8 @@ public class LeaveServiceImpl implements LeaveService{
 	
 	@Autowired
 	UserRepository uRepo;
+	@Autowired
+	LeaveBalanceRepo lbrepo;
 
 	//Base function	
 	@Transactional
@@ -139,28 +143,13 @@ public class LeaveServiceImpl implements LeaveService{
 	@Modifying
 	@Transactional
 	public Boolean deductleave(Leave l, User u, Integer i) {
-		// TODO Auto-generated method stub
-//		if(l.getType().equalsIgnoreCase("Annual")) {
-//			Integer in = u.getLb().getAnnual();
-//			Integer bal = in - i;
-//			if(bal>=0) {
-//			u.getLb().setAnnual(bal);
-//			return true;}
-//		}
-//		else if(l.getType().equalsIgnoreCase("medical")) {
-//			Integer in = u.getLb().getMedical();
-//			Integer bal = in - i;
-//			if(bal>=0) {
-//			u.getLb().setMedical(bal);
-//			return true;}
-//		}
-//		else if(l.getType().equalsIgnoreCase("compensation")) {
-//			Integer in = u.getLb().getCompensation();
-//			Integer bal = in - i;
-//			if(bal>=0) {
-//			u.getLb().setCompensation(bal);
-//			return true;}
-//		}
+		LeaveBalance lb = lbrepo.findByUserAndLeavetype(u, l.getType());
+		Integer in = lb.getBalance();
+		Integer bal = in - i;
+		if(bal>=0) {
+			lb.setBalance(bal);
+			lbrepo.saveAndFlush(lb);
+			return true;}
 		return false;
 	}
 

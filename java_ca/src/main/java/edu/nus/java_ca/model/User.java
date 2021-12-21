@@ -46,6 +46,7 @@ public class User {
 	@ManyToOne
 	private User approvingOfficer;
 	private boolean deleted = Boolean.FALSE;
+	
 	/**Container for LeaveBalance**/
 	@OneToMany(mappedBy = "user", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	Collection<LeaveBalance> lb = new ArrayList<LeaveBalance>();
