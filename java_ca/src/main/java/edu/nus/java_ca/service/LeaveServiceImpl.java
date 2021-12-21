@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import edu.nus.java_ca.model.Department;
 import edu.nus.java_ca.model.Leave;
 import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.User;
@@ -82,9 +83,9 @@ public class LeaveServiceImpl implements LeaveService{
 	}
 	
 	@Transactional
-	public List<Leave> listLeaveToApprove() {
+	public List<Leave> listLeaveToApprove(Department d) {
 		List<Leave> LeavetoApprove = lrepo.findLeaveToApprove(LeaveStatus.APPLIED, 
-				LeaveStatus.UPDATED);
+				LeaveStatus.UPDATED,d);
 		return LeavetoApprove;
 	}	
 	@Modifying //if its CUD need to inform server its not a readonly query

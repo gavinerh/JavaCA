@@ -60,7 +60,7 @@ public class ManagerApproveController {
 		User user = uservice.findByUserEmail(emailString);
 		Department department = user.getDepartment();
 		
-		ArrayList <Leave> pendingleave = (ArrayList<Leave>) lservice.listAllLeaves();
+		ArrayList <Leave> pendingleave = (ArrayList<Leave>) lservice.listLeaveToApprove(department);
 
 		model.addAttribute("pendingleave", pendingleave);
 		
@@ -75,14 +75,14 @@ public class ManagerApproveController {
 		eService.sendEmailApprove(leave);
 		
 		
-		return "forward:/manager/home";
+		return "forward:/manager/manager";
 	}
 	
 	@RequestMapping(value = "/leave/reject/{id}")
 	public String rejectLeave(@PathVariable("id") Long id) {
 		Leave leave = lservice.findLeaveById(id);
 		lservice.rejectLeave(leave);
-		return "forward:/manager/home";
+		return "forward:/manager/manager";
 	}
 	
 	public boolean checkManager (HttpSession sessions)

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.nus.java_ca.model.Department;
 import edu.nus.java_ca.model.Leave;
 
 public interface LeaveService {
@@ -18,7 +19,7 @@ public interface LeaveService {
 	public List<Leave> listLeavesByUserId(Long id);
 	ArrayList<Leave> findAppliedLeaves();
 	public List<Leave> listAllLeaves();
-	public List<Leave> listLeaveToApprove();
+	public List<Leave> listLeaveToApprove(Department d);
 	public void approveLeave(Leave l);
 	public void rejectLeave(Leave l);
 	public Leave findLeaveById(Long id);
