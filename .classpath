@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="java_ca/.mvn/wrapper"/>
-	<classpathentry kind="src" path="java_ca/src/main/java"/>
-	<classpathentry excluding="edu/nus/java_ca/LeaveTestCase/" kind="src" path="java_ca/src/test/java"/>
-	<classpathentry kind="src" path="java_ca/src/test/java/edu/nus/java_ca/LeaveTestCase"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
