@@ -8,12 +8,12 @@
 	
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/general.html :: headerfiles"/>
+<head th:replace="fragment/general.html :: headerfiles"/>
 <meta charset="ISO-8859-1">
 
 <body>
-	<header th:insert="fragments/general.html :: header"> </header>
-	<div th:replace="fragments/general.html :: menu"></div>
+	<header th:insert="fragment/general.html :: header"> </header>
+	<div th:replace="fragment/general.html :: menu"></div>
 	<h1>Movement Register</h1>
 	
 	<!-- pull all leaves for this mth plus details -->
@@ -69,7 +69,7 @@
 	</table>	
 	
 	<br />
-	<div th:replace="fragments/general.html :: footer"></div>
+	<div th:replace="fragment/general.html :: footer"></div>
 	
 </body>
 </html>
