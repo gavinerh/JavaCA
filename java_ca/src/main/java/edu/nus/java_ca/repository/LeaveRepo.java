@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import edu.nus.java_ca.model.Department;
 import edu.nus.java_ca.model.Leave;
 import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.User;
@@ -23,10 +24,9 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	
 	@Query("SELECT l FROM Leave l" 
 			+ " WHERE l.status=:APPLIED " 
-			+ "AND l.status= :UPDATED")
-	 
-	public ArrayList<Leave> findLeaveToApprove(@Param("APPLIED") LeaveStatus a, 
-			@Param("UPDATED") LeaveStatus u);
+			+ "OR l.status= :UPDATED" + " AND l.user = (SELECT u  FROM User u WHERE u.department =:DEPARTMENT)")
+	 public ArrayList<Leave> findLeaveToApprove(@Param("APPLIED") LeaveStatus a, 
+			@Param("UPDATED") LeaveStatus u, @Param ("DEPARTMENT")  Department department);
 
 	@Query("SELECT l FROM Leave l WHERE :date between l.startDate AND l.endDate")
 	public ArrayList<Leave> findLeaveByDate(@Param("date") LocalDate date);
