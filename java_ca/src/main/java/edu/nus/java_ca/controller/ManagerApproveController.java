@@ -75,14 +75,14 @@ public class ManagerApproveController {
 		eService.sendEmailApprove(leave);
 		
 		
-		return "forward:/manager/manager";
+		return "forward:/manager/home";
 	}
 	
 	@RequestMapping(value = "/leave/reject/{id}")
 	public String rejectLeave(@PathVariable("id") Long id) {
 		Leave leave = lservice.findLeaveById(id);
 		lservice.rejectLeave(leave);
-		return "forward:/manager/manager";
+		return "forward:/manager/home";
 	}
 	
 	public boolean checkManager (HttpSession sessions)

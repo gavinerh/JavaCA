@@ -26,9 +26,12 @@ public class EmailService {
     public void sendEmailApprove(Leave leave) {
 
         SimpleMailMessage msg = new SimpleMailMessage();
+        String subject = "Your " +leave.getType() + "leave is approved";
+        String content = "Your " +leave.getType() + "leave from" + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is approved.";
+        		
         msg.setTo(leave.getUser().getEmail());
-        msg.setSubject("Leave Application is approved");
-        msg.setText("");
+        msg.setSubject(subject);
+        msg.setText(content);
 
         javaMailSender.send(msg);
 
