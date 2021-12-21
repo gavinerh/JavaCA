@@ -10,5 +10,5 @@ public interface SessionManagement {
 	void createSession(HttpSession session, User user);
 	void removeSession(HttpSession session, SessionStatus status);
 	boolean isLoggedIn(HttpSession session, SessionStatus status);
-
+	String getUserEmail(HttpSession session);
 }

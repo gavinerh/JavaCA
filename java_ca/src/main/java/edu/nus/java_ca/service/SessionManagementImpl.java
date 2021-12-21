@@ -50,6 +50,12 @@ public class SessionManagementImpl implements SessionManagement{
 		return true;
 	}
 	
+	@Override
+	public String getUserEmail(HttpSession session) {
+		SessionClass sClass = (SessionClass) session.getAttribute("uSession");
+		return sClass.getEmail();
+	}
+	
 	
 
 }

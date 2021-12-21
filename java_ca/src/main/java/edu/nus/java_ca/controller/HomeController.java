@@ -30,14 +30,6 @@ public class HomeController {
 	@Autowired
 	SessionManagement sess;
 	
-	// display pre-login page
-//	@RequestMapping({"/", ""})
-//	public String preLogin(Model model) {
-//		User user = new User();
-//		model.addAttribute("user", user);
-//		return "login/unloggedIn";
-//	}
-	
 	// display register new user form
 	@RequestMapping("/register")
 	public String register(Model model) {
