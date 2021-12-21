@@ -23,7 +23,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Leave {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer leaveId;
+	private Long leaveId;
 	//uni directional so dont need to specify in User
 	@ManyToOne
 	private User user;
@@ -86,7 +86,7 @@ public class Leave {
 		this.endDate = endDate;
 	}
 
-	public Integer getLeaveId() {
+	public Long getLeaveId() {
 		return leaveId;
 	}
 	public void setLeaveId(Integer leaveId) {
