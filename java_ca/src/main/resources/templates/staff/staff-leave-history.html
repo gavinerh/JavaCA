@@ -1,0 +1,76 @@
+<!--page for staff themself history-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragment/layout-staff.html :: html_head" />
+
+<body>
+	<div th:replace="fragment/layout-staff.html :: nav_topbar" />
+	<div th:replace="fragment/layout-staff.html :: nav_sidebar" />
+
+	<!-- YOUR CONTENT GOES HERE -->
+	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+		<!-- FORM -->
+		<div class="pt-3 col-md-7 col-lg-8">
+<style>
+    .error {
+        color: red;
+    }
+</style>
+			<h4 class="mb-3">Staff Leave History</h4>
+		<!-- some sessions code -->		 
+
+	<h2 th:if="${#lists.isEmpty(leaves)}">No Leave Applied</h2>
+	<table th:if="${not #lists.isEmpty(leaves)}" >
+		<tr >
+			<th >Leave Id</th>
+			<th >Start Date</th>
+			<th >End Date</th>
+			<th >Reason</th>
+			<th >Status</th>
+			<th >Leave Type</th>
+			<th >Work Dissemination</th>
+			<th >Contact Details</th >
+		</tr>
+		<tr th:each="leave:${leaves}" class="table-row">
+			<td th:text=${leave.leaveId}>Id</td>
+			<td th:text="${#temporals.format(leave.startDate, 'dd/MM/yyyy')}">Start Date</td>
+			<td th:text="${#temporals.format(leave.endDate, 'dd/MM/yyyy')}">End Date</td>
+			<td th:text=${leave.reason}>reason</td>
+			<td th:text=${leave.status}>status</td>
+			<td th:text=${leave.type}>type</td>
+			<td th:text=${leave.workdissem}>Work Dissem</td>
+			<td th:text=${leave.contactdetail}>Contact detail</td>
+			
+			<td>
+			<div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<a href="#"
+				th:href="@{/staff/leave/edit/}+${leave.leaveId}">Edit</a>
+			</div>
+			</td>
+			<td>
+			<div <div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<a href="#"
+				th:href="@{/staff/leave/delete/}+${leave.leaveId}">Delete</a>
+			</div>
+			</td>
+			<td>
+			<div
+				th:if="${#strings.equals(leave.status, 'APPROVED')}">
+				<a th:href="@{/staff/leave/cancel/}+${leave.leaveId}">Cancel</a>
+			</div>
+			</td>
+		</tr>
+	</table>
+	
+
+	<div class="pagination">
+          <a class="paginate" th:href="@{/staff/leave/backward/}+${currentPage}">&laquo;</a>
+          <a class="paginate" th:href="@{/staff/leave/navigate(pageNo=1)}">1</a>
+          <a class="paginate" th:href="@{/staff/leave/navigate(pageNo=2)}">2</a>
+          <a class="paginate" th:href="@{/staff/leave/navigate(pageNo=3)}">3</a>
+          <a class="paginate" th:href="@{/staff/leave/forward/}+${currentPage}">&raquo;</a>
+     </div>
+</body>
+</html>

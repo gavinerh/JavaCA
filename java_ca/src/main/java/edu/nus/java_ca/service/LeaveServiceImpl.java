@@ -8,6 +8,9 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
@@ -159,4 +162,21 @@ public class LeaveServiceImpl implements LeaveService{
 		// TODO Auto-generated method stub
 		return lrepo.findByUser(u);
 	}
+	
+	@Override
+	public List<Leave> listAllLeaves1() {
+		List<Leave> list = lrepo.findAll();
+		return list;
+	}
+	
+	@Override
+	public List<Leave> getAllLeaves(int pageNo, int pageSize){
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		
+		Page<Leave> pageResult = lrepo.findAll(paging);
+		
+		List<Leave> list = pageResult.getContent();
+		
+		return list;
+}
 }
