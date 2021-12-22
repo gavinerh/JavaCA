@@ -2,6 +2,7 @@ package edu.nus.java_ca.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ import edu.nus.java_ca.model.Leave;
 import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.repository.HolidayRepo;
 import edu.nus.java_ca.repository.LeaveBalanceRepo;
 import edu.nus.java_ca.repository.LeaveRepo;
 import edu.nus.java_ca.repository.UserRepository;
@@ -28,15 +30,16 @@ public class LeaveServiceImpl implements LeaveService{
 	
 	final Set<String> weekends = Set.of("SATURDAY","SUNDAY");
 	//Set of holidays in singapore 2021
-	final Set<LocalDate> holidays = Set.of(LocalDate.of(2021,1,1),LocalDate.of(2021,2,12),LocalDate.of(2021,2,13),LocalDate.of(2021,4,2),
-			LocalDate.of(2021,5,1),LocalDate.of(2021,5,13),LocalDate.of(2021,2,26),LocalDate.of(2021,7,20),LocalDate.of(2021,8,9),
-			LocalDate.of(2021,11,4),LocalDate.of(2021,12,25));
-	
+	private ArrayList<Object> holidays = new ArrayList<>();
 	@Autowired
 	UserRepository uRepo;
 	@Autowired
 	LeaveBalanceRepo lbrepo;
-
+	@Autowired
+	HolidayRepo hrepo;
+	public LeaveServiceImpl() {
+		this.holidays = (ArrayList)hrepo.findAll();
+	}
 	//Base function	
 	@Transactional
 	public List<Leave> listAllLeaves() {
@@ -159,4 +162,12 @@ public class LeaveServiceImpl implements LeaveService{
 		// TODO Auto-generated method stub
 		return lrepo.findByUser(u);
 	}
+
+	@Override
+	@Transactional
+	public void addHoliday(LocalDate d) {
+		// TODO Auto-generated method stub
+		holidays.add(d);
+	}
+	
 }
