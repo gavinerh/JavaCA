@@ -34,9 +34,7 @@ public interface LeaveService {
 	Long countLeaves(LocalDate s, LocalDate e);
 	Boolean checkDupes(LocalDate s, LocalDate e, User u);
 	Boolean deductleave(Leave l, User u, Integer i);
-
-	//add holiday to the calendar
-	void addHoliday(LocalDate d);
+	Boolean refundleave(Leave l, User u, Integer i);
 
 	//for pangination
 		public List<Leave> listAllLeaves1();

@@ -10,6 +10,8 @@ public interface HolidayService {
 	
 	ArrayList<Holidays> findAll();
 	
+	ArrayList<LocalDate> findHolidays();
+	
 	Holidays findById(Integer i);
 	
 	Holidays findByHoliday(LocalDate d);
