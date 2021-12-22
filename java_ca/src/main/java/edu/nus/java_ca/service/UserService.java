@@ -14,5 +14,4 @@ public interface UserService {
 	void deleteUser(User user);
 	List<User> findByPosition(Position position);
 	void deleteUserById(Long id);
-	ArrayList<User> findAllUserId();
 }

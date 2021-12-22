@@ -59,11 +59,5 @@ public class UserServiceImpl implements UserService{
 		uRepo.deleteById(id);
 		
 	}
-	
-	@Override
-	public ArrayList<User> findAllUserId() {
-		// TODO Auto-generated method stub
-		return uRepo.findAllUserId();
-	}
 
 }

@@ -50,21 +50,13 @@ public class AdminLeaveTypeController {
 		if (bindingResult.hasErrors()) {
 			return "admin/leave-type-form";
 		}
-
-		ArrayList<User> userList = uService.findAllUserId();
+		List<User> userlist = uService.findAll();
 		
-		for (int i = 0; i < userList.size(); i++) {
-			User x = userList.get(i);
-			LeaveBalance newlb = new LeaveBalance(lb.getLeavetype(), lb.getBalance(), x);
-			x.addLeaveBalance(newlb);
+		for (User staffUser : userlist) {
+			LeaveBalance newlb = new LeaveBalance(lb.getLeavetype(), lb.getBalance(), staffUser);
+			staffUser.addLeaveBalance(newlb);
 			lbService.saveLeaveBalance(newlb);
 		}
-		
-//		for (User staffUser : userList) {
-//			lb.setUser(staffUser);
-//			staffUser.addLeaveBalance(lb);
-//			lbService.saveLeaveBalance(lb);
-//		}
 
 		return "forward:/AdminType";
 	}
