@@ -1,7 +1,11 @@
 package edu.nus.java_ca.controller;
 
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -50,18 +54,26 @@ public class LeaveController {
 		return "allleaves";
 	}
  
-	@RequestMapping(value="/mvt-reg")
+	//Movement Register
+	@RequestMapping(value="/leaves/mvt-reg")
 	public String viewMvtReg(Model model) {
 		model.addAttribute("leave", new Leave());	
-		return "mvt-reg";
+		List<Integer> mthlist = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11);
+		int year = Year.now().getValue();
+		List<Integer> yrlist = Arrays.asList(year-1, year, year+1);
+		model.addAttribute("mthlist", mthlist);
+		model.addAttribute("yrlist", yrlist);
+		return "leaves/mvt-reg";
 	}
 	@PostMapping(value="/view") 
-	public String viewMvtRegChooseMth(@RequestParam("startDate")
-	@DateTimeFormat(pattern="dd-MM-yyyy") LocalDate startDate, Model model) {
-		model.addAttribute("startDate", startDate);		
-		ArrayList<Leave> mls = (ArrayList<Leave>) lservice.findLeavesByDate(startDate);
+	public String viewMvtRegChooseMth(@RequestParam("mth")String mth, 
+			@RequestParam("yr")String yr, Model model) throws ParseException {				
+		int mthparsed = Integer.parseInt(mth);
+		int yrparsed = Integer.parseInt(yr);
+		List<Leave> mls = lservice.findLeavesByYearandMonth	//NEW QUERY IN LSERVICE
+				(yrparsed, mthparsed);
 		model.addAttribute("mvtleaves", mls);
-		return "forward:/leave/mvt-reg";
+		return "forward:/leave/leaves/mvt-reg";
 	}
 	
 	//initial view of leave history of respective employee

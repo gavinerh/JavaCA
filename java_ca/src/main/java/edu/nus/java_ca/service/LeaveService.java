@@ -27,7 +27,7 @@ public interface LeaveService {
 	public void approveLeave(Leave l);
 	public void rejectLeave(Leave l);
 	public Leave findLeaveById(Long id);
-	public List<Leave> findLeavesByDate(LocalDate d);
+	public List<Leave> findLeavesByYearandMonth(int yy, int mm);	//NEW QUERY
 	//for staff
 	Page<Leave> findByUser(User u,Pageable p);
 	Long countLeaves(LocalDate s, LocalDate e);

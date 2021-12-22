@@ -8,26 +8,43 @@
 	
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/general.html :: headerfiles"/>
-<meta charset="ISO-8859-1">
+<head th:replace="fragment/layout-admin.html :: html_head" />
 
 <body>
-	<header th:insert="fragments/general.html :: header"> </header>
-	<div th:replace="fragments/general.html :: menu"></div>
-	<h1>Movement Register</h1>
+	<div th:replace="fragment/layout-manager.html :: nav_topbar" />
+	<div th:replace="fragment/layout-manager.html :: nav_sidebar" />
 	
-	<!-- pull all leaves for this mth plus details -->
-	
-	<!-- dropdown box providing previous and next mth --> 
-	<form action="#" th:object="${leave}" th:action="@{/leave/selectmth}"
+	 <!--CONTENT-->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div
+          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
+          <h1 class="h2">Movement Register</h1>
+
+	<!-- some sessions code -->
+
+	  </div>
+	<div class="table-responsive">
+
+		<form action="#" th:object="${leave}" th:action="@{/leave/view}"
 		 method="post">
 		<fieldset>
-			Select Month: <input type="date" name="startDate" th:field="*{startDate}"/>	
-		</fieldset>
+		<label>Select Month: </label><br />
+		<select name="mth" style="height: 25px; width: 160px">
+			<option th:each="mthlist:${mthlist}" th:value="${mthlist}"
+			th:text="${mthlist}"></option>
+			</select>
+		</fieldset><br />
+		<fieldset>
+		<label>Select Year: </label><br />
+		<select name="yr" style="height: 25px; width: 160px">
+			<option th:each="yrlist:${yrlist}" th:value="${yrlist}"
+			th:text="${yrlist}"></option>
+			</select>
+		</fieldset><br />
 		<fieldset>
 			<input type="submit" value="View"/>
 		</fieldset>
-	</form>	
+	</form>	<br />
 	
 		<h2 th:if="${not #lists.isEmpty(mvtleaves)}">Leaves: </h2>
 	<table th:if="${not #lists.isEmpty(mvtleaves)}" >
@@ -35,31 +52,31 @@
 			<th>Leave Id</th>
 			<th>Employee's Name</th>>
 			<th>Leave Type</th>
-		<!--	<th>Leave Balance</th> -->
 			<th>Leave Application Date</th>
 			<th>Start Date</th>
 			<th>End Date</th>
 			<th>Reason</th>
 			<th>Work Dissemination</th>
 			<th>Status</th>
+			<th>Manager's Reason</th>
 		</tr>
 		
 		<tr th:each="leave:${mvtleaves}" >
 			<td th:text=${leave.leaveId}>Id</td>
 			<td th:text="${leave.user.firstName}"> Name</td>
 			<td th:text=${leave.type}>Leave Type</td>
-		<!--	<td th:text=${leave.user.bal}>Leave Balance</td> -->
 			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
 			<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Start Date</td>
 			<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
 			<td th:text=${leave.reason}>Reason</td>
 			<td th:text=${leave.workdissem}>Work Dissemination</td>
-			<td th:text=${leave.status}>status</td>			
+			<td th:text=${leave.status}>status</td>	
+			<td th:text="${leave.mreason}">Manager's Reason</td>		
 		</tr>
-	</table>	
-	
-	<br />
-	<div th:replace="fragments/general.html :: footer"></div>
-	
+	</table>
+	</div>
+	</main>
+	<div th:replace="fragment/layout-admin.html :: js_script" />
+    <br/>	
 </body>
 </html>
