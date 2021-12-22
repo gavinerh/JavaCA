@@ -65,7 +65,7 @@ public class StaffController {
 	@RequestMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/home";
+		return "redirect:/staff/list";
 
 	}
 	
@@ -118,10 +118,10 @@ public class StaffController {
 		leave.setUser(u);
 	
 		lservice.createLeave(leave);
-		String message = "New course " + leave.getLeaveId()+" Created ";
+		String message = "New Leave " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
 		u.getLb().forEach(System.out::println);
-		return "redirect:/home";}
+		return "redirect:/staff/list";}
 	}
 
 	@GetMapping(value = "/leave/edit/{id}")
