@@ -60,4 +60,10 @@ public class UserServiceImpl implements UserService{
 		
 	}
 
+	@Override
+	public List<User> findAllWithDeleted() {
+		// TODO Auto-generated method stub
+		return uRepo.findAllWithDeleted();
+	}
+
 }

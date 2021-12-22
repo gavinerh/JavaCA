@@ -23,5 +23,7 @@ public interface LeaveBalanceService {
 	void saveLeaveBalance(LeaveBalance lb);
 	
 	List<String> findAllLeaveTypes();
+	
+	void deleteLeaveBalanceByType(String leavetypename, User user);
 
 }
