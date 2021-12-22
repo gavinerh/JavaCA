@@ -28,8 +28,7 @@ public class Leave {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long leaveId;
 	//uni directional so dont need to specify in User
-	@ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-	@JoinColumn(name = "userid")
+	@ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
 	private User user;
 	@Column(name = "status", columnDefinition = "ENUM('APPLIED', 'APPROVED', 'UPDATED', 'CANCELLED', 'REJECTED','DELETED')")
 	@Enumerated(EnumType.STRING)
