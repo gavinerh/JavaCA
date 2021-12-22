@@ -1,5 +1,6 @@
 package edu.nus.java_ca.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.nus.java_ca.model.Position;
@@ -13,4 +14,5 @@ public interface UserService {
 	void deleteUser(User user);
 	List<User> findByPosition(Position position);
 	void deleteUserById(Long id);
+	ArrayList<User> findAllUserId();
 }

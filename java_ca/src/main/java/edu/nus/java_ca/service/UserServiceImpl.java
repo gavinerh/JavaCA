@@ -60,5 +60,10 @@ public class UserServiceImpl implements UserService{
 		
 	}
 	
+	@Override
+	public ArrayList<User> findAllUserId() {
+		// TODO Auto-generated method stub
+		return uRepo.findAllUserId();
+	}
 
 }

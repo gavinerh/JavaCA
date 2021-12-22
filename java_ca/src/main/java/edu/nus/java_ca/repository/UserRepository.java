@@ -1,5 +1,6 @@
 package edu.nus.java_ca.repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +37,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE u.position = :position AND u.deleted = false")
 	List<User> findByPosition(Position position);
 	
-	@Query("SELECT u FROM User u WHERE u.deleted = false")
+	@Query("SELECT DISTINCT u FROM User u WHERE u.deleted = false")
 	List<User> findAll();
+	
+	@Query("SELECT DISTINCT u FROM User u WHERE u.deleted = false")
+	ArrayList<User> findAllUserId();
 }
