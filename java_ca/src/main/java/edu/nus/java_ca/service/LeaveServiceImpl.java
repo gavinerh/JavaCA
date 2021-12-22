@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import edu.nus.java_ca.model.Department;
 import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.repository.LeaveBalanceRepo;
 import edu.nus.java_ca.repository.LeaveRepo;
 import edu.nus.java_ca.repository.UserRepository;
 
@@ -32,6 +34,8 @@ public class LeaveServiceImpl implements LeaveService{
 	
 	@Autowired
 	UserRepository uRepo;
+	@Autowired
+	LeaveBalanceRepo lbrepo;
 
 	//Base function	
 	@Transactional
@@ -120,18 +124,39 @@ public class LeaveServiceImpl implements LeaveService{
 		}
 		return count;
 	}
+	
+	
+	@Transactional
+	public Boolean checkDupes(LocalDate s, LocalDate e, User u) {
+		ArrayList<Leave> c = findByUser(u);
+		int count = (int)c.stream()
+				.filter(x-> (x.getStartDate().isBefore(s) && x.getEndDate().isAfter(e)) ||
+						(x.getStartDate().isEqual(s) && x.getEndDate().isEqual(e)) ||
+						(x.getStartDate().isEqual(s) && x.getEndDate().isAfter(e)))
+				.count();
+		if(count>0) {
+			return true;}
+		return false;
+	}
+
+	@Override
+	@Modifying
+	@Transactional
+	public Boolean deductleave(Leave l, User u, Integer i) {
+		LeaveBalance lb = lbrepo.findByUserAndLeavetype(u, l.getType());
+		Integer in = lb.getBalance();
+		Integer bal = in - i;
+		if(bal>=0) {
+			lb.setBalance(bal);
+			lbrepo.saveAndFlush(lb);
+			return true;}
+		return false;
+	}
+
 	@Override
 	@Transactional
-	public Leave findByStartDateAndEndDate(LocalDate s, LocalDate e) {
+	public ArrayList<Leave> findByUser(User u) {
 		// TODO Auto-generated method stub
-		return lrepo.findByStartDateAndEndDate(s, e);
-	}
-	@Transactional
-	public Boolean checkDupes(LocalDate s, LocalDate e) {
-		Leave c = findByStartDateAndEndDate(s,e);
-		if(c!=null) {
-			return true;}
-		
-		return false;
+		return lrepo.findByUser(u);
 	}
 }

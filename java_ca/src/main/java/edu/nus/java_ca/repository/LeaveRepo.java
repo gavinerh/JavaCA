@@ -38,5 +38,6 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	public ArrayList<Leave>  findLeaveByUser(@Param("user")User user);
 
 	Leave findByStartDateAndEndDate(LocalDate s, LocalDate e);
+	ArrayList<Leave> findByUser(User u);
 	
 }

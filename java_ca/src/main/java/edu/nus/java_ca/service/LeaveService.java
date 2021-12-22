@@ -6,6 +6,7 @@ import java.util.List;
 
 import edu.nus.java_ca.model.Department;
 import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.model.User;
 
 public interface LeaveService {
 	
@@ -25,7 +26,8 @@ public interface LeaveService {
 	public Leave findLeaveById(Long id);
 	public List<Leave> findLeavesByDate(LocalDate d);
 	//for staff
-	Leave findByStartDateAndEndDate(LocalDate s, LocalDate e);
+	ArrayList<Leave> findByUser(User u);
 	Long countLeaves(LocalDate s, LocalDate e);
-	Boolean checkDupes(LocalDate s, LocalDate e);
+	Boolean checkDupes(LocalDate s, LocalDate e, User u);
+	Boolean deductleave(Leave l, User u, Integer i);
 }

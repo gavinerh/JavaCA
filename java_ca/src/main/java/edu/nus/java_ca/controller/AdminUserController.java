@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import javax.xml.transform.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,14 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.repository.UserRepository;
-
-
-import edu.nus.java_ca.service.UserServiceImpl;
 import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
+import edu.nus.java_ca.service.UserServiceImpl;
 
 @Controller
 @RequestMapping("/AdminUser")
@@ -76,6 +74,13 @@ User result = Uservice.findByUserEmail(em);
 		if (bindingResult.hasErrors()) {
 			return "admin/user-form";
 		}
+		LeaveBalance lbAnnual = new LeaveBalance("annual", 0, user);
+		LeaveBalance lbCompensation = new LeaveBalance("compensation", 0, user);
+		LeaveBalance lbMedical = new LeaveBalance("medical", 0, user);
+		user.addLeaveBalance(lbAnnual);
+		user.addLeaveBalance(lbCompensation);
+		user.addLeaveBalance(lbMedical);
+		
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}

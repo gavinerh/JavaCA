@@ -2,36 +2,40 @@ package edu.nus.java_ca.model;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="leavebal")
+@Table(name = "leavebal")
 public class LeaveBalance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer balId;
-	private Integer medical=60;
-	private Integer annual;
-	private Integer compensation;
+	private String leavetype;
+	private Integer balance;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "userid")
+	private User user;
 
-	
 	public LeaveBalance() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	public LeaveBalance(Integer balId, Integer annual, Integer compensation) {
+
+	public LeaveBalance(Integer balId, String leavetype, Integer balance, User user) {
 		super();
 		this.balId = balId;
-		this.annual = annual;
-		this.compensation = compensation;
+		this.leavetype = leavetype;
+		this.balance = balance;
+		this.user = user;
 	}
 
 	public Integer getBalId() {
@@ -42,34 +46,35 @@ public class LeaveBalance {
 		this.balId = balId;
 	}
 
-	public Integer getMedical() {
-		return medical;
+	public String getLeavetype() {
+		return leavetype;
 	}
 
-	public void setMedical(Integer medical) {
-		this.medical = medical;
+	public void setLeavetype(String leavetype) {
+		this.leavetype = leavetype;
 	}
 
-	public Integer getAnnual() {
-		return annual;
+	public Integer getBalance() {
+		return balance;
 	}
 
-	public void setAnnual(Integer annual) {
-		this.annual = annual;
+	public void setBalance(Integer balance) {
+		this.balance = balance;
 	}
 
-	public Integer getCompensation() {
-		return compensation;
+	public User getUser() {
+		return user;
 	}
 
-	public void setCompensation(Integer compensation) {
-		this.compensation = compensation;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(balId);
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -81,8 +86,12 @@ public class LeaveBalance {
 		LeaveBalance other = (LeaveBalance) obj;
 		return Objects.equals(balId, other.balId);
 	}
-
-
 	
-	
+	public LeaveBalance(String leavetype, Integer balance, User user) {
+		super();
+		this.leavetype = leavetype;
+		this.balance = balance;
+		this.user = user;
+	}
+
 }

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<head th:replace="fragment/layout-admin.html :: html_head" />
+
+<body>
+	<div th:replace="fragment/layout-admin.html :: nav_topbar" />
+	<div th:replace="fragment/layout-admin.html :: nav_sidebar" />
+
+	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+		<!-- FORM -->
+		<div class="pt-3 col-md-7 col-lg-8">
+			<h4 class="mb-3">Edit Leave Entitlement</h4>
+			<form th:object="${lbuser}" method="post" th:action="@{/AdminLeave/edit}">
+				<div class="row g-3">
+					<div class="col-sm-4">
+						<label for="name" class="form-label fw-bold">First Name</label> 
+						<input th:field="*{user.firstName}" type="text" readonly
+							class="form-control-plaintext" id="firstName" value="" />
+					</div>
+
+					<div class="col-sm-4">
+						<label for="leavetype" class="form-label fw-bold">Last Name</label>
+						<input th:field="*{user.lastName}" type="text" readonly
+							class="form-control-plaintext" id="leavetype" value="" />
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-sm-4">
+						<label for="leavebalance" class="form-label fw-bold">Current
+							Leave Balance</label> 
+						<p th:text="*{balance}" type="text"
+							class="form-control-plaintext" />
+					</div>
+					
+					<div class="col-sm-4">
+						<label for="leavetype" class="form-label fw-bold">Leave Type</label>
+						<input th:field="*{leavetype}" type="text" readonly
+							class="form-control-plaintext" id="leavetype" value="" />
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-sm-4">
+						<label for="addmore" class="form-label fw-bold">Add More Leave</label> 
+						<input th:field="*{balance}" type="number" id="leave" min="1" max="36" />
+					</div>
+				</div>
+				<!-- saving data for leavebalance table -->
+				<input type="hidden" th:field="*{balId}" />
+				
+				<!-- saving data for user table -->
+				<input type="hidden" th:field="*{user.userId}" />
+				<!--  <input type="hidden" th:field="*{user.deleted}" />-->
+				<input type="hidden" th:field="*{user.department}" />
+				<input type="hidden" th:field="*{user.email}" />
+				<input type="hidden" th:field="*{user.lastLoginDate}" />
+				<input type="hidden" th:field="*{user.password}" />
+				<input type="hidden" th:field="*{user.position}" />
+				<input type="hidden" th:field="*{user.approvingOfficer}" />
+			
+				<div th:if="${#fields.hasAnyErrors()}">
+					<p th:each="err : ${#fields.allErrors()}" th:text="${err}"
+						style="color: red;" />
+				</div>
+
+				<div class="col-12">
+					<input class="mt-3 btn btn-primary me-2" type="submit" value="Submit" /> 
+					<input class="mt-3 btn btn-secondary" type="reset" value="Reset" />
+				</div>
+			</form>
+		</div>
+	</main>
+
+	<div th:replace="fragment/layout-admin.html :: js_script" />
+
+</body>
+</html>
