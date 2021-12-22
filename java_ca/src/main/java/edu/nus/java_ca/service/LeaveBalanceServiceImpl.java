@@ -59,5 +59,11 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
 		return lbrepo.findByBalId(id);
 	}
 	
+	@Override
+	public List<String> findAllLeaveTypes() {
+		// TODO Auto-generated method stub
+		return lbrepo.findAllLeaveTypes();
+	}
+	
 
 }

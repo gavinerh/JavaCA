@@ -48,9 +48,7 @@ public class staff1 {
 	    User result = Uservice.findByUserEmail(em);
 		System.out.println(result.getLastName());
 		model.addAttribute("usernow", result);	
-	    List<User> userlist = Uservice.findAll();
-		userlist.remove(result);
-		model.addAttribute("userlist", userlist);
+
 	    return "staff/staff"; 
 		}
 	
@@ -58,9 +56,8 @@ public class staff1 {
 	
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView editUser(@PathVariable Long id) {
-		ModelAndView mav = new ModelAndView("admin/user-form", "user", Uservice.findByUserId(id));
-		List<User> managerList = Uservice.findByPosition(Position.Manager);
-		mav.addObject("managerlist", managerList);
+		ModelAndView mav = new ModelAndView("staff/staff-edit", "user", Uservice.findByUserId(id));
+
 		return mav;
 	}
 
@@ -68,12 +65,11 @@ public class staff1 {
 	public String editUser(@ModelAttribute @Valid User user, BindingResult result, 
 			@PathVariable Long id) {
 		if (result.hasErrors()) {
-			return "admin/user-form";
+			return "staff/staff-edit";
 		}
 		Uservice.saveUser(user);
-		return "forward:/AdminUser/";
+		return "forward:/staff1/main";
 	}
-	
 	
 	
 	

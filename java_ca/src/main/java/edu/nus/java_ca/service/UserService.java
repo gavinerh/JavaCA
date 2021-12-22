@@ -1,5 +1,6 @@
 package edu.nus.java_ca.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.nus.java_ca.model.Position;

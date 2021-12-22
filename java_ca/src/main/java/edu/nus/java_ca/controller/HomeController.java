@@ -110,9 +110,9 @@ public class HomeController {
 		case Admin:
 			return "redirect:/AdminUser";
 		case Manager:
-			return "redirect:/manager/list";
+			return "redirect:/manager/home";
 		case Staff:
-			return "redirect:/staff/list";
+			return "redirect:/staff1/main";
 		}
 		return null;
 	}

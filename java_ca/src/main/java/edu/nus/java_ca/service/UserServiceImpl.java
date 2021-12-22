@@ -59,6 +59,5 @@ public class UserServiceImpl implements UserService{
 		uRepo.deleteById(id);
 		
 	}
-	
 
 }

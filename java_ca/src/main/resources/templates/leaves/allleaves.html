@@ -11,12 +11,13 @@
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div
           class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
-          <h1 class="h2">Leave List: To Approve</h1>
-    
-         <!-- some sessions code -->	
-         
-	    </div>
+          <h1 class="h2">Leave List: All</h1>
+
+	<!-- some sessions code -->
+	
+	  </div>
 	<div class="table-responsive">
+
 	<h2 th:if="${not #lists.isEmpty(leaves)}"></h2>
 	<table th:if="${not #lists.isEmpty(leaves)}" >
 		<tr >
@@ -28,31 +29,21 @@
 			<th>End Date</th>
 			<th>Reason</th>
 			<th>Work Dissemination(if any)</th>
-
 			<th>Status</th>
-			<th> </th>
+			<th>Manager's Reason</th>
+
 		</tr>
 		<tr th:each="leave:${leaves}" >
-			<td th:text=${leave.leaveId}>Id</td>
+			<td th:text="${leave.leaveId}">Id</td>
 			<td th:text="${leave.user.firstName}"> Name</td>
-			<td th:text=${leave.type}>Leave Type</td>
+			<td th:text="${leave.type}">Leave Type</td>
 			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
 			<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Start Date</td>
 			<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
-			<td th:text=${leave.reason}>Reason</td>
-			<td th:text=${leave.workdissem}>Work Dissemination</td>
-
-			<td th:text=${leave.status}>status</td>
-			<!--<td ><a href="approveLeave.html"
-				th:href="@{/leave/approve/}+${leave.leaveId}" 
-				th:utext="#{leave.approve}" >Approved<a></td>
-			<td ><a href="rejectLeave.html"
-				th:href="@{/leave/reject/}+${leave.leaveId}" 
-				th:utext="#{leave.reject}">Rejected</a></td>	
-			<td > -->
-			<td ><a href="manager-setstatus.html"
-				th:href="@{/manager/send/}+${leave.leaveId}" 
-				th:utext="#{leave.setStatus}" >Set Status<a></td>	
+			<td th:text="${leave.reason}">Reason</td>
+			<td th:text="${leave.workdissem}">Work Dissemination</td>
+			<td th:text="${leave.status}">Status</td>
+			<td th:text="${leave.mreason}">Manager's Reason</td>
 		</tr>
 	</table>
 	</div>

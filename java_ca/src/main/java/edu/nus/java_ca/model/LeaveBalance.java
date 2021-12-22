@@ -94,4 +94,12 @@ public class LeaveBalance {
 		this.user = user;
 	}
 
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		String s;
+		return s = "Leave Type: "+this.leavetype+"\nLeave Balance: "+this.balance;
+	}
+	
+
 }

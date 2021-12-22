@@ -21,5 +21,7 @@ public interface LeaveBalanceService {
 	LeaveBalance findByBalId(Integer id);
 	
 	void saveLeaveBalance(LeaveBalance lb);
+	
+	List<String> findAllLeaveTypes();
 
 }

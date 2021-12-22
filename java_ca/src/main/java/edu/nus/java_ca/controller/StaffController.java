@@ -2,6 +2,7 @@ package edu.nus.java_ca.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.nus.java_ca.model.Leave;
@@ -40,7 +42,7 @@ public class StaffController {
 	  protected void initBinder(WebDataBinder binder) {
 		binder.addValidators(new LeaveValidator());
 	  }
-	
+	public Integer pagesize;
 	@Autowired
 	LeaveBalanceService lbservice;
 	@Autowired
@@ -65,7 +67,7 @@ public class StaffController {
 	@RequestMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/home";
+		return "redirect:/staff/list";
 
 	}
 	
@@ -118,10 +120,10 @@ public class StaffController {
 		leave.setUser(u);
 	
 		lservice.createLeave(leave);
-		String message = "New course " + leave.getLeaveId()+" Created ";
+		String message = "New Leave " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
 		u.getLb().forEach(System.out::println);
-		return "redirect:/home";}
+		return "redirect:/staff/list";}
 	}
 
 	@GetMapping(value = "/leave/edit/{id}")
@@ -158,4 +160,99 @@ public class StaffController {
 		lservice.changeLeave(l);
 		return "forward:/staff/leave/list";
 	}
+	
+	/*
+	 * @RequestMapping(value = "/leave/history") public String leaveinfo( Model
+	 * model,HttpSession session) {
+	 * 
+	 * 
+	 * Leave staff = (Leave) session.getAttribute("currentLeave");
+	 * model.addAttribute("leaves", lservice.findAppliedLeaves());//2 should change
+	 * to staff
+	 * 
+	 * return "staff/staff-leave-history"; }
+	 */
+	
+	@GetMapping(value = "/leave/list")
+	public String list(Model model, HttpSession session) {
+		
+	
+		
+		User u = user(session);
+		int currentpage = 0;
+
+		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, 10,u);
+		listWithPagination.size()
+
+		Leave lea = (Leave) session.getAttribute("currentLeave");
+		
+		model.addAttribute("leave", lea);
+		model.addAttribute("leaves", listWithPagination);
+		model.addAttribute("currentPage", currentpage);
+
+		return "staff/staff-leave-history";
+	}
+
+	@GetMapping(value = "/leave/navigate")
+	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
+		User u = user(session);
+		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
+		Leave lea = (Leave) session.getAttribute("currentLeave");
+		
+		model.addAttribute("leave", lea);
+		model.addAttribute("leaves", listWithPagination);
+		model.addAttribute("currentPage", pageNo-1);
+		return "staff/staff-leave-history";
+	}
+
+	@GetMapping(value = "/leave/forward/{currentPage}")
+	public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session) {
+		Integer i = Integer.parseInt(pageNo);
+		if (i == 2)
+			i--;
+		User u = user(session);
+		List<Leave> listWithPagination = lservice.getAllLeaves(i+1,pagesize,u);
+		Leave lea = (Leave) session.getAttribute("currentLeave");
+		
+		model.addAttribute("leave", lea);
+		model.addAttribute("leaves", listWithPagination);
+		model.addAttribute("currentPage", i+1);
+		
+		return "staff/staff-leave-history";
+	}
+
+	@GetMapping(value = "/leave/backward/{currentPage}")
+	public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session) {
+		User u = user(session);
+		Integer i = Integer.parseInt(pageNo);
+		if (i == 0)
+			i++;
+		List<Leave> listWithPagination = lservice.getAllLeaves(i-1, pagesize,u);
+		Leave lea = (Leave) session.getAttribute("currentLeave");
+		
+		model.addAttribute("leave", lea);
+		model.addAttribute("leaves", listWithPagination);
+		model.addAttribute("currentPage", i-1);
+		
+		return "staff/staff-leave-history";
+	}
+	
+	@GetMapping(value = "/leave/list/{id}")
+	public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
+		
+	this.pagesize= id;
+		
+		User u = user(session);
+		int currentpage = 0;
+
+		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, pagesize,u);
+
+		Leave lea = (Leave) session.getAttribute("currentLeave");
+		
+		model.addAttribute("leave", lea);
+		model.addAttribute("leaves", listWithPagination);
+		model.addAttribute("currentPage", currentpage);
+
+		return "staff/staff-leave-history";
+}
 }

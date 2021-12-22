@@ -26,8 +26,8 @@ public class EmailService {
     public void sendEmailApprove(Leave leave) {
 
         SimpleMailMessage msg = new SimpleMailMessage();
-        String subject = "Your " +leave.getType() + "leave is approved";
-        String content = "Your " +leave.getType() + "leave from" + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is approved.";
+        String subject = "Your " +leave.getType() + " leave is approved.";
+        String content = "Your " +leave.getType() + " leave from" + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is approved.";
         		
         msg.setTo(leave.getUser().getEmail());
         msg.setSubject(subject);
@@ -36,6 +36,23 @@ public class EmailService {
         javaMailSender.send(msg);
 
     }
+    
+    public void sendEmailReject(Leave leave) {
+
+        SimpleMailMessage msg = new SimpleMailMessage();
+        String subject = "Your " +leave.getType() + " leave is rejected.";
+        String content = "Your " +leave.getType() + " leave from" + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is rejected.";
+        		
+        msg.setTo(leave.getUser().getEmail());
+        msg.setSubject(subject);
+        msg.setText(content);
+
+        javaMailSender.send(msg);
+
+    }
+    
+    
+    
 
     void sendEmailWithAttachment() throws MessagingException, IOException {
 
