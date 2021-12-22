@@ -165,7 +165,7 @@ public class LeaveServiceImpl implements LeaveService{
 		// TODO Auto-generated method stub
 		return lrepo.findByUser(u);
 	}
-<<<<<<< HEAD
+
 
 	@Override
 	@Transactional
@@ -174,7 +174,7 @@ public class LeaveServiceImpl implements LeaveService{
 		holidays.add(d);
 	}
 	
-=======
+
 	
 	@Override
 	public List<Leave> listAllLeaves1() {
@@ -192,5 +192,5 @@ public class LeaveServiceImpl implements LeaveService{
 		
 		return list;
 }
->>>>>>> branch 'main' of https://github.com/gavinerh/JavaCA
+
 }
