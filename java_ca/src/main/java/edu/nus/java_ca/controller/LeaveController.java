@@ -48,10 +48,10 @@ public class LeaveController {
 //	@Autowired
 //	private LeaveBalanceService lbservice;
 	
-	@RequestMapping(value="/all")
+	@RequestMapping(value="/leaves/all")
 	public String listAll(Model model) {
 		model.addAttribute("leaves", lservice.listAllLeaves());
-		return "allleaves";
+		return "leaves/allleaves";
 	}
  
 	//Movement Register
@@ -90,29 +90,6 @@ public class LeaveController {
 				lservice.listLeavesByUserId(Long.parseLong(UserId));
 		model.addAttribute("emleaves", lls);
 		return "forward:/leave/leaves/empl-leavehistory";
-	}
-	
-	
-	
-	//manager actions
-	@RequestMapping(value = "/list")
-	public String list(Model model) {
-		//model.addAttribute("leaves", lservice.listLeaveToApprove());
-		return "leave-toapprove";
-	}
-	
-	@RequestMapping(value = "/approve/{id}")
-	public String approveLeave(@PathVariable("id") Long id) {
-		lservice.approveLeave(lservice.findLeaveById(id));
-		//leave balance has to be reduced for corresponding user
-		return "forward:/leave/list";
-	}
-	
-	//rejection require comment
-	@RequestMapping(value = "/reject/{id}")
-	public String rejectLeave(@PathVariable("id") Long id) {
-		lservice.rejectLeave(lservice.findLeaveById(id));
-		return "forward:/leave/list";
 	}
 
 	

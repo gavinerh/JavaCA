@@ -45,12 +45,9 @@ public class ManagerApproveController {
 		this.lservice = lserviceImpl;
 	}
 	@Autowired
-	private SessionManagement sess;
-	
+	private SessionManagement sess;	
 	@Autowired
 	private EmailService eService;
-//	@Autowired
-//	private LeaveBalanceService lbservice;
 
 	
 	@RequestMapping(value="/home")

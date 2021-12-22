@@ -103,17 +103,29 @@
           <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>Manager's Menu</span>
           </h6>
-          <ul class="nav flex-column mb-2">
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/manager/home}">
-                <span data-feather="edit"></span>
-                Manage Leave Applications
+             <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+              <a class="nav-link" href="/leave/leaves/mvt-reg">
+                <span data-feather="eye"></span>
+                Movement Register
+              </a>
+            </li>
+             <li class="nav-item">
+              <a class="nav-link"href="/leave/leaves/all">
+                <span data-feather="eye"></span>
+                View ALL Leave
+              </a>
+            </li>
+           <li class="nav-item">
+              <a class="nav-link" href="/leave/leaves/empl-leavehistory">
+                <span data-feather="eye"></span>
+                View Employee's Leave
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="eye"></span>
-                View Employee's Leave
+              <a class="nav-link" href="/manager/leaves/list">
+                <span data-feather="edit"></span>
+                Manage Leave Applications
               </a>
             </li>
             <li class="nav-item">
