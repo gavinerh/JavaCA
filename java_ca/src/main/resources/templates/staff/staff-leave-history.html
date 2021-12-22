@@ -44,13 +44,13 @@
 			<td th:text=${leave.contactdetail}>Contact detail</td>
 			
 			<td>
-			<div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<div th:if="${#strings.equals(leave.status, 'APPLIED')} or ${#strings.equals(leave.status, 'UPDATED')}">
 			<a href="#"
 				th:href="@{/staff/leave/edit/}+${leave.leaveId}">Edit</a>
 			</div>
 			</td>
 			<td>
-			<div <div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<div <div th:if="${#strings.equals(leave.status, 'APPLIED')} or ${#strings.equals(leave.status, 'UPDATED')}">
 			<a href="#"
 				th:href="@{/staff/leave/delete/}+${leave.leaveId}">Delete</a>
 			</div>
@@ -65,14 +65,13 @@
 	</table>
 	
 
-
-	<div class="pagination"> 
-          <a class="paginate" th:href="@{/staff/leave/backward/}+${currentPage}">&laquo;</a>
-          <a th:each="i: ${#numbers.sequence(1, 5)}" class="paginate" th:href="@{/staff/leave/navigate(pageNo=${i})}" th:text= "${i}"></a >
-          
-          
-          <a class="paginate" th:href="@{/staff/leave/forward/}+${currentPage}">&raquo;</a>
-     </div>
+<nav aria-label="...">
+  <ul class="pagination pagination-sm">
+    <li class="page-item"><a class="page-link" th:href="@{/staff/leave/backward/}+${currentPage}">&laquo;</a></li>
+    <li class="page-item"th:each="i:${#numbers.sequence(1,5)}"><a class="page-link"th:href="@{/staff/leave/navigate(pageNo=${i})}" th:text= "${i}"></a></li>
+    <li class="page-item"><a class="page-link" th:href="@{/staff/leave/forward/}+${currentPage}">&raquo;</a></li>
+  </ul>
+</nav>
     <!--<fieldset>
 			pagesize <select >
 				<option><a href="@{/staff/leave/list/1}">1</a></option>  
@@ -84,7 +83,8 @@
      <div class="col-12">
 						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list/1}">1</a> 
 						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list/2}">2</a> 
-						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list/3}">3</a> 
+						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list/3}">3</a>
+						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list}">All</a> 
 					</div>
 </body>
 </html>

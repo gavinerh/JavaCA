@@ -71,11 +71,6 @@ public class StaffController {
 
 	}
 	
-	@RequestMapping(value="/leave/list")
-	public String showLeaves (Model model) {
-		model.addAttribute("leaves", lservice.findAppliedLeaves());
-		return "staff/leave-list";
-	}
 	
 	@GetMapping(value = "/leave/new")
 	public ModelAndView newLeave(HttpSession ses) {
@@ -146,6 +141,7 @@ public class StaffController {
 		lservice.changeLeave(l);
 		return "forward:/staff/leave/list";
 	}
+	
 	@RequestMapping(value = "/leave/delete/{id}")
 	public String deleteLeave(@PathVariable("id") long id) {
 		Leave l = lservice.findLeaveById(id);
@@ -182,7 +178,7 @@ public class StaffController {
 		int currentpage = 0;
 
 		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, 10,u);
-		listWithPagination.size()
+		listWithPagination.size();
 
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
