@@ -39,8 +39,8 @@ public interface LeaveService {
 	void addHoliday(LocalDate d);
 
 	//for pangination
-	public List<Leave> listAllLeaves1();
-		//public List<Module> listModuleByStudentId(int id);
-	List<Leave> getAllLeaves(int pageNo, int pageSize, User u);
+		public List<Leave> listAllLeaves1();
+			//public List<Module> listModuleByStudentId(int id);
+		List<Leave> getAllLeaves(int pageNo, int pageSize, User u);
 
 }
