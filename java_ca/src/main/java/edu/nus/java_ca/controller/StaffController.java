@@ -43,6 +43,7 @@ public class StaffController {
 		binder.addValidators(new LeaveValidator());
 	  }
 	public Integer pagesize;
+	public Integer leave;
 	@Autowired
 	LeaveBalanceService lbservice;
 	@Autowired
@@ -67,7 +68,7 @@ public class StaffController {
 	@RequestMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/staff/list";
+		return "redirect:/home";
 
 	}
 	
@@ -122,36 +123,70 @@ public class StaffController {
 	}
 
 	@GetMapping(value = "/leave/edit/{id}")
-	public ModelAndView editLeavePage(@PathVariable ("id")long id) {
+	public ModelAndView editLeavePage(@PathVariable ("id")long id,HttpSession ses) {
+		User u = user(ses);
+		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
+		ArrayList<String> s = new ArrayList<String>();
+		for(LeaveBalance b:lb) {
+			s.add(b.getLeavetype());
+		}
+		Leave l = lservice.findLeaveById(id);
+		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate());
+		this.leave = count.intValue();
 		ModelAndView mav = new ModelAndView("staff/leave-edit");
-		Leave leave = lservice.findLeaveById(id);
-		mav.addObject("leave", leave);
-		
+		mav.addObject("leave", l);
+		mav.addObject("types",s);
 		return mav;
 	}
 
 	@PostMapping(value = "/leave/edit")
-	public String editLeave(@ModelAttribute ("leave")@Valid Leave l, BindingResult result, Model model){
+	public String editLeave(@ModelAttribute ("leave")@Valid Leave l, BindingResult result, Model model,HttpSession ses){
+		User u = user(ses);
+		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
+		ArrayList<String> s = new ArrayList<String>();
+		for(LeaveBalance b:lb) {
+			s.add(b.getLeavetype());
+		}
+		model.addAttribute("types",s);
+		if (result.hasErrors()) {
+			return "staff/leave-edit";}
+		if(lservice.checkDupes(l.getStartDate(), l.getEndDate(),u)) {
+			model.addAttribute("errormsg", "**You've already Applied the same period**");
+			return("staff/staff-new-leave");
+		}
+		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate());
 		
-		if (result.hasErrors())
-			return "staff/leave-edit";
+		System.out.println("Total leave days: "+count);
+		if(!lservice.deductleave(l, u, count.intValue())) {
+			model.addAttribute("errormsg", "**Leave Application Failed! You don't Have Enough Leave**");
+			return("staff/staff-new-leave");
+		}
+		else {
+		lservice.refundleave(l, u,leave);
 		l.setStatus(LeaveStatus.UPDATED);
 		LocalDate now = LocalDate.now();
 		l.setAppliedDate(now);
 		lservice.changeLeave(l);
-		return "forward:/staff/leave/list";
+		return "forward:/staff/list";
+		}
 	}
 	
 	@RequestMapping(value = "/leave/delete/{id}")
-	public String deleteLeave(@PathVariable("id") long id) {
+	public String deleteLeave(@PathVariable("id") long id,HttpSession ses) {
+		User u = user(ses);
 		Leave l = lservice.findLeaveById(id);
+		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate());
+		lservice.refundleave(l, u,count.intValue());
 		l.setStatus(LeaveStatus.DELETED);
 		lservice.changeLeave(l);
 		return "forward:/staff/leave/list";
 	}
 	@RequestMapping(value = "/leave/cancel/{id}")
-	public String cancelLeave(@PathVariable("id") long id) {
+	public String cancelLeave(@PathVariable("id") long id,HttpSession ses) {
+		User u = user(ses);
 		Leave l = lservice.findLeaveById(id);
+		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate());
+		lservice.refundleave(l, u,count.intValue());
 		l.setStatus(LeaveStatus.CANCELLED);
 		lservice.changeLeave(l);
 		return "forward:/staff/leave/list";
@@ -175,11 +210,10 @@ public class StaffController {
 		
 		User u = user(session);
 		int currentpage = 0;
-
-		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, 10,u);
-		long top = listWithPagination.size();
-		long top1 = top/10+1;
-
+		int num = 10;
+		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, num,u);
+		int top = listWithPagination.size();
+		int top1 = (top/num)+1;
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
 		model.addAttribute("leave", lea);
@@ -190,14 +224,14 @@ public class StaffController {
 		return "staff/staff-leave-history";
 	}
 
-	@GetMapping(value = "/leave/navigate")
+	@GetMapping(value = "/leave/navigate/{pageNo}")
 	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
 		long top = listWithPagination.size();
-		long top1 = top/pagesize+1;
+		long top1 = (top/pagesize)+1;
 
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);

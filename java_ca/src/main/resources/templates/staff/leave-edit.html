@@ -19,10 +19,13 @@
 </style>
 			<h4 class="mb-3">Edit Leave Application</h4>
 			<!-- create hidden id tag-->
-			<form action="#" th:object="${leave}" th:action="@{/staff/leave/new}"
+			<form action="#" th:object="${leave}" th:action="@{/staff/leave/edit}"
 				method="post">
 		<fieldset>
 			<input type="hidden" th:field="*{leaveId}" />
+		</fieldset>
+		<fieldset>
+			<input type="hidden" th:field="*{user}" />
 		</fieldset>
 				<div class="row g-3">
 					<div class="col-md-6">

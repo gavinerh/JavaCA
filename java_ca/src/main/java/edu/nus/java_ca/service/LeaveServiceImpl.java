@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -82,7 +83,7 @@ public class LeaveServiceImpl implements LeaveService {
 
 		User user1 = uRepo.findByUserId(id);
 
-		List<Leave> EmplLeave = lrepo.findLeaveByUser(user1);
+		List<Leave> EmplLeave = lrepo.findByUser(user1);
 		return EmplLeave;
 	}
 
@@ -138,8 +139,13 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Transactional
 	public Boolean checkDupes(LocalDate s, LocalDate e, User u) {
-		ArrayList<Leave> c = lrepo.findLeaveByUser(u);
-		int count = (int) c.stream()
+		ArrayList<Leave> c = lrepo.findDupeLeaveByUser(u);
+		ArrayList<Leave> le = c.stream()
+				.filter(l-> !(l.getStatus().equals(LeaveStatus.DELETED)||l.getStatus().equals(LeaveStatus.REJECTED)||
+					l.getStatus().equals(LeaveStatus.CANCELLED)))
+				.collect(Collectors
+	                    .toCollection(ArrayList::new));
+		int count = (int) le.stream()
 				.filter(x -> (x.getStartDate().isBefore(s) && x.getEndDate().isAfter(e))
 						|| (x.getStartDate().isEqual(s) && x.getEndDate().isEqual(e))
 						|| (x.getStartDate().isEqual(s) && x.getEndDate().isAfter(e)))
@@ -173,6 +179,8 @@ public class LeaveServiceImpl implements LeaveService {
 		LeaveBalance lb = lbrepo.findTop1ByUserAndLeavetype(u, l.getType());
 		Integer in = lb.getBalance();
 		Integer bal = in + i;
+		lb.setBalance(bal);
+		lbrepo.saveAndFlush(lb);
 		return true;
 	}
 
@@ -181,7 +189,7 @@ public class LeaveServiceImpl implements LeaveService {
 	public Page<Leave> findByUser(User u, Pageable p) {
 		// TODO Auto-generated method stub
 
-		return lrepo.findByUser(u, p);
+		return lrepo.findBypageUser(u, p);
 	}
 
 
@@ -200,6 +208,12 @@ public class LeaveServiceImpl implements LeaveService {
 		List<Leave> list = pageResult.getContent();
 
 		return list;
+	}
+
+	@Override
+	public ArrayList<Leave> findByUser(User u) {
+		// TODO Auto-generated method stub
+		return lrepo.findByUser(u);
 	}
 
 }
