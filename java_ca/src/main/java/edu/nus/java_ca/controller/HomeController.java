@@ -112,7 +112,7 @@ public class HomeController {
 		case Manager:
 			return "redirect:/manager/list";
 		case Staff:
-			return "redirect:/staff/list";
+			return "redirect:/staff1/main";
 		}
 		return null;
 	}
