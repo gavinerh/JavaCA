@@ -168,7 +168,6 @@ public class StaffController {
 	 * 
 	 * return "staff/staff-leave-history"; }
 	 */
-	
 	@GetMapping(value = "/leave/list")
 	public String list(Model model, HttpSession session) {
 		
@@ -178,13 +177,15 @@ public class StaffController {
 		int currentpage = 0;
 
 		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, 10,u);
-		listWithPagination.size();
+		long top = listWithPagination.size();
+		long top1 = top/10+1;
 
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", currentpage);
+		model.addAttribute("top1",top1);
 
 		return "staff/staff-leave-history";
 	}
@@ -195,9 +196,13 @@ public class StaffController {
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
+		long top = listWithPagination.size();
+		long top1 = top/pagesize+1;
+
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", pageNo-1);
+		model.addAttribute("top1",top1);
 		return "staff/staff-leave-history";
 	}
 
@@ -210,9 +215,13 @@ public class StaffController {
 		List<Leave> listWithPagination = lservice.getAllLeaves(i+1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
+		long top = listWithPagination.size();
+		long top1 = top/pagesize+1;
+		
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", i+1);
+		model.addAttribute("top1",top1);
 		
 		return "staff/staff-leave-history";
 	}
@@ -226,9 +235,13 @@ public class StaffController {
 		List<Leave> listWithPagination = lservice.getAllLeaves(i-1, pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
+		long top = listWithPagination.size();
+		long top1 = top/pagesize+1;
+		
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", i-1);
+		model.addAttribute("top1",top1);
 		
 		return "staff/staff-leave-history";
 	}
@@ -245,10 +258,14 @@ public class StaffController {
 
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
+		long top = listWithPagination.size();
+		long top1 = top/pagesize+1;
+		
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", currentpage);
-
+		model.addAttribute("top1",top1);
+		
 		return "staff/staff-leave-history";
 }
 }
