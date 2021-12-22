@@ -44,28 +44,27 @@ public class StaffLeaveTest {
 	@Test
 	@Order(1)
 	public void testSubmitLeave(){
-//		List<User> u = uservice.findAll();
-//		ArrayList<LeaveBalance> ll = new ArrayList<LeaveBalance>();
-//		for(User us:u) {
-//			LeaveBalance lb = new LeaveBalance(0,"Child Care Leave",7,us);
-//			ll.add(lb);
-//		}
-//		
-//		lbrepo.saveAllAndFlush(ll);
-//		User us = uservice.findByUserId((long)16);
-//		LeaveBalance lb = new LeaveBalance("ChildCare Leave",7,us);
-//		LeaveBalance lb1 = new LeaveBalance("Annual",14,us);
-//		LeaveBalance lb2 = new LeaveBalance("Medical",60,us);
-//		us.addLeaveBalance(lb);
-//		us.addLeaveBalance(lb1);
-//		us.addLeaveBalance(lb2);
-//		uservice.saveUser(us);
-//		LeaveBalance lb = lbrepo.findByUserAndLeavetype(us, "Annual");
-//		System.out.println(lb);
-//		us.getLb().forEach(System.out::println);
-//		LocalDate ld = LocalDate.of(2021, 11, 20);
-		ArrayList<Object> holidays = new ArrayList<>(Arrays.asList(new LocalDate[] {LocalDate.of(2021, 11, 20),LocalDate.of(2021, 11, 21)}));
-//		//lservice.addHoliday(LocalDate.of(2021, 11, 20));
+		List<User> u = uservice.findAll();
+	ArrayList<LeaveBalance> ll = new ArrayList<LeaveBalance>();
+	for(User us:u) {
+		LeaveBalance lb = new LeaveBalance(0,"Child Care Leave",7,us);
+			ll.add(lb);
+	}
+		
+		lbrepo.saveAllAndFlush(ll);
+		User us = uservice.findByUserId((long)11);
+		LeaveBalance lb = new LeaveBalance("ChildCare Leave",7,us);
+		LeaveBalance lb1 = new LeaveBalance("Annual",14,us);
+		LeaveBalance lb2 = new LeaveBalance("Medical",60,us);
+		us.addLeaveBalance(lb);
+		us.addLeaveBalance(lb1);
+		us.addLeaveBalance(lb2);
+		/* uservice.saveUser(us); */
+	/* LeaveBalance lb = lbrepo.findByUserAndLeavetype(us, "Annual"); */
+		System.out.println(lb);
+	us.getLb().forEach(System.out::println);
+		LocalDate ld = LocalDate.of(2021, 11, 20);
+		ArrayList<Object> holidays = new ArrayList<>(Arrays.asList(new LocalDate[] {LocalDate.of(2021, 11, 20),LocalDate.of(2021, 11, 21)}));		//lservice.addHoliday(LocalDate.of(2021, 11, 20));
 		holidays.add(LocalDate.of(2022, 11, 1));
 		holidays.forEach(System.out::println);
 		System.out.println(holidays.contains(LocalDate.of(2022, 11, 1)));

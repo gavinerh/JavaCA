@@ -65,12 +65,26 @@
 	</table>
 	
 
-	<div class="pagination">
+
+	<div class="pagination"> 
           <a class="paginate" th:href="@{/staff/leave/backward/}+${currentPage}">&laquo;</a>
-          <a class="paginate" th:href="@{/staff/leave/navigate(pageNo=1)}">1</a>
-          <a class="paginate" th:href="@{/staff/leave/navigate(pageNo=2)}">2</a>
-          <a class="paginate" th:href="@{/staff/leave/navigate(pageNo=3)}">3</a>
+          <a th:each="i: ${#numbers.sequence(1, 5)}" class="paginate" th:href="@{/staff/leave/navigate(pageNo=${i})}" th:text= "${i}"></a >
+          
+          
           <a class="paginate" th:href="@{/staff/leave/forward/}+${currentPage}">&raquo;</a>
      </div>
+    <!--<fieldset>
+			pagesize <select >
+				<option><a href="@{/staff/leave/list/1}">1</a></option>  
+				<option><a href="@{/staff/leave/list/2}">2</a></option>
+				<option><a href="@{/staff/leave/list/3}">3</a></option>
+			</select>
+	</fieldset>-->
+     
+     <div class="col-12">
+						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list/1}">1</a> 
+						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list/2}">2</a> 
+						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list/3}">3</a> 
+					</div>
 </body>
 </html>
