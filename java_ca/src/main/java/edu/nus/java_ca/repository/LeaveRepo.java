@@ -30,6 +30,12 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	 public ArrayList<Leave> findLeaveToApprove(@Param("APPLIED") LeaveStatus a, 
 			@Param("UPDATED") LeaveStatus u, @Param ("DEPARTMENT")  Department department);
 
+	//NEW EDIT
+	@Query("SELECT l FROM Leave l" 
+			+ " WHERE (l.status=:APPLIED " 
+			+ "OR l.status= :UPDATED)")
+	 public ArrayList<Leave> findLeaveToApprove(@Param("APPLIED") LeaveStatus a, 
+			@Param("UPDATED") LeaveStatus u);
 	//NEW QUERY
 	@Query("SELECT l FROM Leave l WHERE year(l.startDate)=?1 AND month(l.startDate)=?2")
 	public ArrayList<Leave> getByYearandMonth(int year, int month);

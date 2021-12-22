@@ -23,6 +23,7 @@ public interface LeaveService {
 	public List<Leave> listLeavesByUserId(Long id);
 	ArrayList<Leave> findAppliedLeaves();
 	public List<Leave> listAllLeaves();
+	public List<Leave> listLeaveToApprove();
 	public List<Leave> listLeaveToApprove(Department d);
 	public void approveLeave(Leave l);
 	public void rejectLeave(Leave l);

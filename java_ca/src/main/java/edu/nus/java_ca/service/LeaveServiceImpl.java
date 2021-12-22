@@ -95,6 +95,12 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Transactional
+	public List<Leave> listLeaveToApprove() {
+		List<Leave> LeavetoApprove = lrepo.findLeaveToApprove(LeaveStatus.APPLIED, 
+				LeaveStatus.UPDATED);
+		return LeavetoApprove;
+	}	
+	@Transactional
 	public List<Leave> listLeaveToApprove(Department d) {
 		List<Leave> LeavetoApprove = lrepo.findLeaveToApprove(LeaveStatus.APPLIED, LeaveStatus.UPDATED, d);
 		return LeavetoApprove;

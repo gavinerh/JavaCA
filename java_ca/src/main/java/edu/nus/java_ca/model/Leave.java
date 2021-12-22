@@ -35,6 +35,7 @@ public class Leave {
 	@Enumerated(EnumType.STRING)
 	private LeaveStatus status;	//enum
 	private String reason;
+	private String mreason;
 	private String workdissem;
 	private String type;
 	private String contactdetail;
@@ -89,7 +90,21 @@ public class Leave {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
-
+	public Leave(Long leaveId, User user, LeaveStatus status, String reason, String mreason, String workdissem,
+			String type, String contactdetail, LocalDate appliedDate, LocalDate startDate, LocalDate endDate) {
+		super();
+		this.leaveId = leaveId;
+		this.user = user;
+		this.status = status;
+		this.reason = reason;
+		this.mreason = mreason;
+		this.workdissem = workdissem;
+		this.type = type;
+		this.contactdetail = contactdetail;
+		this.appliedDate = appliedDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
 	public Long getLeaveId() {
 		return leaveId;
 	}
@@ -119,6 +134,12 @@ public class Leave {
 	}
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+	public String getMreason() {
+		return mreason;
+	}
+	public void setMreason(String mreason) {
+		this.mreason = mreason;
 	}
 	public String getWorkdissem() {
 		return workdissem;
