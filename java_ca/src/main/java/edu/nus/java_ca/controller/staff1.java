@@ -48,9 +48,7 @@ public class staff1 {
 	    User result = Uservice.findByUserEmail(em);
 		System.out.println(result.getLastName());
 		model.addAttribute("usernow", result);	
-	    List<User> userlist = Uservice.findAll();
-		userlist.remove(result);
-		model.addAttribute("userlist", userlist);
+
 	    return "staff/staff"; 
 		}
 	
