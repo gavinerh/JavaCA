@@ -31,4 +31,6 @@ public interface LeaveBalanceRepo extends JpaRepository<LeaveBalance, Integer> {
 	@Modifying
 	@Query("DELETE FROM LeaveBalance lb WHERE (lb.leavetype = :leavetypename AND lb.user = :user)")
 	void deleteLeaveBalanceByType(String leavetypename, User user);
+	
+	List<LeaveBalance> findByLeavetype(String leavetype);
 }

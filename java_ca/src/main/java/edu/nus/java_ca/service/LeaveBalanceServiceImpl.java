@@ -65,11 +65,18 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
 		// TODO Auto-generated method stub
 		return lbrepo.findAllLeaveTypes();
 	}
+	
 	@Modifying
 	@Transactional
 	public void deleteLeaveBalanceByType(String leavetypename, User user) {
 		// TODO Auto-generated method stub
 		lbrepo.deleteLeaveBalanceByType(leavetypename, user);
+	}
+	
+	@Override
+	public List<LeaveBalance> findByLeavetype2(String leavetype) {
+		// TODO Auto-generated method stub
+		return lbrepo.findByLeavetype(leavetype);
 	}
 
 

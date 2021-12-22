@@ -21,7 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @DynamicUpdate
-//@SQLDelete(sql = "UPDATE user SET deleted = true WHERE user_id=?")
+@SQLDelete(sql = "UPDATE user SET deleted = true WHERE user_id=?")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,7 +48,7 @@ public class User {
 	private boolean deleted = Boolean.FALSE;
 	
 	/**Container for LeaveBalance**/
-	@OneToMany(mappedBy = "user", cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.EAGER)
 	Collection<LeaveBalance> lb = new ArrayList<LeaveBalance>();
 
 	public User() {

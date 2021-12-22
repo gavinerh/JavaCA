@@ -107,7 +107,7 @@ public class AdminLeaveController {
 	
 	@RequestMapping({ "/", "" })
 	public String dashboard(Model model) {
-		List<LeaveBalance> balancelist = lbService.findByLeavetype("annual");
+		List<LeaveBalance> balancelist = lbService.findByLeavetype2("annual");
 		model.addAttribute("lblist", balancelist);
 		return "admin/leavebalances";
 	}
