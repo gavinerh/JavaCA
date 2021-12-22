@@ -30,6 +30,13 @@ public interface LeaveService {
 	Long countLeaves(LocalDate s, LocalDate e);
 	Boolean checkDupes(LocalDate s, LocalDate e, User u);
 	Boolean deductleave(Leave l, User u, Integer i);
+<<<<<<< HEAD
 	//add holiday to the calendar
 	void addHoliday(LocalDate d);
+=======
+	//for pangination
+	public List<Leave> listAllLeaves1();
+	public List<Leave> getAllLeaves(int pageNo, int pageSize);
+		//public List<Module> listModuleByStudentId(int id);
+>>>>>>> branch 'main' of https://github.com/gavinerh/JavaCA
 }
