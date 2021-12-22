@@ -39,4 +39,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	@Query("SELECT DISTINCT u FROM User u WHERE u.deleted = false")
 	List<User> findAll();
+	
+	@Query("SELECT DISTINCT u FROM User u")
+	List<User> findAllWithDeleted();
 }

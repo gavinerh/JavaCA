@@ -4,17 +4,15 @@ package edu.nus.java_ca.model;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -28,8 +26,7 @@ public class Leave {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long leaveId;
 	//uni directional so dont need to specify in User
-	@ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-	@JoinColumn(name = "userid")
+	@ManyToOne
 	private User user;
 	@Column(name = "status", columnDefinition = "ENUM('APPLIED', 'APPROVED', 'UPDATED', 'CANCELLED', 'REJECTED','DELETED')")
 	@Enumerated(EnumType.STRING)
@@ -62,9 +59,7 @@ public class Leave {
 		this.status=ls;
 	}
 	public Leave(User user, LeaveStatus status, String type, String reason, String workdissem,
-			 LocalDate appliedDate,
-			 LocalDate startDate,
-			 LocalDate endDate) {
+			 LocalDate appliedDate, LocalDate startDate, LocalDate endDate) {
 		super();
 		this.user = user;
 		this.status = status;
@@ -105,6 +100,13 @@ public class Leave {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
+	public String getMreason() {
+		return mreason;
+	}
+	public void setMreason(String mreason) {
+		if(mreason.isEmpty()) {this.mreason= " ";}
+		else {this.mreason=mreason;}
+	}
 	public Long getLeaveId() {
 		return leaveId;
 	}
@@ -135,12 +137,6 @@ public class Leave {
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
-	public String getMreason() {
-		return mreason;
-	}
-	public void setMreason(String mreason) {
-		this.mreason = mreason;
-	}
 	public String getWorkdissem() {
 		return workdissem;
 	}
@@ -165,6 +161,12 @@ public class Leave {
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
+	public String getContactdetail() {
+		return contactdetail;
+	}
+	public void setContactdetail(String contactdetail) {
+		this.contactdetail = contactdetail;
+	}
 	@Override
 	public int hashCode() {
 		return Objects.hash(leaveId);
@@ -180,16 +182,13 @@ public class Leave {
 		Leave other = (Leave) obj;
 		return Objects.equals(leaveId, other.leaveId);
 	}
-	public String getContactdetail() {
-		return contactdetail;
+	@Override
+	public String toString() {
+		return "Leave [leaveId=" + leaveId + ", user=" + user + ", status=" + status + ", reason=" + reason
+				+ ", mreason=" + mreason + ", workdissem=" + workdissem + ", type=" + type + ", contactdetail="
+				+ contactdetail + ", appliedDate=" + appliedDate + ", startDate=" + startDate + ", endDate=" + endDate
+				+ "]";
 	}
-	public void setContactdetail(String contactdetail) {
-		this.contactdetail = contactdetail;
-	}
-
-	
-
-
 
 	
 }

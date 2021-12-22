@@ -21,7 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE user SET deleted = true WHERE user_id=?")
+//@SQLDelete(sql = "UPDATE user SET deleted = true WHERE user_id=?")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

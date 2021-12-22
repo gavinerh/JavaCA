@@ -25,6 +25,7 @@
                   <td scope="row"><span class="dot-medical"></span></td>
                   <td th:text=${#strings.capitalize(eleave)}>Medical</td>
                   <td><span class="text-approved fw-bold">Available</span></td>
+                  <td><a th:href="@{/AdminType/delete/}+${eleave}"><span data-feather="trash-2"></span></a></td>
                 </tr>
                 
               </table>
