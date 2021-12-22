@@ -74,7 +74,6 @@ public class ManagerApproveController {
 		lservice.approveLeave(leave);
 		eService.sendEmailApprove(leave);
 		
-		
 		return "forward:/manager/home";
 	}
 	
