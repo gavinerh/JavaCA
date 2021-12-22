@@ -52,6 +52,17 @@ public class HolidayServiceImpl implements HolidayService {
 		// TODO Auto-generated method stub
 		hrepo.saveAndFlush(h);
 	}
+
+	@Override
+	public ArrayList<LocalDate> findHolidays() {
+		// TODO Auto-generated method stub
+		ArrayList<Holidays> ho = (ArrayList<Holidays>) hrepo.findAll();
+		ArrayList<LocalDate> d = new ArrayList<>();
+		for(Holidays h: ho) {
+			d.add(h.getHoliday());
+		}
+		return d;
+	}
 	
 
 }

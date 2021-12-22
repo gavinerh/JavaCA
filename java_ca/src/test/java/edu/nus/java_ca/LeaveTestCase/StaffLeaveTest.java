@@ -68,7 +68,6 @@ public class StaffLeaveTest {
 		holidays.add(LocalDate.of(2022, 11, 1));
 		holidays.forEach(System.out::println);
 		System.out.println(holidays.contains(LocalDate.of(2022, 11, 1)));
-		lservice.addHoliday(LocalDate.of(2021, 12, 22));
 		Long i = lservice.countLeaves(LocalDate.of(2021, 12, 21), LocalDate.of(2021, 12, 22));
 		System.out.println(i);
 	}

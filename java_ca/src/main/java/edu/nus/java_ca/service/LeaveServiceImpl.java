@@ -32,14 +32,13 @@ public class LeaveServiceImpl implements LeaveService {
 	LeaveRepo lrepo;
 
 	final Set<String> weekends = Set.of("SATURDAY", "SUNDAY");
-	// Set of holidays in singapore 2021
-	private ArrayList<Object> holidays = new ArrayList<>();
+
 	@Autowired
 	UserRepository uRepo;
 	@Autowired
 	LeaveBalanceRepo lbrepo;
 	@Autowired
-	HolidayRepo hrepo;
+	HolidayService hservice;
 
 //	public LeaveServiceImpl() {
 //		this.holidays = (ArrayList)hrepo.findAll();
@@ -128,8 +127,8 @@ public class LeaveServiceImpl implements LeaveService {
 	@Transactional
 	public Long countLeaves(LocalDate s, LocalDate e) {
 		Long count;
+		ArrayList<LocalDate> holidays = hservice.findHolidays();
 		count = s.datesUntil(e.plusDays(1)).count();
-
 		if (count <= 14) {
 			count = s.datesUntil(e.plusDays(1)).filter(t -> !weekends.contains(t.getDayOfWeek().name()))
 					.filter(t -> !holidays.contains(t)).count();
@@ -155,7 +154,8 @@ public class LeaveServiceImpl implements LeaveService {
 	@Modifying
 	@Transactional
 	public Boolean deductleave(Leave l, User u, Integer i) {
-		LeaveBalance lb = lbrepo.findByUserAndLeavetype(u, l.getType());
+		String s = l.getType();
+		LeaveBalance lb = lbrepo.findTop1ByUserAndLeavetype(u, l.getType());
 		Integer in = lb.getBalance();
 		Integer bal = in - i;
 		if (bal >= 0) {
@@ -164,6 +164,16 @@ public class LeaveServiceImpl implements LeaveService {
 			return true;
 		}
 		return false;
+	}
+	@Override
+	@Modifying
+	@Transactional
+	public Boolean refundleave(Leave l, User u, Integer i) {
+		String s = l.getType();
+		LeaveBalance lb = lbrepo.findTop1ByUserAndLeavetype(u, l.getType());
+		Integer in = lb.getBalance();
+		Integer bal = in + i;
+		return true;
 	}
 
 	@Override
@@ -174,12 +184,6 @@ public class LeaveServiceImpl implements LeaveService {
 		return lrepo.findByUser(u, p);
 	}
 
-	@Override
-	@Transactional
-	public void addHoliday(LocalDate d) {
-		// TODO Auto-generated method stub
-		// hrepo.saveAndFlush(d);
-	}
 
 	@Override
 	public List<Leave> listAllLeaves1() {
