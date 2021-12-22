@@ -25,14 +25,14 @@ import edu.nus.java_ca.repository.LeaveBalanceRepo;
 import edu.nus.java_ca.repository.LeaveRepo;
 import edu.nus.java_ca.repository.UserRepository;
 
-@Service //need to impl component type to be recognized as spring bean
-public class LeaveServiceImpl implements LeaveService{
- 
+@Service // need to impl component type to be recognized as spring bean
+public class LeaveServiceImpl implements LeaveService {
+
 	@Autowired
 	LeaveRepo lrepo;
-	
-	final Set<String> weekends = Set.of("SATURDAY","SUNDAY");
-	//Set of holidays in singapore 2021
+
+	final Set<String> weekends = Set.of("SATURDAY", "SUNDAY");
+	// Set of holidays in singapore 2021
 	private ArrayList<Object> holidays = new ArrayList<>();
 	@Autowired
 	UserRepository uRepo;
@@ -40,15 +40,16 @@ public class LeaveServiceImpl implements LeaveService{
 	LeaveBalanceRepo lbrepo;
 	@Autowired
 	HolidayRepo hrepo;
-	public LeaveServiceImpl() {
-		this.holidays = (ArrayList)hrepo.findAll();
-	}
-	//Base function	
+
+//	public LeaveServiceImpl() {
+//		this.holidays = (ArrayList)hrepo.findAll();
+//	}
+	// Base function
 	@Transactional
 	public List<Leave> listAllLeaves() {
 		return lrepo.findAll();
 	}
-	
+
 	@Override
 	@Transactional
 	public Leave createLeave(Leave l) {
@@ -62,25 +63,25 @@ public class LeaveServiceImpl implements LeaveService{
 		// TODO Auto-generated method stub
 		return lrepo.saveAndFlush(l);
 	}
-	
+
 	@Transactional
 	public void cancelLeave(Leave l) {
 		l.setStatus(LeaveStatus.CANCELLED);
-		lrepo.save(l);		
+		lrepo.save(l);
 	}
-	
+
 	@Transactional
 	public List<Leave> findLeavesByDate(LocalDate d) {
 		List<Leave> mthLeave = lrepo.findLeaveByDate(d);
 		return mthLeave;
 	}
-	
-	//Manager's function
+
+	// Manager's function
 	@Transactional
 	public List<Leave> listLeavesByUserId(Long id) {
-		
-	 User user1 = uRepo.findByUserId(id);
-		
+
+		User user1 = uRepo.findByUserId(id);
+
 		List<Leave> EmplLeave = lrepo.findLeaveByUser(user1);
 		return EmplLeave;
 	}
@@ -91,26 +92,27 @@ public class LeaveServiceImpl implements LeaveService{
 		// TODO Auto-generated method stub
 		return lrepo.findAppliedLeaves();
 	}
-	
+
 	@Transactional
 	public List<Leave> listLeaveToApprove(Department d) {
-		List<Leave> LeavetoApprove = lrepo.findLeaveToApprove(LeaveStatus.APPLIED, 
-				LeaveStatus.UPDATED,d);
+		List<Leave> LeavetoApprove = lrepo.findLeaveToApprove(LeaveStatus.APPLIED, LeaveStatus.UPDATED, d);
 		return LeavetoApprove;
-	}	
-	@Modifying //if its CUD need to inform server its not a readonly query
+	}
+
+	@Modifying // if its CUD need to inform server its not a readonly query
 	@Transactional
 	public void approveLeave(Leave l) {
 		l.setStatus(LeaveStatus.APPROVED);
 		lrepo.save(l);
 	}
-	@Modifying 
-	@Transactional	
+
+	@Modifying
+	@Transactional
 	public void rejectLeave(Leave l) {
 		l.setStatus(LeaveStatus.REJECTED);
 		lrepo.save(l);
 	}
-	
+
 	@Transactional
 	public Leave findLeaveById(Long id) {
 		return lrepo.findLeaveById(id);
@@ -119,29 +121,26 @@ public class LeaveServiceImpl implements LeaveService{
 	@Transactional
 	public Long countLeaves(LocalDate s, LocalDate e) {
 		Long count;
-		count = s.datesUntil(e.plusDays(1))
-				.count();
+		count = s.datesUntil(e.plusDays(1)).count();
 
-		if(count<=14) {
-			count = s.datesUntil(e.plusDays(1))
-			        .filter(t -> !weekends.contains(t.getDayOfWeek().name()))
-			        .filter(t -> !holidays.contains(t))
-			        .count();
+		if (count <= 14) {
+			count = s.datesUntil(e.plusDays(1)).filter(t -> !weekends.contains(t.getDayOfWeek().name()))
+					.filter(t -> !holidays.contains(t)).count();
 		}
 		return count;
 	}
-	
-	
+
 	@Transactional
 	public Boolean checkDupes(LocalDate s, LocalDate e, User u) {
-		ArrayList<Leave> c = findByUser(u);
-		int count = (int)c.stream()
-				.filter(x-> (x.getStartDate().isBefore(s) && x.getEndDate().isAfter(e)) ||
-						(x.getStartDate().isEqual(s) && x.getEndDate().isEqual(e)) ||
-						(x.getStartDate().isEqual(s) && x.getEndDate().isAfter(e)))
+		ArrayList<Leave> c = lrepo.findLeaveByUser(u);
+		int count = (int) c.stream()
+				.filter(x -> (x.getStartDate().isBefore(s) && x.getEndDate().isAfter(e))
+						|| (x.getStartDate().isEqual(s) && x.getEndDate().isEqual(e))
+						|| (x.getStartDate().isEqual(s) && x.getEndDate().isAfter(e)))
 				.count();
-		if(count>0) {
-			return true;}
+		if (count > 0) {
+			return true;
+		}
 		return false;
 	}
 
@@ -152,45 +151,44 @@ public class LeaveServiceImpl implements LeaveService{
 		LeaveBalance lb = lbrepo.findByUserAndLeavetype(u, l.getType());
 		Integer in = lb.getBalance();
 		Integer bal = in - i;
-		if(bal>=0) {
+		if (bal >= 0) {
 			lb.setBalance(bal);
 			lbrepo.saveAndFlush(lb);
-			return true;}
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	@Transactional
-	public ArrayList<Leave> findByUser(User u) {
+	public Page<Leave> findByUser(User u, Pageable p) {
 		// TODO Auto-generated method stub
-		return lrepo.findByUser(u);
-	}
 
+		return lrepo.findByUser(u, p);
+	}
 
 	@Override
 	@Transactional
 	public void addHoliday(LocalDate d) {
 		// TODO Auto-generated method stub
-		holidays.add(d);
+		// hrepo.saveAndFlush(d);
 	}
-	
 
-	
 	@Override
 	public List<Leave> listAllLeaves1() {
 		List<Leave> list = lrepo.findAll();
 		return list;
 	}
-	
+
 	@Override
-	public List<Leave> getAllLeaves(int pageNo, int pageSize){
+	public List<Leave> getAllLeaves(int pageNo, int pageSize, User u) {
 		Pageable paging = PageRequest.of(pageNo, pageSize);
-		
-		Page<Leave> pageResult = lrepo.findAll(paging);
-		
+
+		Page<Leave> pageResult = findByUser(u, paging);
+
 		List<Leave> list = pageResult.getContent();
-		
+
 		return list;
-}
+	}
 
 }

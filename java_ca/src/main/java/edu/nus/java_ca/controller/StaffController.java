@@ -177,10 +177,10 @@ public class StaffController {
 	public String list(Model model, HttpSession session) {
 		
 	
-		
+		User u = user(session);
 		int currentpage = 0;
 
-		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, 5);
+		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, 5,u);
 
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
@@ -193,8 +193,8 @@ public class StaffController {
 
 	@GetMapping(value = "/leave/navigate")
 	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
-
-		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1, 5);
+		User u = user(session);
+		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1, 5,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
 		model.addAttribute("leave", lea);
@@ -208,8 +208,8 @@ public class StaffController {
 		Integer i = Integer.parseInt(pageNo);
 		if (i == 2)
 			i--;
-		
-		List<Leave> listWithPagination = lservice.getAllLeaves(i+1, 5);
+		User u = user(session);
+		List<Leave> listWithPagination = lservice.getAllLeaves(i+1, 5,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
 		model.addAttribute("leave", lea);
@@ -221,10 +221,11 @@ public class StaffController {
 
 	@GetMapping(value = "/leave/backward/{currentPage}")
 	public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session) {
+		User u = user(session);
 		Integer i = Integer.parseInt(pageNo);
 		if (i == 0)
 			i++;
-		List<Leave> listWithPagination = lservice.getAllLeaves(i-1, 5);
+		List<Leave> listWithPagination = lservice.getAllLeaves(i-1, 5,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
 		model.addAttribute("leave", lea);

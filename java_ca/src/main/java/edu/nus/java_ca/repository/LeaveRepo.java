@@ -3,6 +3,8 @@ package edu.nus.java_ca.repository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,6 +40,8 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	public ArrayList<Leave>  findLeaveByUser(@Param("user")User user);
 
 	Leave findByStartDateAndEndDate(LocalDate s, LocalDate e);
-	ArrayList<Leave> findByUser(User u);
+	
+	@Query("SELECT l  FROM  Leave l WHERE l.user = :user")
+	Page<Leave> findByUser(@Param("user")User user,Pageable page);
 	
 }
