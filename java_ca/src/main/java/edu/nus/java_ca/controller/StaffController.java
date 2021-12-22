@@ -182,7 +182,7 @@ public class StaffController {
 		int currentpage = 0;
 
 		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, 10,u);
-		listWithPagination.size()
+		listWithPagination.size();
 
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
