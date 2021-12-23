@@ -141,14 +141,15 @@ public class LeaveServiceImpl implements LeaveService {
 	public Boolean checkDupes(LocalDate s, LocalDate e, User u) {
 		ArrayList<Leave> c = lrepo.findDupeLeaveByUser(u);
 		ArrayList<Leave> le = c.stream()
-				.filter(l-> !(l.getStatus().equals(LeaveStatus.DELETED)||l.getStatus().equals(LeaveStatus.REJECTED)||
+				.filter(l-> !(l.getStatus().equals(LeaveStatus.DELETED)||
 					l.getStatus().equals(LeaveStatus.CANCELLED)))
 				.collect(Collectors
 	                    .toCollection(ArrayList::new));
-		int count = (int) le.stream()
+		Long count = le.stream()
 				.filter(x -> (x.getStartDate().isBefore(s) && x.getEndDate().isAfter(e))
 						|| (x.getStartDate().isEqual(s) && x.getEndDate().isEqual(e))
-						|| (x.getStartDate().isEqual(s) && x.getEndDate().isAfter(e)))
+						|| (x.getStartDate().isEqual(s) && x.getEndDate().isAfter(e))
+						|| (x.getEndDate().isEqual(e) && x.getStartDate().isAfter(s)))
 				.count();
 		if (count > 0) {
 			return true;

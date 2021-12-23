@@ -33,6 +33,11 @@ public class Holidays {
 	public void setHoliday(LocalDate holiday) {
 		this.holiday = holiday;
 	}
+	public boolean equals(Holidays obj) {
+		// TODO Auto-generated method stub
+		if(this.getHoliday().equals(obj.getHoliday())) {return true;}
+		return false;
+	}
 	
 
 }

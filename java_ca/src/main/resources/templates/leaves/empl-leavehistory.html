@@ -2,7 +2,6 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head th:replace="fragment/layout-admin.html :: html_head" />
 
 <body>
@@ -13,11 +12,12 @@
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div
           class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
-          <h1 class="h2">Employee's Personal Leave History</h1>
+          <h2 class="mt-3 h4">Employee's Personal Leave History</h2>
 
 		<!-- some sessions code -->		
 
 	  </div>
+
 	<div class="table-responsive">
 	 
 		<form action="#" th:object="${leave}" th:action="@{/leave/search}"
@@ -30,12 +30,15 @@
 			<fieldset>
 				<input type="submit" value="Search"/>
 			</fieldset>
-			
-		</form> 
+		</form><br /> 
 
-	<h2 th:if="${not #lists.isEmpty(emleaves)}">Leaves: </h2>
-	<table th:if="${not #lists.isEmpty(emleaves)}" >
-		<tr >
+	 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
+		<h2 class="mt-3 h4">Leave: </h2>
+	 </div>
+	 
+	<div class="table-responsive">
+	<table th:if="${not #lists.isEmpty(emleaves)}" class="table table-hover">
+		<thead>
 			<th>Leave Id</th>
 			<th>Employee's Name</th>>
 			<th>Leave Type</th>
@@ -46,25 +49,26 @@
 			<th>Work Dissemination</th>
 			<th>Status</th>
 			<th>Manager's Reason</th>
-		</tr>
-		
-		<tr th:each="leave:${emleaves}" >
-			<td th:text=${leave.leaveId}>Id</td>
-			<td th:text="${leave.user.firstName}"> Name</td>
-			<td th:text=${leave.type}>Leave Type</td>
-			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
-			<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Start Date</td>
-			<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
-			<td th:text="${leave.reason}">Reason</td>
-			<td th:text="${leave.workdissem}">Work Dissemination</td>
-			<td th:text="${leave.status}">status</td>	
-			<td th:text="${leave.mreason}">Manager's Reason</td>			
-		</tr>
-		
+		</thead>
+		<tbody>
+			<tr th:each="leave:${emleaves}" >
+				<td th:text=${leave.leaveId}>Id</td>
+				<td th:text="${leave.user.firstName}"> Name</td>
+				<td th:text=${leave.type}>Leave Type</td>
+				<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
+				<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Start Date</td>
+				<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
+				<td th:text="${leave.reason}">Reason</td>
+				<td th:text="${leave.workdissem}">Work Dissemination</td>
+				<td th:text="${leave.status}">status</td>	
+				<td th:text="${leave.mreason}">Manager's Reason</td>			
+			</tr>
+		</tbody>	
 	</table>
 	</div>
 	</main>
+	
 	<div th:replace="fragment/layout-admin.html :: js_script" />
-    <br/>	
+    	
 </body>
 </html>
