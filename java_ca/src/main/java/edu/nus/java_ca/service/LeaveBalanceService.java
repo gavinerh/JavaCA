@@ -25,5 +25,7 @@ public interface LeaveBalanceService {
 	List<String> findAllLeaveTypes();
 	
 	void deleteLeaveBalanceByType(String leavetypename, User user);
+	
+	List<LeaveBalance> findByLeavetype2(String leavetype);
 
 }

@@ -33,7 +33,7 @@
 			<th >Work Dissemination</th>
 			<th >Contact Details</th >
 		</tr>
-		<tr th:each="leave:${leaves}" class="table-row">
+		<tr th:each="leave:${leaves}"th:unless="${#strings.equals(leave.status, 'DELETED')}" class="table-row">
 			<td th:text=${leave.leaveId}>Id</td>
 			<td th:text="${#temporals.format(leave.startDate, 'dd/MM/yyyy')}">Start Date</td>
 			<td th:text="${#temporals.format(leave.endDate, 'dd/MM/yyyy')}">End Date</td>
@@ -44,13 +44,13 @@
 			<td th:text=${leave.contactdetail}>Contact detail</td>
 			
 			<td>
-			<div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<div th:if="${#strings.equals(leave.status, 'APPLIED')}or ${#strings.equals(leave.status, 'UPDATED')}">
 			<a href="#"
 				th:href="@{/staff/leave/edit/}+${leave.leaveId}">Edit</a>
 			</div>
 			</td>
 			<td>
-			<div <div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+			<div <div th:if="${#strings.equals(leave.status, 'APPLIED')}or ${#strings.equals(leave.status, 'UPDATED')}">
 			<a href="#"
 				th:href="@{/staff/leave/delete/}+${leave.leaveId}">Delete</a>
 			</div>
@@ -64,15 +64,14 @@
 		</tr>
 	</table>
 	
+<nav aria-label="...">
+  <ul class="pagination pagination-sm">
+    <li class="page-item"><a class="page-link" th:href="@{/staff/leave/backward/}+${currentPage}">&laquo;</a></li>
+    <li class="page-item"th:each="i: ${#numbers.sequence(1, top1)}" ><a class="page-link" th:href="@{/staff/leave/navigate/}+${i}" th:text= "${i}"></a></li>
+    <li class="page-item"><a class="page-link" th:href="@{/staff/leave/forward/}+${currentPage}">&raquo;</a></li>
+  </ul>
+</nav>
 
-
-	<div class="pagination"> 
-          <a class="paginate" th:href="@{/staff/leave/backward/}+${currentPage}">&laquo;</a>
-          <a th:each="i: ${#numbers.sequence(1, 5)}" class="paginate" th:href="@{/staff/leave/navigate(pageNo=${i})}" th:text= "${i}"></a >
-          
-          
-          <a class="paginate" th:href="@{/staff/leave/forward/}+${currentPage}">&raquo;</a>
-     </div>
     <!--<fieldset>
 			pagesize <select >
 				<option><a href="@{/staff/leave/list/1}">1</a></option>  

@@ -1,5 +1,6 @@
 package edu.nus.java_ca.controller;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -19,7 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.repository.LeaveBalanceRepo;
 import edu.nus.java_ca.repository.UserRepository;
+import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
 import edu.nus.java_ca.service.UserServiceImpl;
@@ -30,36 +33,37 @@ public class AdminUserController {
 
 	@Autowired
 	UserRepository urepo;
-	
+
 	@Autowired
 	UserService Uservice;
-	
+
+	@Autowired
+	LeaveBalanceService lbService;
+
 	@Autowired
 	SessionManagement sess;
-	
+
 	@Autowired
 	public void setUserService(UserServiceImpl UserviceImpl) {
 		this.Uservice = UserviceImpl;
 	}
-	
-	@RequestMapping({"/", ""})
-	public String dashboard(Model model,HttpSession session, SessionStatus status) {
-	
-		
-		
-	String	em = sess.getUserEmail(session);
-User result = Uservice.findByUserEmail(em);
-	System.out.println(result.getLastName());
-	model.addAttribute("usernow", result);
-		
+
+	@RequestMapping({ "/", "" })
+	public String dashboard(Model model, HttpSession session, SessionStatus status) {
+
+		String em = sess.getUserEmail(session);
+		User result = Uservice.findByUserEmail(em);
+		System.out.println(result.getLastName());
+		model.addAttribute("usernow", result);
+
 		List<User> userlist = Uservice.findAll();
 		userlist.remove(result);
-		
+
 		model.addAttribute("userlist", userlist);
-		return "admin/users"; //folder is admin, users is the html
-		}
-		
-	//1234
+		return "admin/users"; // folder is admin, users is the html
+	}
+
+	// 1234
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public ModelAndView addUser() {
 		ModelAndView mav = new ModelAndView("admin/user-form", "user", new User());
@@ -67,10 +71,9 @@ User result = Uservice.findByUserEmail(em);
 		mav.addObject("managerlist", managerList);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String saveMember(@ModelAttribute("user") @Valid User user,
-			BindingResult bindingResult,  Model model) {
+	public String saveMember(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			return "admin/user-form";
 		}
@@ -80,23 +83,22 @@ User result = Uservice.findByUserEmail(em);
 		user.addLeaveBalance(lbAnnual);
 		user.addLeaveBalance(lbCompensation);
 		user.addLeaveBalance(lbMedical);
-		
+
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}
 	
 	@RequestMapping(value = "/delete/{id}")
 	public String deleteMember(@PathVariable("id") Long id) {
-//		if (id==) {
-//			return "forward:/AdminUser/";
-//		}
-		
-		
-		
-		Uservice.deleteUser(Uservice.findByUserId(id));
+		User delUser = Uservice.findByUserId(id);
+		Uservice.deleteUser(delUser);
+
+		Collection<LeaveBalance> userlbCollection = delUser.getLb(); 
+		delUser.getLb().removeAll(userlbCollection);
+
 		return "forward:/AdminUser/";
 	}
-	
+
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView editUser(@PathVariable Long id) {
 		ModelAndView mav = new ModelAndView("admin/user-form", "user", Uservice.findByUserId(id));
@@ -106,13 +108,12 @@ User result = Uservice.findByUserEmail(em);
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
-	public String editUser(@ModelAttribute @Valid User user, BindingResult result, 
-			@PathVariable Long id) {
+	public String editUser(@ModelAttribute @Valid User user, BindingResult result, @PathVariable Long id) {
 		if (result.hasErrors()) {
 			return "admin/user-form";
 		}
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}
-	
+
 }

@@ -44,11 +44,12 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	ArrayList<Leave> findAppliedLeaves();
 	
 	@Query("SELECT l  FROM  Leave l WHERE l.user = :user")
-	public ArrayList<Leave>  findLeaveByUser(@Param("user")User user);
+	public ArrayList<Leave>  findDupeLeaveByUser(@Param("user")User user);
 
 	Leave findByStartDateAndEndDate(LocalDate s, LocalDate e);
 	
 	@Query("SELECT l  FROM  Leave l WHERE l.user = :user")
-	Page<Leave> findByUser(@Param("user")User user,Pageable page);
+	Page<Leave> findBypageUser(@Param("user")User user,Pageable page);
 	
+	ArrayList<Leave> findByUser(User u);
 }

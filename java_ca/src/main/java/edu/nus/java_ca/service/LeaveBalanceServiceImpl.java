@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,7 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
 	@Transactional
 	public LeaveBalance findByUserAndLeavetype(User u, String s) {
 		// TODO Auto-generated method stub
-		return lbrepo.findByUserAndLeavetype(u, s);
+		return lbrepo.findTop1ByUserAndLeavetype(u, s);
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
 	@Override
 	public List<LeaveBalance> findByLeavetype(String leavetype) {
 		// TODO Auto-generated method stub
-		return lbrepo.findByLeavetype(leavetype);
+		return lbrepo.findTop1ByLeavetype(leavetype);
 	}
 
 	@Override
@@ -64,11 +65,18 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
 		// TODO Auto-generated method stub
 		return lbrepo.findAllLeaveTypes();
 	}
-
+	
+	@Modifying
 	@Transactional
 	public void deleteLeaveBalanceByType(String leavetypename, User user) {
 		// TODO Auto-generated method stub
 		lbrepo.deleteLeaveBalanceByType(leavetypename, user);
+	}
+	
+	@Override
+	public List<LeaveBalance> findByLeavetype2(String leavetype) {
+		// TODO Auto-generated method stub
+		return lbrepo.findByLeavetype(leavetype);
 	}
 
 

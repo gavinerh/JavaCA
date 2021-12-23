@@ -16,13 +16,13 @@ public interface LeaveBalanceRepo extends JpaRepository<LeaveBalance, Integer> {
 	
 	LeaveBalance findByBalId(Integer balId);
 
-	LeaveBalance findByUserAndLeavetype(User u, String s);
+	LeaveBalance findTop1ByUserAndLeavetype(User u, String s);
 	
 	ArrayList<LeaveBalance> findByUser(User u);
 	
 	List<LeaveBalance> findAll();
 	
-	List<LeaveBalance> findByLeavetype(String leavetype);
+	List<LeaveBalance> findTop1ByLeavetype(String leavetype);
 	
 	@Query("SELECT DISTINCT lb.leavetype FROM LeaveBalance lb WHERE lb.leavetype IS NOT NULL")
 	List<String> findAllLeaveTypes();
@@ -31,4 +31,6 @@ public interface LeaveBalanceRepo extends JpaRepository<LeaveBalance, Integer> {
 	@Modifying
 	@Query("DELETE FROM LeaveBalance lb WHERE (lb.leavetype = :leavetypename AND lb.user = :user)")
 	void deleteLeaveBalanceByType(String leavetypename, User user);
+	
+	List<LeaveBalance> findByLeavetype(String leavetype);
 }

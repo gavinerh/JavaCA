@@ -31,12 +31,11 @@ public interface LeaveService {
 	public List<Leave> findLeavesByYearandMonth(int yy, int mm);	//NEW QUERY
 	//for staff
 	Page<Leave> findByUser(User u,Pageable p);
+	ArrayList<Leave> findByUser(User u);
 	Long countLeaves(LocalDate s, LocalDate e);
 	Boolean checkDupes(LocalDate s, LocalDate e, User u);
 	Boolean deductleave(Leave l, User u, Integer i);
-
-	//add holiday to the calendar
-	void addHoliday(LocalDate d);
+	Boolean refundleave(Leave l, User u, Integer i);
 
 	//for pangination
 		public List<Leave> listAllLeaves1();

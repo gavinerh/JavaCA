@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,33 +45,36 @@ public class StaffLeaveTest {
 	@Test
 	@Order(1)
 	public void testSubmitLeave(){
-		List<User> u = uservice.findAll();
-	ArrayList<LeaveBalance> ll = new ArrayList<LeaveBalance>();
-	for(User us:u) {
-		LeaveBalance lb = new LeaveBalance(0,"Child Care Leave",7,us);
-			ll.add(lb);
-	}
+//		List<User> u = uservice.findAll();
+//	ArrayList<LeaveBalance> ll = new ArrayList<LeaveBalance>();
+//	for(User us:u) {
+//		LeaveBalance lb = new LeaveBalance(0,"Child Care Leave",7,us);
+//			ll.add(lb);
+//	}
+//		
+//		lbrepo.saveAllAndFlush(ll);
+//		User us = uservice.findByUserId((long)11);
+//		LeaveBalance lb = new LeaveBalance("ChildCare Leave",7,us);
+//		LeaveBalance lb1 = new LeaveBalance("Annual",14,us);
+//		LeaveBalance lb2 = new LeaveBalance("Medical",60,us);
+//		us.addLeaveBalance(lb);
+//		us.addLeaveBalance(lb1);
+//		us.addLeaveBalance(lb2);
+//		/* uservice.saveUser(us); */
+//	/* LeaveBalance lb = lbrepo.findByUserAndLeavetype(us, "Annual"); */
+//		System.out.println(lb);
+//	us.getLb().forEach(System.out::println);
+//		LocalDate ld = LocalDate.of(2021, 11, 20);
+//		ArrayList<Object> holidays = new ArrayList<>(Arrays.asList(new LocalDate[] {LocalDate.of(2021, 11, 20),LocalDate.of(2021, 11, 21)}));		//lservice.addHoliday(LocalDate.of(2021, 11, 20));
+//		holidays.add(LocalDate.of(2022, 11, 1));
+//		holidays.forEach(System.out::println);
+//		System.out.println(holidays.contains(LocalDate.of(2022, 11, 1)));
+//		Long i = lservice.countLeaves(LocalDate.of(2021, 12, 21), LocalDate.of(2021, 12, 22));
+//		System.out.println(i);
+		User us = uservice.findByUserId((long)14);
+		ArrayList<Leave> ll = lservice.findByUser(us);
+		System.out.println(ll.size());
 		
-		lbrepo.saveAllAndFlush(ll);
-		User us = uservice.findByUserId((long)11);
-		LeaveBalance lb = new LeaveBalance("ChildCare Leave",7,us);
-		LeaveBalance lb1 = new LeaveBalance("Annual",14,us);
-		LeaveBalance lb2 = new LeaveBalance("Medical",60,us);
-		us.addLeaveBalance(lb);
-		us.addLeaveBalance(lb1);
-		us.addLeaveBalance(lb2);
-		/* uservice.saveUser(us); */
-	/* LeaveBalance lb = lbrepo.findByUserAndLeavetype(us, "Annual"); */
-		System.out.println(lb);
-	us.getLb().forEach(System.out::println);
-		LocalDate ld = LocalDate.of(2021, 11, 20);
-		ArrayList<Object> holidays = new ArrayList<>(Arrays.asList(new LocalDate[] {LocalDate.of(2021, 11, 20),LocalDate.of(2021, 11, 21)}));		//lservice.addHoliday(LocalDate.of(2021, 11, 20));
-		holidays.add(LocalDate.of(2022, 11, 1));
-		holidays.forEach(System.out::println);
-		System.out.println(holidays.contains(LocalDate.of(2022, 11, 1)));
-		lservice.addHoliday(LocalDate.of(2021, 12, 22));
-		Long i = lservice.countLeaves(LocalDate.of(2021, 12, 21), LocalDate.of(2021, 12, 22));
-		System.out.println(i);
 	}
 
 }
