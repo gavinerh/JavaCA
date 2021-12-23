@@ -48,8 +48,8 @@ public class User {
 	private boolean deleted = Boolean.FALSE;
 	
 	/**Container for LeaveBalance**/
-	@OneToMany(mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.EAGER)
-	Collection<LeaveBalance> lb = new ArrayList<LeaveBalance>();
+	@OneToMany(mappedBy = "user", cascade = { CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
+	Collection<LeaveBalance> lb;
 
 	public User() {
 	}
@@ -60,7 +60,12 @@ public class User {
 	public Collection<LeaveBalance> getLb() {
 		return lb;
 	}
+	
 
+
+	public void setLb(Collection<LeaveBalance> lb) {
+		this.lb = lb;
+	}
 
 	public Long getUserId() {
 		return userId;
