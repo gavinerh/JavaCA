@@ -33,16 +33,16 @@
               </div>
 
               <div class="col-md-6">
-                <label for="department" class="form-label">Department</label>
-                <select name="department" class="form-select" id="department">
+                <label th:for="department" class="form-label">Department</label>
+                <select th:field="*{department}" name="department" class="form-select" id="department">
                   <option th:each="departmentOpt : ${T(edu.nus.java_ca.model.Department).values()}"
 							th:value="${departmentOpt}" th:text="${departmentOpt}"></option>
                 </select>
               </div>
 
               <div class="col-md-6">
-                <label for="position" class="form-label">Position</label>
-                <select name="position" class="form-select" id="position" required>
+                <label th:for="position" class="form-label">Position</label>
+                <select th:field="*{position}" name="position" class="form-select" id="position" required>
                   <option th:each="positionOpt : ${T(edu.nus.java_ca.model.Position).values()}"
 							th:value="${positionOpt}" th:text="${positionOpt}"></option>
                 </select>
@@ -56,14 +56,6 @@
 								th:text="${selectOption.firstName} + ' ' + ${selectOption.lastName}"></option>
                 </select>
               </div>
-               <div class="col-md-6">
-                <label for="authority" class="form-label">authority</label>
-                <select name="authority" class="form-select" id="authority" required>
-                  <option th:each="authorityOpt : ${T(edu.nus.java_ca.model.Authority).values()}"
-							th:value="${authorityOpt}" th:text="${authorityOpt}" ></option>
-                </select>
-              </div>
-              
               
               <input type="hidden" th:field="*{userId}" />
               
