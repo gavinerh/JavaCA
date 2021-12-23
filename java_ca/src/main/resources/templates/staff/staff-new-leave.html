@@ -34,6 +34,10 @@
 						<p th:if="${#fields.hasErrors('type')}" th:class="error" th:errors="*{type}"></p>
 						
 					</div>
+					<div class="col-md-6">
+						<label for="type" class="form-label">Leave Balance</label>
+						<p th:each="type:${bal}" th:text="${type}"></p>
+					</div>
 				</div>
 				<div class="mt-1 row g-3">
 					<div class="col-md-6">

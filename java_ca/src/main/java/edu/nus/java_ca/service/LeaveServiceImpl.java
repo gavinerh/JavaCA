@@ -132,7 +132,8 @@ public class LeaveServiceImpl implements LeaveService {
 		count = s.datesUntil(e.plusDays(1)).count();
 		if (count <= 14) {
 			count = s.datesUntil(e.plusDays(1)).filter(t -> !weekends.contains(t.getDayOfWeek().name()))
-					.filter(t -> !holidays.contains(t)).count();
+					.filter(t -> !holidays.contains(t))
+					.count();
 		}
 		return count;
 	}
