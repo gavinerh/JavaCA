@@ -28,10 +28,6 @@ import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
 
-
-
-
-
 @Controller
 @RequestMapping("/leave")
 public class LeaveController {
@@ -45,14 +41,11 @@ public class LeaveController {
 		this.lservice = lserviceImpl;
 	}
 	
-//	@Autowired
-//	private LeaveBalanceService lbservice;
-	
-	@RequestMapping(value="/leaves/all")
-	public String listAll(Model model) {
-		model.addAttribute("leaves", lservice.listAllLeaves());
-		return "leaves/allleaves";
-	}
+//	@RequestMapping(value="/leaves/all")
+//	public String listAll(Model model) {
+//		model.addAttribute("leaves", lservice.listAllLeaves());
+//		return "leaves/allleaves";
+//	}
  
 	//Movement Register
 	@RequestMapping(value="/leaves/mvt-reg")
@@ -77,7 +70,6 @@ public class LeaveController {
 	}
 	
 	//Subordinate leave history
-	//initial view of leave history of respective employee
 	@RequestMapping(value="/leaves/empl-leavehistory")
 	public String empLeaveHistSearchPage(Model model) {
 		model.addAttribute("leave", new Leave());
