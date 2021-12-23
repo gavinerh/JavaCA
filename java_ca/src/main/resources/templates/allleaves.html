@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/general.html :: headerfiles"/>
+
+<body>
+	<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>
+
+	<h1>Leave List: All</h1>
+
+	<!-- some sessions code -->
+
+	<h2 th:if="${not #lists.isEmpty(leaves)}">Leave List: All</h2>
+	<table th:if="${not #lists.isEmpty(leaves)}" >
+		<tr >
+			<th>Leave Id</th>
+			<th>Employee's Name</th>>
+			<th>Leave Type</th>
+		<!--	<th>Leave Balance</th> -->
+			<th>Leave Application Date</th>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<th>Reason</th>
+			<th>Work Dissemination(if any)</th>
+			<th>Status</th>
+
+		</tr>
+		<tr th:each="leave:${leaves}" >
+			<td th:text=${leave.leaveId}>Id</td>
+			<td th:text="${leave.user.firstName}"> Name</td>
+			<td th:text=${leave.type}>Leave Type</td>
+		<!--	<td th:text=${leavebal.user.balance}>Leave Balance</td> -->
+			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
+			<td th:text="${#temporals.format(leave.startDate, 'dd-MM-yyyy')}">Start Date</td>
+			<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
+			<td th:text=${leave.reason}>Reason</td>
+			<td th:text=${leave.workdissem}>Work Dissemination</td>
+			<td th:text=${leave.status}>status</td>
+
+		</tr>
+	</table>
+    <br/>
+	<div th:replace="fragments/general.html :: footer"></div>
+	
+</body>
+</html>

@@ -59,7 +59,7 @@ public class ReportController {
 	// get all the leave
 	@RequestMapping("/manager/report/all")
 	public String listAll(HttpSession session, Model model, SessionStatus status) {
-//		if(!sess.isLoggedIn(session, status)) return "redirect:/";
+		if(!sess.isLoggedIn(session, status)) return "redirect:/";
 		visited = false;
 		PageDetails pageD = new PageDetails();
 		setPageDetails(pageD, 1);
@@ -80,7 +80,9 @@ public class ReportController {
 	
 	// filter paginated pages for leaves
 	@RequestMapping("/manager/report")
-	public String listWholeReportByPages(@RequestParam("page") Integer page, HttpSession session, Model model) {
+	public String listWholeReportByPages(@RequestParam("page") Integer page, HttpSession session, Model model,
+			SessionStatus status) {
+		if(!sess.isLoggedIn(session, status)) return "redirect:/";
 		List<Leave> filtered = null;
 		if(visited == false) {
 			filtered = paginateView(cachedLeave, page);
@@ -105,7 +107,8 @@ public class ReportController {
 	// filter the leaves by date duration, refreshes from database every time it is called
 	@RequestMapping("/manager/report/filterDate")
 	public String filterByDate(@RequestParam("startDate") String start, @RequestParam("endDate") String end,
-			Model model, HttpSession session) {
+			Model model, HttpSession session, SessionStatus status) {
+		if(!sess.isLoggedIn(session, status)) return "redirect:/";
 		visited = true;
 		System.out.println(start + " " + end);
 		cachedLeaveByDate = getLeaveList(session);
