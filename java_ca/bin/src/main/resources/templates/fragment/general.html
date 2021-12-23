@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headerfiles">
+<meta charset="UTF-8" />
+<link th:href="@{/css/simple.css}" rel="stylesheet">
+</head>
+<body>
+	<div th:fragment="header" id="header">
+		<table>
+			<tr>
+				<td width="15%"><img th:src="@{/img/cal1.png}" /></td>
+				<td><h1>Leave Application Processing System(LAPS) </h1></td>
+			</tr>
+		</table>
+
+	</div>
+	<div th:fragment="menu" id="menu">
+		<table>
+			<tr>
+				<td>
+				<input type="button" value="View All Leave"
+					onclick="window.location.href='/leave/all'; return false"
+					class="button" /> 
+				<input type="button" value="Manage Leave"
+					onclick="window.location.href='/leave/list'; return false"
+					class="button" /> 
+				<input type="button" value="View Employee History"
+					onclick="window.location.href='/leave/empl-leavehistory'; return false"
+					class="button" /> 
+				</td>
+			</tr>
+		</table>
+	</div>
+	<footer th:fragment="footer">
+		<a href="Index.html" th:href="@{/index}">Back to Home</a>
+		<br/>
+		 <small>Now is: <b
+			th:text="${execInfo.now.time}"></b></small> <br /> <small>(c)LAPS, 
+			ISS, NUS 2021</small>
+	</footer>
+</body>
+</html>

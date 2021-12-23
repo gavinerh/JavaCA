@@ -28,7 +28,7 @@ public class EmailService {
         SimpleMailMessage msg = new SimpleMailMessage();
         String subject = "Your " +leave.getType() + " leave is approved.";
         String content = "Your " +leave.getType() + " leave from" + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is approved.";
-        		
+       	
         msg.setTo(leave.getUser().getEmail());
         msg.setSubject(subject);
         msg.setText(content);
@@ -50,6 +50,7 @@ public class EmailService {
         javaMailSender.send(msg);
 
     }
+    
     
     
     
