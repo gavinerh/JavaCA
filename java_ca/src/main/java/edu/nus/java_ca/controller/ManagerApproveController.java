@@ -296,17 +296,31 @@ public class ManagerApproveController {
 		model.addAttribute("leaveapplied",lservice.findLeaveById(id));
 		return "leaves/manager-setstatus";
 	}
+	
 	@PostMapping(value="/confirm")
-	public String approverejectLeave(@RequestParam("leaveId")String id, 
+	public String ApproveRejectLeave(@RequestParam("leaveId")String id, 
 		@RequestParam("mset")String mset, 
 		@RequestParam("mreason")String mrea, Model model) {
 				Leave ls = lservice.findLeaveById(Long.parseLong(id));
+				User user = ls.getUser();
+				Integer count = lservice.countLeaves(ls.getStartDate(), ls.getEndDate()).intValue();
 				ls.setMreason(mrea);
 				LeaveStatus stat = Enum.valueOf(LeaveStatus.class, mset);
 				if(stat.equals(LeaveStatus.APPROVED))
+					{
 					lservice.approveLeave(ls);
+					eService.sendEmailApprove(ls);
+					
+					}
+					
 				if(stat.equals(LeaveStatus.REJECTED))
+				{
 					lservice.rejectLeave(ls);
+					
+					eService.sendEmailReject(ls);
+					lservice.refundleave(ls, user, count);
+				}
+					
 				return "forward:/manager/leaves/list";
 	}
 

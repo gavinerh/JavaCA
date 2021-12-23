@@ -1,0 +1,77 @@
+<!--Page for Manager approval/rejection of Leave-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/layout-admin.html :: html_head" />
+
+<body>
+	<div th:replace="fragment/layout-manager.html :: nav_topbar" />
+	<div th:replace="fragment/layout-manager.html :: nav_sidebar" />
+	
+	 <!--CONTENT-->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div
+          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
+          <h1 class="h2">Approve/Reject Leave</h1>
+		 
+		  <!-- some sessions code -->		
+	  	
+	  	</div>
+	  	
+	  	<div>
+	  	<table>
+		  	<tr >
+				<th>Leave Id</th>
+				<th>Employee's Name</th>>
+				<th>Leave Type</th>
+				<th>Leave Application Date</th>
+				<th>Start Date</th>
+				<th>End Date</th>
+				<th>Reason</th>
+				<th>Work Dissemination(if any)</th>
+			</tr>
+		  	<tr>
+				<td th:text="${leaveapplied.leaveId}">Id</td>
+				<td th:text="${leaveapplied.user.firstName}"> Name</td>
+				<td th:text=${leaveapplied.type}>Leave Type</td>
+				<td th:text="${#temporals.format(leaveapplied.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
+				<td th:text="${#temporals.format(leaveapplied.startDate, 'dd-MM-yyyy')}">Start Date</td>
+				<td th:text="${#temporals.format(leaveapplied.endDate, 'dd-MM-yyyy')}">End Date</td>
+				<td th:text=${leaveapplied.reason}>Reason</td>
+				<td th:text=${leaveapplied.workdissem}>Work Dissemination</td>
+			</tr>
+	  	</table>
+	  	</div><br /> <br />
+		
+	  	
+		<form action="#" th:object="${leaveapplied}" th:action="@{/manager/confirm/}"
+		 		method="post">
+		 			<fieldset>
+						<input type="hidden" th:field="*{leaveId}">
+					</fieldset>
+				<fieldset>
+					<label>Leave Approval: </label>
+					<br />
+					<select name="mset" style="height: 25px; width: 160px">
+					<option th:each="msetstatus:${msetstatus}" th:value="${msetstatus}"
+						th:text="${msetstatus}"></option>
+						</select>
+				</fieldset>
+				<br />
+				<fieldset>
+				<label>	Comments: </label>
+				<br />
+				<textarea th:field="*{mreason}" name="mreason" 
+							placeholder="Leave reason for approval/rejection here"
+							style="height: 50px; width: 300px"></textarea>
+				<!--	<input type="text" name="mreason" th:field="*{mreason}"></i> -->
+				</fieldset><br />
+				<fieldset>
+					<input type="submit" value="Confirm"/>
+				</fieldset>
+			</form>	
+				</div>
+	</main>
+	<div th:replace="fragment/layout-admin.html :: js_script" />
+    <br/>	
+</body>
+</html>
