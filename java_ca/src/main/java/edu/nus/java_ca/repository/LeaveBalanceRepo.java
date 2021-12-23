@@ -33,4 +33,8 @@ public interface LeaveBalanceRepo extends JpaRepository<LeaveBalance, Integer> {
 	void deleteLeaveBalanceByType(String leavetypename, User user);
 	
 	List<LeaveBalance> findByLeavetype(String leavetype);
+	
+	
+	@Query("SELECT DISTINCT lb.leavetype FROM LeaveBalance lb")
+	List<String> findDistinctLeaveType();
 }

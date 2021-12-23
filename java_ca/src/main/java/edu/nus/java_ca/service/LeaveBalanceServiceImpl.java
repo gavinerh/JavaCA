@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.nus.java_ca.model.LeaveBalance;
+import edu.nus.java_ca.model.TypesOfLeave;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.repository.LeaveBalanceRepo;
 @Service
@@ -79,7 +80,15 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
 		return lbrepo.findByLeavetype(leavetype);
 	}
 
-
-	
+	@Override
+	public List<TypesOfLeave> findDistinctLeaveType() {
+		List<String> types = lbrepo.findDistinctLeaveType();
+		List<TypesOfLeave> tLeaves = new ArrayList<TypesOfLeave>();
+		for(int i=0; i<types.size(); i++) {
+			tLeaves.add(new TypesOfLeave(types.get(i)));
+		}
+		tLeaves.add(new TypesOfLeave("All"));
+		return tLeaves;
+	}
 
 }

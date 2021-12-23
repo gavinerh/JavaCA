@@ -15,15 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
-import org.supercsv.io.CsvBeanWriter;
-import org.supercsv.io.ICsvBeanWriter;
-import org.supercsv.prefs.CsvPreference;
 
 import edu.nus.java_ca.model.FilterDate;
 import edu.nus.java_ca.model.Leave;
-import edu.nus.java_ca.model.LeaveReport;
 import edu.nus.java_ca.model.PageDetails;
+import edu.nus.java_ca.model.TypesOfLeave;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveReportService;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.ReportService;
@@ -48,6 +46,9 @@ public class ReportController {
 	@Autowired
 	LeaveReportService lrService;
 	
+	@Autowired
+	LeaveBalanceService	lbService;
+	
 	private List<Leave> cachedLeave;
 	
 	private List<Leave> cachedLeaveByDate;
@@ -70,6 +71,7 @@ public class ReportController {
 	public String listAll(HttpSession session, Model model, SessionStatus status) {
 		if(!sess.isLoggedIn(session, status)) return "redirect:/";
 		visited = false;
+		List<TypesOfLeave> types = lbService.findDistinctLeaveType();
 		PageDetails pageD = new PageDetails();
 		setPageDetails(pageD, 1);
 		
@@ -84,6 +86,7 @@ public class ReportController {
 		}
 		model.addAttribute("leaves", filtered);
 		model.addAttribute("pageDetails", pageD);
+		model.addAttribute("types", types);
 		return "manager/test";
 	}
 	
@@ -109,29 +112,65 @@ public class ReportController {
 		if(filtered.size() < rowsPerPage) {
 			pageD.setNext(null);
 		}
+		List<TypesOfLeave> types = lbService.findDistinctLeaveType();
 		model.addAttribute("filtering", fd);
 		model.addAttribute("pageDetails", pageD);
+		model.addAttribute("types", types);
 		return "manager/test";
 	}
 	
-	// filter the leaves by date duration, refreshes from database every time it is called
-	@RequestMapping("/manager/report/filterDate")
-	public String filterByDate(@RequestParam("startDate") String start, @RequestParam("endDate") String end,
+	
+	@RequestMapping("/manager/report/filterAll")
+	public String filterByDateTesting(@RequestParam("startDate") String start, @RequestParam("endDate") String end,
+			@RequestParam("leaveType") String type,
 			Model model, HttpSession session, SessionStatus status) {
+		System.out.println(type);
 		if(!sess.isLoggedIn(session, status)) return "redirect:/";
 		visited = true;
-		System.out.println(start + " " + end);
 		cachedLeaveByDate = getLeaveList(session);
+		
 		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-d");
 		LocalDate localDateStart = LocalDate.parse(start, df);
 		LocalDate localDateEnd = LocalDate.parse(end, df);
 		FilterDate fd = new FilterDate(); fd.setEndDate(end); fd.setStartDate(start);
 		this.startStr = start; this.endStr = end;
 		// modify local cached list with filtered date list
+
 		cachedLeaveByDate = filterByDate(cachedLeaveByDate, localDateStart, localDateEnd);
+		cachedLeaveByDate = filterByLeaveType(cachedLeaveByDate, type);
 		return "redirect:/manager/report?page=1";
 
 	}
+	
+	
+	private List<Leave> filterByLeaveType(List<Leave> list, String type){
+		if(!type.equals("All")) {
+			return list.stream()
+			.filter(x->{
+				return x.getType().equals(type);
+			}).collect(Collectors.toList());
+		}
+		return list;
+	}
+	
+	// filter the leaves by date duration, refreshes from database every time it is called
+//	@RequestMapping("/manager/report/filterDate")
+//	public String filterByDate(@RequestParam("startDate") String start, @RequestParam("endDate") String end,
+//			Model model, HttpSession session, SessionStatus status) {
+//		if(!sess.isLoggedIn(session, status)) return "redirect:/";
+//		visited = true;
+//		System.out.println(start + " " + end);
+//		cachedLeaveByDate = getLeaveList(session);
+//		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-d");
+//		LocalDate localDateStart = LocalDate.parse(start, df);
+//		LocalDate localDateEnd = LocalDate.parse(end, df);
+//		FilterDate fd = new FilterDate(); fd.setEndDate(end); fd.setStartDate(start);
+//		this.startStr = start; this.endStr = end;
+//		// modify local cached list with filtered date list
+//		cachedLeaveByDate = filterByDate(cachedLeaveByDate, localDateStart, localDateEnd);
+//		return "redirect:/manager/report?page=1";
+//
+//	}
 	
 	
 	@RequestMapping("/manager/exportCSV")

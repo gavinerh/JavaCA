@@ -1,10 +1,8 @@
 package edu.nus.java_ca.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.nus.java_ca.JavaCaApplication;
-import edu.nus.java_ca.model.Leave;
-import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.service.LeaveService;
 
 @ExtendWith(SpringExtension.class)
@@ -35,6 +31,9 @@ public class ReportRepositoryTest {
 	
 	@Autowired
 	ReportRepository rRepo;
+	
+	@Autowired
+	LeaveBalanceRepo lbRepo;
 
 //	@Test
 //	@Order(1)
@@ -61,21 +60,21 @@ public class ReportRepositoryTest {
 //		
 //	}
 //	
-	@Test
-	@Order(2)
-	public void testfindLeaveByUser() {
-		User manager = uRepo.findByUserEmail("manager@manager").get(0);
-		List<User> users = uRepo.findUsersByApprovingOfficer(manager);
-		System.out.println(users.size());
-		List<Leave> result = new ArrayList<Leave>();
-		for(User u : users) {
-			result.addAll(rRepo.findLeaveByUser(u));
-		}
-		System.out.println(result.size());
-		for(Leave l : result) {
-			System.out.println(l.getStartDate() + " " +  l.getEndDate());
-		}
-	}
+//	@Test
+//	@Order(2)
+//	public void testfindLeaveByUser() {
+//		User manager = uRepo.findByUserEmail("manager@manager").get(0);
+//		List<User> users = uRepo.findUsersByApprovingOfficer(manager);
+//		System.out.println(users.size());
+//		List<Leave> result = new ArrayList<Leave>();
+//		for(User u : users) {
+//			result.addAll(rRepo.findLeaveByUser(u));
+//		}
+//		System.out.println(result.size());
+//		for(Leave l : result) {
+//			System.out.println(l.getStartDate() + " " +  l.getEndDate());
+//		}
+//	}
 	
 //	@Test
 //	public void addUserLeave() {
@@ -111,6 +110,15 @@ public class ReportRepositoryTest {
 //		List<Leave> result = rRepo.findLeaveByApprovingOfficer(manager);
 //		for(Leave l : result) {
 //			System.out.println(l.getUser());
+//		}
+//	}
+	
+	
+//	@Test
+//	public void testFindDistinctLeaveType() {
+//		List<String> lists = lbRepo.findDistinctLeaveType();
+//		for(String s : lists) {
+//			System.out.println(s);
 //		}
 //	}
 	

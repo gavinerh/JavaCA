@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.nus.java_ca.model.LeaveBalance;
+import edu.nus.java_ca.model.TypesOfLeave;
 import edu.nus.java_ca.model.User;
 
 public interface LeaveBalanceService {
@@ -27,5 +28,7 @@ public interface LeaveBalanceService {
 	void deleteLeaveBalanceByType(String leavetypename, User user);
 	
 	List<LeaveBalance> findByLeavetype2(String leavetype);
+	
+	List<TypesOfLeave> findDistinctLeaveType();
 
 }

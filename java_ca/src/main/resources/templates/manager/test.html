@@ -69,7 +69,7 @@
 				<div class="position-sticky pt-3">
 					<ul class="nav flex-column">
 						<li class="nav-item mt-3"><a class="nav-link active"
-							aria-current="page" href="/home"> <span data-feather="home"></span>
+							aria-current="page" href="/manager/home"> <span data-feather="home"></span>
 								Dashboard
 						</a></li>
 					</ul>
@@ -79,15 +79,22 @@
 						<span>Filter by Date</span>
 					</h6>
 					<form class="custom-form" method="post"
-						th:action="@{/manager/report/filterDate}">
+						th:action="@{/manager/report/filterAll}">
 						<ul class="nav flex-column mb-2">
 							<br />
 							<li class="nav-item">Start Date</li>
 							<li class="nav-item"><input class="nav-link" type="date"
-								name="startDate" /></li>
-							<li class="nav-item"><br /> End Date</li>
+								name="startDate" required/></li>
+							<li class="nav-item"> End Date</li>
 							<li class="nav-item"><input class="nav-link" type="date"
-								name="endDate" /></li>
+								name="endDate" required/></li>
+							<li class="nav-item" th:if="${not #lists.isEmpty(types)}">
+								<select name="leaveType">
+									<option th:each="type : ${types}" th:text="${type.getType()}"/>
+								</select>
+							</li>
+							
+							
 							<br />
 							<li class="nav-item"><input class="nav-link" type="submit" /></li>
 							<li class="nav-item"><a th:href="@{/manager/report/all}">Clear
@@ -133,8 +140,8 @@
 					<h2 th:if="${leaves == null}">No Leave is recorded</h2>
 					<h2 th:if="${#lists.isEmpty(leaves)}">No more records found</h2>
 					<p th:if="${filtering != null}" class="custom-p"
-						th:text="${'Date filtering from: ' + filtering.getStartDate() + ' to ' + filtering.getEndDate()}">You
-						are in a filtered view</p>
+						th:text="${'Date filtering from: ' + filtering.getStartDate() + ' to ' + filtering.getEndDate()}"></p>
+					<p></p>
 
 				</div>
 
