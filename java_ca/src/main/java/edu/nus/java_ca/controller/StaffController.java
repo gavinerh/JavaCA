@@ -45,7 +45,7 @@ public class StaffController {
 	/** Leave type and Balance to be use in Thymleaf*/
 	private ArrayList<String> s = new ArrayList<>();
 	private ArrayList<String> t = new ArrayList<>();
-	
+	private String type;
 	@Autowired
 	LeaveBalanceService lbservice;
 	@Autowired
@@ -137,6 +137,7 @@ public class StaffController {
 	public ModelAndView editLeavePage(@PathVariable ("id")long id,HttpSession ses) {
 		User u = user(ses);
 		Leave l = lservice.findLeaveById(id);
+		this.type=l.getType();
 		ModelAndView mav = new ModelAndView("staff/leave-edit");
 		mav.addObject("leave", l);
 		mav.addObject("types",s);
@@ -164,8 +165,7 @@ public class StaffController {
 			return("staff/leave-edit");
 		}
 		else {
-		lservice.refundleave(l, u,l.getLeavetaken());
-		
+		lservice.refundleave(this.type, u, l.getLeavetaken());
 		l.setStatus(LeaveStatus.UPDATED);
 		l.setLeavetaken(count.intValue());
 		LocalDate now = LocalDate.now();

@@ -202,6 +202,19 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
+	@Modifying
+	@Transactional
+	public Boolean refundleave(String s, User u, Integer i) {
+		// TODO Auto-generated method stub
+		LeaveBalance lb = lbrepo.findTop1ByUserAndLeavetype(u, s);
+		Integer in = lb.getBalance();
+		Integer bal = in + i;
+		lb.setBalance(bal);
+		lbrepo.saveAndFlush(lb);
+		return true;
+	}
+
+	@Override
 	@Transactional
 	public Page<Leave> findByUser(User u, Pageable p) {
 		// TODO Auto-generated method stub
