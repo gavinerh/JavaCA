@@ -70,7 +70,7 @@
           <a class="paginate" th:href="@{/manager/leave/backward/}+${currentPage}">&laquo;</a>
           <a th:each="i: ${#numbers.sequence(1, top1)}" class="paginate" th:href="@{/manager/leave/navigate(pageNo=${i})}" th:text= "${i}"></a >
           
-          
+         
           <a class="paginate" th:href="@{/manager/leave/forward/}+${currentPage}">&raquo;</a>
      </div>
     <!--<fieldset>

@@ -26,8 +26,9 @@ public class EmailService {
     public void sendEmailApprove(Leave leave) {
 
         SimpleMailMessage msg = new SimpleMailMessage();
+        String urlString = "http://localhost:8080/login";
         String subject = "Your " +leave.getType() + " leave is approved.";
-        String content = "Your " +leave.getType() + " leave from" + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is approved.";
+        String content = "Your " +leave.getType() + " leave from" + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is approved.\n" +urlString;
        	
         msg.setTo(leave.getUser().getEmail());
         msg.setSubject(subject);
@@ -40,8 +41,9 @@ public class EmailService {
     public void sendEmailReject(Leave leave) {
 
         SimpleMailMessage msg = new SimpleMailMessage();
+        String urlString = "http://localhost:8080/login";
         String subject = "Your " +leave.getType() + " leave is rejected.";
-        String content = "Your " +leave.getType() + " leave from" + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is rejected.";
+        String content = "Your " +leave.getType() + " leave from" + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is rejected.\n" + urlString;
         		
         msg.setTo(leave.getUser().getEmail());
         msg.setSubject(subject);
@@ -50,7 +52,20 @@ public class EmailService {
         javaMailSender.send(msg);
 
     }
-    
+    public void sendEmailApply(Leave leave) {
+        User user = leave.getUser();
+        SimpleMailMessage msg = new SimpleMailMessage();
+        String urlString = "http://localhost:8080/login";
+        String subject = "Application of" +leave.getType() + " leave from "+user.getFirstName()+" "+user.getLastName();
+        String content = "Application of" +leave.getType() + " leave from "+user.getFirstName()+" "+user.getLastName() + "," + leave.getStartDate().toString() + " to " + leave.getEndDate().toString() + " is pending.\n" + urlString;
+        		
+        msg.setTo(user.getApprovingOfficer().getEmail());
+        msg.setSubject(subject);
+        msg.setText(content);
+
+        javaMailSender.send(msg);
+
+    }
     
     
     

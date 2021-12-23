@@ -26,6 +26,7 @@ import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.SessionClass;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.service.EmailService;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
@@ -50,6 +51,8 @@ public class StaffController {
 	LeaveBalanceService lbservice;
 	@Autowired
 	private LeaveService lservice;
+	@Autowired
+	private EmailService eService;
 	@Autowired
 	public void setLeaveService (LeaveServiceImpl lservice) {
 		this.lservice = lservice;
@@ -131,9 +134,10 @@ public class StaffController {
 		leave.setAppliedDate(now);
 		leave.setLeavetaken(count.intValue());
 		leave.setStatus(LeaveStatus.APPLIED);
+		
 		leave.setUser(u);
 		lservice.createLeave(leave);
-		
+		eService.sendEmailApply(leave);
 		String message = "New Leave " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
 		u.getLb().forEach(System.out::println);
