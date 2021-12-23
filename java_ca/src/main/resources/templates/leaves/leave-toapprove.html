@@ -1,6 +1,6 @@
+<!-- page for DISPLAYING pending leaves ONLY for approval -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head th:replace="fragment/layout-admin.html :: html_head" />
 
 <body>
@@ -9,17 +9,16 @@
 	
 	 <!--CONTENT-->
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div
-          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
-          <h1 class="h2">Leave List: To Approve</h1>
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
+           <h2 class="mt-3 h4">Leave List: To Approve</h2>
     
          <!-- some sessions code -->	
          
 	    </div>
-	<div class="table-responsive">
-	<h2 th:if="${not #lists.isEmpty(leaves)}"></h2>
-	<table th:if="${not #lists.isEmpty(leaves)}" >
-		<tr >
+
+	<div clas s="table-responsive">
+	<table th:if="${not #lists.isEmpty(leaves)}" class="table table-hover">
+		<thead>
 			<th>Leave Id</th>
 			<th>Employee's Name</th>>
 			<th>Leave Type</th>
@@ -28,11 +27,11 @@
 			<th>End Date</th>
 			<th>Reason</th>
 			<th>Work Dissemination(if any)</th>
-
 			<th>Status</th>
-			<th> </th>
-		</tr>
-		<tr th:each="leave:${leaves}" >
+			<th></th>
+		</thead>
+		<tbody>
+		  <tr th:each="leave:${leaves}" class="table-row" >
 			<td th:text=${leave.leaveId}>Id</td>
 			<td th:text="${leave.user.firstName}"> Name</td>
 			<td th:text=${leave.type}>Leave Type</td>
@@ -41,23 +40,17 @@
 			<td th:text="${#temporals.format(leave.endDate, 'dd-MM-yyyy')}">End Date</td>
 			<td th:text=${leave.reason}>Reason</td>
 			<td th:text=${leave.workdissem}>Work Dissemination</td>
-
 			<td th:text=${leave.status}>status</td>
-			<!--<td ><a href="approveLeave.html"
-				th:href="@{/leave/approve/}+${leave.leaveId}" 
-				th:utext="#{leave.approve}" >Approved<a></td>
-			<td ><a href="rejectLeave.html"
-				th:href="@{/leave/reject/}+${leave.leaveId}" 
-				th:utext="#{leave.reject}">Rejected</a></td>	
-			<td > -->
 			<td ><a href="manager-setstatus.html"
 				th:href="@{/manager/send/}+${leave.leaveId}" 
 				th:utext="#{leave.setStatus}" >Set Status<a></td>	
-		</tr>
+		  </tr>
+		</tbody>
 	</table>
 	</div>
 	</main>
+	
 	<div th:replace="fragment/layout-admin.html :: js_script" />
-    <br/>	
+   
 </body>
 </html>
