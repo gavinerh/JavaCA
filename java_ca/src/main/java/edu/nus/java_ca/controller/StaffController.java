@@ -45,6 +45,7 @@ public class StaffController {
 	public Integer pagesize;
 	public Integer leave;
 	private ArrayList<String> s = new ArrayList<>();
+	private ArrayList<String> t = new ArrayList<>();
 	@Autowired
 	LeaveBalanceService lbservice;
 	@Autowired
@@ -79,13 +80,17 @@ public class StaffController {
 		User u = user(ses);
 		/**find leaves for current user and his leave types*/
 		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
+		
 		s.clear();
+		t.clear();
 		for(LeaveBalance b:lb) {
 			s.add(b.getLeavetype());
+			t.add(b.getLeavetype()+":\t"+b.getBalance().toString());
 		}
 		ModelAndView mav = new ModelAndView("staff/staff-new-leave");
 		mav.addObject("leave", new Leave());
 		mav.addObject("types",s);
+		mav.addObject("bal",t);
 		return mav;
 	}
 
@@ -94,6 +99,7 @@ public class StaffController {
 		User u = user(ses);
 		
 		model.addAttribute("types",s);
+		model.addAttribute("bal",t);
 		
 		if (result.hasErrors()){
 			return("staff/staff-new-leave");}
