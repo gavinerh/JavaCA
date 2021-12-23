@@ -29,6 +29,7 @@ import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.SessionClass;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.security.Hash;
 import edu.nus.java_ca.service.EmailService;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
@@ -157,6 +158,8 @@ public class ManagerApproveController {
 		if (result.hasErrors()) {
 			return "manager/manageredit";
 		}
+		String hashPassword = Hash.hashPassword(user.getPassword());
+		user.setPassword(hashPassword);
 		uservice.saveUser(user);
 		return "forward:/manager/home";
 	}

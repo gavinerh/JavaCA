@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.repository.UserRepository;
+import edu.nus.java_ca.security.Hash;
 import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
 import edu.nus.java_ca.service.UserServiceImpl;
@@ -67,6 +68,8 @@ public class staff1 {
 		if (result.hasErrors()) {
 			return "staff/staff-edit";
 		}
+		String hashedPassword = Hash.hashPassword(user.getPassword());
+		user.setPassword(hashedPassword);
 		Uservice.saveUser(user);
 		return "forward:/staff1/main";
 	}

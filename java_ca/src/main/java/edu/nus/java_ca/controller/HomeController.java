@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.security.Hash;
 import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
 
@@ -43,9 +44,8 @@ public class HomeController {
 		User result = uService.findByUserEmail(user.getEmail());
 		if(result == null) {
 			// create a new user
-//			PasswordEncoder encoder = new BCryptPasswordEncoder(5);
-//			String codedPassword = encoder.encode(user.getPassword());
-//			user.setPassword(codedPassword);
+			String hashedPassword = Hash.hashPassword(user.getPassword());
+			user.setPassword(hashedPassword);
 			uService.saveUser(user);
 			return "register/registerSuccess";
 		}
@@ -70,12 +70,13 @@ public class HomeController {
 	public String login(@RequestParam String email, @RequestParam String password, HttpSession session) {
 		User result = uService.findByUserEmail(email);
 		System.out.println(result);
-//		PasswordEncoder encoder = new BCryptPasswordEncoder(5);
 		if(result == null) {
 			return "login/failedLogin";
 		}
 		// compare the email and password
-		if(result.getEmail().equals(email.toLowerCase())) {
+		String storedPassword = result.getPassword();
+		
+		if(result.getEmail().equals(email.toLowerCase()) && storedPassword.equals(Hash.hashPassword(password))) {
 			sess.createSession(session, result);
 			// set lastlogin date
 			result.setLastLoginDate(new Date());

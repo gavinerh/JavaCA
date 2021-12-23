@@ -22,6 +22,7 @@ import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.repository.LeaveBalanceRepo;
 import edu.nus.java_ca.repository.UserRepository;
+import edu.nus.java_ca.security.Hash;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
@@ -83,7 +84,7 @@ public class AdminUserController {
 		user.addLeaveBalance(lbAnnual);
 		user.addLeaveBalance(lbCompensation);
 		user.addLeaveBalance(lbMedical);
-
+		user.setPassword(Hash.hashPassword(user.getPassword()));
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}
@@ -112,6 +113,7 @@ public class AdminUserController {
 		if (result.hasErrors()) {
 			return "admin/user-form";
 		}
+		user.setPassword(Hash.hashPassword(user.getPassword()));
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}

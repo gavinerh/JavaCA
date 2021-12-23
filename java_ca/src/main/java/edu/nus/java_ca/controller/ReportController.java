@@ -113,6 +113,7 @@ public class ReportController {
 			pageD.setNext(null);
 		}
 		List<TypesOfLeave> types = lbService.findDistinctLeaveType();
+		
 		model.addAttribute("filtering", fd);
 		model.addAttribute("pageDetails", pageD);
 		model.addAttribute("types", types);
