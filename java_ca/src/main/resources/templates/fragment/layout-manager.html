@@ -87,6 +87,7 @@
           </h6>
           <ul class="nav flex-column mb-2">
             <li class="nav-item">
+<<<<<<< HEAD
               <a class="nav-link" th:href="@{/manager/leave/new}">
                 <span data-feather="edit"></span>
                 Apply new leave
@@ -147,6 +148,79 @@
 			th:src="@{https://unpkg.com/feather-icons@4.28.0/dist/feather.min.js}"></script>
 
 		<script type="text/javascript" th:src="@{/css/dashboard.js}"></script>
+=======
+              <a class="nav-link" href="@{/staff/leave/new}">
+                <span data-feather="edit"></span>
+                Manage My Leave
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/manager/home">
+                <span data-feather="eye"></span>
+                View Leave History
+              </a>
+            </li>
+          </ul>
+          
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Manager's Menu</span>
+          </h6>
+           <ul class="nav flex-column mb-2">
+             <li class="nav-item">
+              <a class="nav-link" href="/leave/leaves/mvt-reg">
+                <span data-feather="eye"></span>
+                Movement Register
+              </a>
+            </li>
+             <li class="nav-item">
+              <a class="nav-link"href="/leave/leaves/all">
+                <span data-feather="eye"></span>
+                View ALL Leave
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/leave/leaves/empl-leavehistory">
+                <span data-feather="eye"></span>
+                View Employee's Leave
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/manager/leaves/list">
+                <span data-feather="edit"></span>
+                Manage Leave Applications
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span data-feather="file-text"></span>
+                ?Report
+              </a>
+            </li>
+          </ul>
+
+          <ul class="nav flex-column border-top">
+            <li class="nav-item mt-3">
+              <a class="nav-link" aria-current="logout" th:href="@{/logout}">
+                <span data-feather="log-out"></span>
+                Log Out
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+	<!-- ALL THE JAVASCRIPT -->
+	<div th:fragment="js_script" id="js_script">
+		<script type="text/javascript"
+			th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js}"
+			integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+			crossorigin="anonymous"></script>
+
+		<script type="text/javascript"
+			th:src="@{https://unpkg.com/feather-icons@4.28.0/dist/feather.min.js}"></script>
+
+		<script type="text/javascript" th:src="@{/dashboard.js}"></script>
+>>>>>>> branch 'main' of https://github.com/gavinerh/JavaCA
 	</div>
 </body>
 
