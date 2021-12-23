@@ -233,10 +233,16 @@ public class StaffController {
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
+		List<Leave> userList =lservice.findByUser(u);
 		
-		int top = listWithPagination.size();
-		int top1 = (top/pagesize)+1;
-		
+		int top = userList.size();
+		int top1;
+		if (top % pagesize>0)
+		{
+			 top1 = (top/pagesize)+1;}
+		else {
+			 top1 = top/pagesize;
+		}
 
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
@@ -294,10 +300,6 @@ public class StaffController {
 	else {
 		 top1 = top/pagesize;
 	}
-	
-		
-		
-	
 	
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
