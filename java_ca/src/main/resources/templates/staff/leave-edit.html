@@ -27,6 +27,9 @@
 		<fieldset>
 			<input type="hidden" th:field="*{user}" />
 		</fieldset>
+		<fieldset>
+			<input type="hidden" th:field="*{leavetaken}" />
+		</fieldset>
 				<div class="row g-3">
 					<div class="col-md-6">
 						<label for="type" class="form-label">Leave Type</label><select
@@ -35,7 +38,10 @@
 							<option th:each="type:${types}" th:value="${type}" th:text="${type}"></option>
 						</select>
 						<p th:if="${#fields.hasErrors('type')}" th:class="error" th:errors="*{type}"></p>
-						
+					</div>
+					<div class="col-md-6">
+						<label for="type" class="form-label">Leave Balance</label>
+						<p th:each="type:${bal}" th:text="${type}"></p>
 					</div>
 				</div>
 				<div class="mt-1 row g-3">

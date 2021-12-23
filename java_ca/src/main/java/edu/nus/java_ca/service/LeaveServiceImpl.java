@@ -126,13 +126,28 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Transactional
-	public Long countLeaves(LocalDate s, LocalDate e) {
+	public Long countLeaves(LocalDate s, LocalDate e, User u) {
 		Long count;
+		ArrayList<Leave> c = lrepo.findDupeLeaveByUser(u);
+		ArrayList<Leave> le = c.stream()
+				.filter(l-> !(l.getStatus().equals(LeaveStatus.DELETED)||
+					l.getStatus().equals(LeaveStatus.CANCELLED)))
+				.collect(Collectors
+	                    .toCollection(ArrayList::new));
+		ArrayList<LocalDate> userleave = new ArrayList<>();
+		for(Leave lea:le) {
+			userleave.addAll(lea.getStartDate().datesUntil(lea.getEndDate().plusDays(1))
+					.collect(Collectors
+		                    .toCollection(ArrayList::new)));
+		}
+				
 		ArrayList<LocalDate> holidays = hservice.findHolidays();
 		count = s.datesUntil(e.plusDays(1)).count();
 		if (count <= 14) {
-			count = s.datesUntil(e.plusDays(1)).filter(t -> !weekends.contains(t.getDayOfWeek().name()))
+			count = s.datesUntil(e.plusDays(1))
+					.filter(t -> !weekends.contains(t.getDayOfWeek().name()))
 					.filter(t -> !holidays.contains(t))
+					.filter(t-> !userleave.contains(t))
 					.count();
 		}
 		return count;
@@ -150,7 +165,7 @@ public class LeaveServiceImpl implements LeaveService {
 				.filter(x -> (x.getStartDate().isBefore(s) && x.getEndDate().isAfter(e))
 						|| (x.getStartDate().isEqual(s) && x.getEndDate().isEqual(e))
 						|| (x.getStartDate().isEqual(s) && x.getEndDate().isAfter(e))
-						|| (x.getEndDate().isEqual(e) && x.getStartDate().isAfter(s)))
+						|| (x.getEndDate().isEqual(e) && x.getStartDate().isBefore(s)))
 				.count();
 		if (count > 0) {
 			return true;

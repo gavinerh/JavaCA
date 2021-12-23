@@ -106,7 +106,7 @@ public class ManagerApproveController {
 			model.addAttribute("errormsg", "**You've already Applied the same period**");
 			return("manager/manager-new-leave");
 		}
-		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate());
+		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate(),u);
 		System.out.println("Total leave days: "+count);
 		if(!lservice.deductleave(leave, u, count.intValue())) {
 			model.addAttribute("errormsg", "**Leave Application Failed! You don't Have Enough Leave**");
@@ -279,7 +279,7 @@ public class ManagerApproveController {
 		@RequestParam("mreason")String mrea, Model model) {
 			Leave ls = lservice.findLeaveById(Long.parseLong(id));
 			User user = ls.getUser();
-			Integer count = lservice.countLeaves(ls.getStartDate(), ls.getEndDate()).intValue();
+			Integer count = lservice.countLeaves(ls.getStartDate(), ls.getEndDate(),user).intValue();
 			ls.setMreason(mrea);
 			LeaveStatus stat = Enum.valueOf(LeaveStatus.class, mset);
 			if(stat.equals(LeaveStatus.APPROVED))

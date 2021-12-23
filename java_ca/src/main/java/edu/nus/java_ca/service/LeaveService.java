@@ -32,7 +32,7 @@ public interface LeaveService {
 	//for staff
 	Page<Leave> findByUser(User u,Pageable p);
 	ArrayList<Leave> findByUser(User u);
-	Long countLeaves(LocalDate s, LocalDate e);
+	Long countLeaves(LocalDate s, LocalDate e, User u);
 	Boolean checkDupes(LocalDate s, LocalDate e, User u);
 	Boolean deductleave(Leave l, User u, Integer i);
 	Boolean refundleave(Leave l, User u, Integer i);

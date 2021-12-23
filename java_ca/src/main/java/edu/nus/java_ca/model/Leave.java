@@ -39,6 +39,8 @@ public class Leave {
 	private String workdissem;
 	private String type;
 	private String contactdetail;
+	@Column(name = "leave_taken")
+	private Integer leavetaken;
 	
 	@Column(name = "applieddate")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -169,6 +171,13 @@ public class Leave {
 	}
 	public void setContactdetail(String contactdetail) {
 		this.contactdetail = contactdetail;
+	}
+	
+	public Integer getLeavetaken() {
+		return leavetaken;
+	}
+	public void setLeavetaken(Integer leavetaken) {
+		this.leavetaken = leavetaken;
 	}
 	@Override
 	public int hashCode() {

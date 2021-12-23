@@ -81,7 +81,7 @@ public class AdminLeaveController {
 			return("admin/admin-new-leave");
 		}
 	
-		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate());
+		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate(),u);
 		System.out.println("Total leave days: "+count);
 		if(!lservice.deductleave(leave, u, count.intValue())) {
 			model.addAttribute("errormsg", "**Leave Application Failed! You don't Have Enough Leave**");
