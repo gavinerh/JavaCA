@@ -83,6 +83,22 @@
 	</div>
 	</main>
 	
+	
+	<!--PAGINATION-->
+	<div class="pagination"> 
+    	<a class="paginate" th:href="@{/leave/backward/}+${currentPage}">&laquo;</a>
+        <a th:each="i: ${#numbers.sequence(1, top1)}" class="paginate" th:href="@{/leave/navigate(pageNo=${i})}" th:text= "${i}"></a >
+            
+        <a class="paginate" th:href="@{/leave/forward/}+${currentPage}">&raquo;</a>
+    </div>
+     
+     <div class="col-12">
+		<a class="btn btn-primary me-2" th:href="@{/leave/view/1}">1</a> 
+		<a class="btn btn-primary me-2" th:href="@{/leave/view/2}">2</a> 
+		<a class="btn btn-primary me-2" th:href="@{/leave/view/3}">3</a> 
+	</div>
+	
+	
 	<div th:replace="fragment/layout-admin.html :: js_script" />
     	
 </body>
