@@ -26,10 +26,13 @@
                 <label for="email" class="form-label">Email</label>
                 <input th:field="*{email}" type="email" class="form-control" id="email" placeholder="you@example.com" required>
               </div>
-
+              
               <div class="col-md-6">
-                <label for="password" class="form-label">Password</label>
-                <input th:field="*{password}" type="password" class="form-control" id="password" placeholder="" value="" required>
+                <label th:for="position" class="form-label">Position</label>
+                <select th:field="*{position}" name="position" class="form-select" id="position" required>
+                  <option th:each="positionOpt : ${T(edu.nus.java_ca.model.Position).values()}"
+							th:value="${positionOpt}" th:text="${positionOpt}"></option>
+                </select>
               </div>
 
               <div class="col-md-6">
@@ -41,14 +44,6 @@
               </div>
 
               <div class="col-md-6">
-                <label th:for="position" class="form-label">Position</label>
-                <select th:field="*{position}" name="position" class="form-select" id="position" required>
-                  <option th:each="positionOpt : ${T(edu.nus.java_ca.model.Position).values()}"
-							th:value="${positionOpt}" th:text="${positionOpt}"></option>
-                </select>
-              </div>
-              
-              <div class="col-md-6">
                 <label th:for="*{approvingOfficer}" class="form-label">Approving Officer</label>
                 <select th:field="*{approvingOfficer.userId}" name="approvingOfficer" class="form-select" id="approvingOfficer">
                 <option value="" disabled selected>Select</option>
@@ -58,6 +53,7 @@
               </div>
               
               <input type="hidden" th:field="*{userId}" />
+              <input type="hidden" th:field="*{password}" />
               <input type="hidden" th:field="*{lb}" />
               
               <div th:if="${#fields.hasAnyErrors()}">
