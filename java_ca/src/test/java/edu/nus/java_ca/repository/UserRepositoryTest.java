@@ -69,6 +69,15 @@ public class UserRepositoryTest {
 		uRepo.save(u1);
 	}
 	
+	@Test
+	public void testFindUsersByApprovingOfficer() {
+		User manager = uRepo.findByUserEmail("manager@manager").get(0);
+		List<User> users = uRepo.findUsersByApprovingOfficer(manager);
+		for(User u : users) {
+			System.out.println(u);
+		}
+	}
+	
 	
 	
 	

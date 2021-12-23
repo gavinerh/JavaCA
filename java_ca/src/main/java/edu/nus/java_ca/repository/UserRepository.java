@@ -27,7 +27,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	User  findByUserId(@Param("userId") Long userId);
 	
 	
-	
+	@Query("SELECT u FROM User u WHERE u.approvingOfficer = :approving")
+	List<User> findUsersByApprovingOfficer(@Param("approving") User approving);
 	
 	
 	@Modifying

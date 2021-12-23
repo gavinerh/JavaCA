@@ -12,9 +12,10 @@ import edu.nus.java_ca.model.Leave;
 import edu.nus.java_ca.model.User;
 
 public interface ReportRepository extends JpaRepository<Leave, Long> {
-	@Query("SELECT l FROM Leave l WHERE l.user.approvingOfficer = :approving")
-	List<Leave> findLeaveByApprovingOfficer(@Param("approving") User approving);
-
+	@Query("SELECT l FROM Leave l WHERE l.user = :u")
+	List<Leave> findLeaveByUser(@Param("u") User user);
 	
+	@Query("SELECT l FROM Leave l WHERE l.user.approvingOfficer = :approving")
+	List<Leave> findLeaveByApprovingOfficer(@Param("approving") User manager);
 	
 }

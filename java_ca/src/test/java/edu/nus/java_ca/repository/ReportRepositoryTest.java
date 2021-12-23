@@ -1,9 +1,6 @@
 package edu.nus.java_ca.repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -17,10 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.nus.java_ca.JavaCaApplication;
-import edu.nus.java_ca.model.Department;
 import edu.nus.java_ca.model.Leave;
-import edu.nus.java_ca.model.LeaveStatus;
-import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.service.LeaveService;
 
@@ -67,43 +61,48 @@ public class ReportRepositoryTest {
 //		
 //	}
 //	
-//	@Test
-//	@Order(2)
-//	public void testfindLeaveByApprovingOfficer() {
-//		User manager = uRepo.findByUserEmail("manager@manager").get(0);
-//		List<Leave> result = rRepo.findLeaveByApprovingOfficer(manager);
-//		
-//		for(Leave l : result) {
-//			System.out.println(l.getUser() + " " +  l.getUser());
-//		}
-//	}
-	
 	@Test
-	public void addUserLeave() {
+	@Order(2)
+	public void testfindLeaveByUser() {
 		User manager = uRepo.findByUserEmail("manager@manager").get(0);
-		User u2 = uRepo.findByUserEmail("staff1@staff").get(0);
-		System.out.println("User is found: " + u2.getEmail());
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		
-		for(int i=10; i<29; i++) {
-			String date = "2021-12-";
-			String time = " 13:00";
-			int start = i;
-			String startStr = date;
-			startStr += Integer.toString(i);
-			startStr += time;
-			String endStr = date;
-			endStr += Integer.toString(i+1);
-			endStr += time;
-			LocalDate startD = LocalDateTime.parse(startStr, df).atZone(ZoneId.of("Asia/Singapore")).toLocalDate();
-			LocalDate endD = LocalDateTime.parse(endStr, df).atZone(ZoneId.of("Asia/Singapore")).toLocalDate();
-			Leave l1 = new Leave();
-			l1.setStartDate(startD); l1.setEndDate(endD); 
-			l1.setContactdetail("99999"); l1.setStatus(LeaveStatus.APPLIED);
-			l1.setUser(u2);
-			rRepo.saveAndFlush(l1);
+		List<User> users = uRepo.findUsersByApprovingOfficer(manager);
+		System.out.println(users.size());
+		List<Leave> result = new ArrayList<Leave>();
+		for(User u : users) {
+			result.addAll(rRepo.findLeaveByUser(u));
+		}
+		System.out.println(result.size());
+		for(Leave l : result) {
+			System.out.println(l.getStartDate() + " " +  l.getEndDate());
 		}
 	}
+	
+//	@Test
+//	public void addUserLeave() {
+//		User manager = uRepo.findByUserEmail("manager@manager").get(0);
+//		User u2 = uRepo.findByUserEmail("staff1@staff").get(0);
+//		System.out.println("User is found: " + u2.getEmail());
+//		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//		
+//		for(int i=10; i<29; i++) {
+//			String date = "2021-12-";
+//			String time = " 13:00";
+//			int start = i;
+//			String startStr = date;
+//			startStr += Integer.toString(i);
+//			startStr += time;
+//			String endStr = date;
+//			endStr += Integer.toString(i+1);
+//			endStr += time;
+//			LocalDate startD = LocalDateTime.parse(startStr, df).atZone(ZoneId.of("Asia/Singapore")).toLocalDate();
+//			LocalDate endD = LocalDateTime.parse(endStr, df).atZone(ZoneId.of("Asia/Singapore")).toLocalDate();
+//			Leave l1 = new Leave();
+//			l1.setStartDate(startD); l1.setEndDate(endD); 
+//			l1.setContactdetail("99999"); l1.setStatus(LeaveStatus.APPLIED);
+//			l1.setUser(u2);
+//			rRepo.saveAndFlush(l1);
+//		}
+//	}
 //	
 //	@Test
 ////	@Order(3)
