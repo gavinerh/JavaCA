@@ -21,8 +21,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.nus.java_ca.JavaCaApplication;
 import edu.nus.java_ca.model.*;
+import edu.nus.java_ca.repository.HolidayRepo;
 import edu.nus.java_ca.repository.LeaveBalanceRepo;
 import edu.nus.java_ca.repository.UserRepository;
+import edu.nus.java_ca.service.HolidayService;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.UserService;
@@ -40,7 +42,10 @@ public class StaffLeaveTest {
 	@Autowired
 	UserService uservice;
 	@Autowired
-	LeaveBalanceRepo lbrepo;
+	HolidayService hservice;
+	@Autowired
+	HolidayRepo hrepo;
+	
 	
 	@Test
 	@Order(1)
@@ -65,15 +70,16 @@ public class StaffLeaveTest {
 //		System.out.println(lb);
 //	us.getLb().forEach(System.out::println);
 //		LocalDate ld = LocalDate.of(2021, 11, 20);
-//		ArrayList<Object> holidays = new ArrayList<>(Arrays.asList(new LocalDate[] {LocalDate.of(2021, 11, 20),LocalDate.of(2021, 11, 21)}));		//lservice.addHoliday(LocalDate.of(2021, 11, 20));
-//		holidays.add(LocalDate.of(2022, 11, 1));
-//		holidays.forEach(System.out::println);
+	    ArrayList<Holidays> holidays = new ArrayList<>(Arrays.asList(new Holidays[] {new Holidays(LocalDate.of(2021, 11, 20)),new Holidays(LocalDate.of(2021, 11, 21))}));		
+  
+		hservice.createHoliday(new Holidays(LocalDate.of(2021, 11, 20)));
+    	hrepo.saveAllAndFlush(holidays);
 //		System.out.println(holidays.contains(LocalDate.of(2022, 11, 1)));
 //		Long i = lservice.countLeaves(LocalDate.of(2021, 12, 21), LocalDate.of(2021, 12, 22));
 //		System.out.println(i);
-		User us = uservice.findByUserId((long)14);
-		ArrayList<Leave> ll = lservice.findByUser(us);
-		System.out.println(ll.size());
+//		User us = uservice.findByUserId((long)14);
+//		ArrayList<Leave> ll = lservice.findByUser(us);
+//		System.out.println(ll.size());
 		
 	}
 

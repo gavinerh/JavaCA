@@ -44,6 +44,7 @@ public class StaffController {
 	  }
 	public Integer pagesize;
 	public Integer leave;
+	private ArrayList<String> s = new ArrayList<>();
 	@Autowired
 	LeaveBalanceService lbservice;
 	@Autowired
@@ -68,20 +69,21 @@ public class StaffController {
 	@RequestMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/home";
+		return "forward:/home";
 
 	}
 	
 	
 	@GetMapping(value = "/leave/new")
 	public ModelAndView newLeave(HttpSession ses) {
-		ModelAndView mav = new ModelAndView("staff/staff-new-leave");
 		User u = user(ses);
+		/**find leaves for current user and his leave types*/
 		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
-		ArrayList<String> s = new ArrayList<String>();
+		s.clear();
 		for(LeaveBalance b:lb) {
 			s.add(b.getLeavetype());
 		}
+		ModelAndView mav = new ModelAndView("staff/staff-new-leave");
 		mav.addObject("leave", new Leave());
 		mav.addObject("types",s);
 		return mav;
@@ -90,19 +92,19 @@ public class StaffController {
 	@PostMapping(value = "/leave/new")
 	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses) {
 		User u = user(ses);
-		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
-		ArrayList<String> s = new ArrayList<String>();
-		for(LeaveBalance b:lb) {
-			s.add(b.getLeavetype());
-		}
+		
 		model.addAttribute("types",s);
+		
 		if (result.hasErrors()){
 			return("staff/staff-new-leave");}
+		
+		/**Check for Duplication and return error**/
 		if(lservice.checkDupes(leave.getStartDate(), leave.getEndDate(),u)) {
 			model.addAttribute("errormsg", "**You've already Applied the same period**");
 			return("staff/staff-new-leave");
 		}
-	
+		
+		/**Count the number of leaves and return error if the user has not enough leave**/
 		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate());
 		System.out.println("Total leave days: "+count);
 		if(!lservice.deductleave(leave, u, count.intValue())) {
@@ -114,8 +116,8 @@ public class StaffController {
 		leave.setAppliedDate(now);
 		leave.setStatus(LeaveStatus.APPLIED);
 		leave.setUser(u);
-	
 		lservice.createLeave(leave);
+		
 		String message = "New Leave " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
 		u.getLb().forEach(System.out::println);
@@ -125,12 +127,9 @@ public class StaffController {
 	@GetMapping(value = "/leave/edit/{id}")
 	public ModelAndView editLeavePage(@PathVariable ("id")long id,HttpSession ses) {
 		User u = user(ses);
-		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
-		ArrayList<String> s = new ArrayList<String>();
-		for(LeaveBalance b:lb) {
-			s.add(b.getLeavetype());
-		}
 		Leave l = lservice.findLeaveById(id);
+		
+		/**count the leaves to refund*/
 		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate());
 		this.leave = count.intValue();
 		ModelAndView mav = new ModelAndView("staff/leave-edit");
@@ -142,11 +141,6 @@ public class StaffController {
 	@PostMapping(value = "/leave/edit")
 	public String editLeave(@ModelAttribute ("leave")@Valid Leave l, BindingResult result, Model model,HttpSession ses){
 		User u = user(ses);
-		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
-		ArrayList<String> s = new ArrayList<String>();
-		for(LeaveBalance b:lb) {
-			s.add(b.getLeavetype());
-		}
 		model.addAttribute("types",s);
 		if (result.hasErrors()) {
 			return "staff/leave-edit";}
@@ -167,7 +161,7 @@ public class StaffController {
 		LocalDate now = LocalDate.now();
 		l.setAppliedDate(now);
 		lservice.changeLeave(l);
-		return "forward:/staff/list";
+		return "redirect:/staff/list";
 		}
 	}
 	
@@ -179,7 +173,7 @@ public class StaffController {
 		lservice.refundleave(l, u,count.intValue());
 		l.setStatus(LeaveStatus.DELETED);
 		lservice.changeLeave(l);
-		return "forward:/staff/leave/list";
+		return "redirect:/staff/leave/list";
 	}
 	@RequestMapping(value = "/leave/cancel/{id}")
 	public String cancelLeave(@PathVariable("id") long id,HttpSession ses) {
@@ -189,7 +183,7 @@ public class StaffController {
 		lservice.refundleave(l, u,count.intValue());
 		l.setStatus(LeaveStatus.CANCELLED);
 		lservice.changeLeave(l);
-		return "forward:/staff/leave/list";
+		return "redirect:/staff/leave/list";
 	}
 	
 	/*
@@ -203,11 +197,11 @@ public class StaffController {
 	 * 
 	 * return "staff/staff-leave-history"; }
 	 */
-	@GetMapping(value = "/leave/list")
+	@RequestMapping(value = "/leave/list")
 	public String list(Model model, HttpSession session) {
 		
 	
-		
+		this.pagesize = 10;
 		User u = user(session);
 		int currentpage = 0;
 		int num = 10;
@@ -224,7 +218,7 @@ public class StaffController {
 		return "staff/staff-leave-history";
 	}
 
-	@GetMapping(value = "/leave/navigate/{pageNo}")
+	@RequestMapping(value = "/leave/navigate")
 	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
@@ -282,7 +276,7 @@ public class StaffController {
 	
 	@GetMapping(value = "/leave/list/{id}")
 	public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
-		
+
 	this.pagesize= id;
 		
 		User u = user(session);

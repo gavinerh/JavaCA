@@ -50,7 +50,11 @@ public class HolidayServiceImpl implements HolidayService {
 	@Transactional
 	public void createHoliday(Holidays h) {
 		// TODO Auto-generated method stub
-		hrepo.saveAndFlush(h);
+		ArrayList<LocalDate> ho = findHolidays();
+		Long count = ho.stream()
+					.filter(x-> x.isEqual(h.getHoliday()))
+					.count();
+		if(count==0) {hrepo.saveAndFlush(h);}
 	}
 
 	@Override
