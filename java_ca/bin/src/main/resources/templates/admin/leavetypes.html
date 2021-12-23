@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragment/layout-admin.html :: html_head" />
+
+<body>
+	<div th:replace="fragment/layout-admin.html :: nav_topbar" />
+	<div th:replace="fragment/layout-admin.html :: nav_sidebar" />
+	
+	 <!--CONTENT-->
+	 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 d-grid gap-4">
+        <div class="container-fluid mt-3">
+          <div class="row">
+            <div class="col-md-auto my-3 g-0">
+              <a th:href="@{/AdminType/add}" class="btn btn-primary fw-bold text-">Create New Leave Type</a>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-6 border border-1 rounded-3 pb-3 px-4 my-3">
+              <table th:if="${not #lists.isEmpty(ltlist)}" class="table caption-top table-borderless table-hover">
+                <h1 class="h2 py-3">Leave Types</h1>
+                <tr th:each="eleave:${ltlist}" class="border-bottom">
+                  <td scope="row"><span class="dot-medical"></span></td>
+                  <td th:text=${#strings.capitalize(eleave)}>Medical</td>
+                  <td><span class="text-approved fw-bold">Available</span></td>
+                  <td><a th:href="@{/AdminType/delete/}+${eleave}"><span data-feather="trash-2"></span></a></td>
+                </tr>
+                
+              </table>
+            </div>
+          </div>
+         </main>
+   
+
+	<div th:replace="fragment/layout-admin.html :: js_script" />
+</body>
+</html>

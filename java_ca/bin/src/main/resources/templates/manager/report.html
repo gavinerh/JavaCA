@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<form method="post" th:action="@{/manager/report/filterDate}">
+		<table>
+			<tr>
+				<td colspan="2">Filter by date</td>
+			</tr>
+			<tr>
+				<td>Start Date</td>
+				<td>End Date</td>
+			</tr>
+			<tr>
+				<td><input type="date" name="startDate"/></td>
+				<td><input type="date" name="endDate"/></td>
+			</tr>
+			<tr>
+			<td><input type="submit" /></td>
+			</tr>
+		</table>
+	</form>
+	<button><a th:href="@{/manager/report/all}">Clear filter</a></button>
+	<p th:if="${filtering != null}" th:text="${'Date filtering from: ' + filtering.getStartDate() + ' to ' + filtering.getEndDate()}">You are in a filtered view</p>
+	<h1>Leave List</h1>
+	<h2 th:if="${leaves == null}">No Leave is recorded</h2>
+	<h2 th:if="${#lists.isEmpty(leaves)}">No more records found</h2>
+	<table th:if="${not #lists.isEmpty(leaves)}">
+		<tr>
+			<th>Leave Id</th>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<th>Reason</th>
+			<th>Status</th>
+			<th>Leave Type</th>
+			<th>Work Dissemination</th>
+			<th>Contact Details</th>
+		</tr>
+		<tr th:each="leave:${leaves}" class="table-row">
+			<td th:text=${leave.leaveId}>Id</td>
+			<td th:text="${#temporals.format(leave.startDate, 'dd/MM/yyyy')}">Start
+				Date</td>
+			<td th:text="${#temporals.format(leave.endDate, 'dd/MM/yyyy')}">End
+				Date</td>
+			<td th:text=${leave.reason}>reason</td>
+			<td th:text=${leave.status}>status</td>
+			<td th:text=${leave.type}>type</td>
+			<td th:text=${leave.workdissem}>Work Dissem</td>
+			<td th:text=${leave.contactdetail}>Contact detail</td>
+
+			<td>
+				<div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+					<a href="#" th:href="@{/staff/leave/edit/}+${leave.leaveId}">Edit</a>
+				</div>
+			</td>
+			<td>
+				<div th:if="${#strings.equals(leave.status, 'APPLIED')}">
+					<a href="#" th:href="@{/staff/leave/delete/}+${leave.leaveId}">Delete</a>
+				</div>
+			</td>
+			<td>
+				<div th:if="${#strings.equals(leave.status, 'APPROVED')}">
+					<a th:href="@{/staff/leave/cancel/}+${leave.leaveId}">Cancel</a>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<div th:if="${leaves != null}">
+		<button th:if="${pageDetails.getPrev() > 0}">
+			<a th:text="${pageDetails.prev}"
+				th:href="@{/manager/report(page=${pageDetails.prev})}"></a>
+		</button>
+		<p th:text="${pageDetails.page}"></p>
+		<button th:if="${pageDetails.next != null}">
+			<a th:text="${pageDetails.next}"
+				th:href="@{/manager/report(page=${pageDetails.next})}"></a>
+		</button>
+	</div>
+
+</body>
+</html>
