@@ -74,7 +74,14 @@ public class StaffController {
 
 	}
 	
-	
+	@GetMapping(value = "/leave/balance")
+	public ModelAndView checkbalance(HttpSession ses) {
+		User u = user(ses);
+		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
+		ModelAndView mav = new ModelAndView("staff/leave-balance");
+		mav.addObject("lbalance",lb);
+		return mav;
+	}
 	@GetMapping(value = "/leave/new")
 	public ModelAndView newLeave(HttpSession ses) {
 		User u = user(ses);
