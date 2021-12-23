@@ -32,6 +32,7 @@ import edu.nus.java_ca.service.LeaveServiceImpl;
 import edu.nus.java_ca.service.UserService;
 import edu.nus.java_ca.service.UserServiceImpl;
 import edu.nus.java_ca.validator.LeaveValidator;
+import net.bytebuddy.asm.Advice.This;
 
 
 @Controller
@@ -220,6 +221,7 @@ public class StaffController {
 		int top1 = (top/num)+1;
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
+		model.addAttribute("pageSize", this.pagesize);
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", currentpage);
@@ -243,7 +245,8 @@ public class StaffController {
 		else {
 			 top1 = top/pagesize;
 		}
-
+		
+		model.addAttribute("pageSize", this.pagesize);
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", pageNo-1);
@@ -272,7 +275,7 @@ public class StaffController {
 		
         Leave lea = (Leave) session.getAttribute("currentLeave");
 		
-		
+        model.addAttribute("pageSize", this.pagesize);
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", i+1);
@@ -300,7 +303,8 @@ public class StaffController {
 	else {
 		 top1 = top/pagesize;
 	}
-	
+		
+		model.addAttribute("pageSize", this.pagesize);
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", i-1);
@@ -311,7 +315,8 @@ public class StaffController {
 	
 	@GetMapping(value = "/leave/list/{id}")
 	public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
-
+		
+		System.out.println("Page Size:" + id);
 	this.pagesize= id;
 		
 		User u = user(session);
@@ -330,7 +335,7 @@ public class StaffController {
 		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
-		
+		model.addAttribute("pageSize", this.pagesize);
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", currentpage);
