@@ -170,6 +170,10 @@ public class AdminLeaveController {
 			model.addAttribute("errormsg", "**You've already Applied the same period**");
 			return("admin/leave-edit");
 		}
+		if(u.getApprovingOfficer() == null) {
+			model.addAttribute("errormsg", "**You have no approving officer to approve your leave**");
+			return("admin/leave-edit");
+		}
 		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate(),u);
 		System.out.println("Total leave days: "+count);
 		if(count==0) {	model.addAttribute("errormsg", "**Leave Application Failed!! You Applied on Holidays**");
