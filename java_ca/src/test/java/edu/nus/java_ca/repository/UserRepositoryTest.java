@@ -22,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.nus.java_ca.JavaCaApplication;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.service.UserService;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes=JavaCaApplication.class)
@@ -32,51 +33,61 @@ public class UserRepositoryTest {
 	@Autowired
 	UserRepository uRepo;
 	
-	@Test
-	@Order(1)
-	public void testAddingUser() {
-		User u1 = new User();
-		u1.setEmail("test@gmail");
-		u1.setFirstName("test");
-		u1.setLastName("test");
-		u1.setPassword("password");
-		//u1.setDepartment("test");
-		uRepo.saveAndFlush(u1);
-		System.out.println("Added one user");
-	}
+	@Autowired
+	UserService uService;
 	
-	@Test
-	@Order(2)
-	public void testFindByUserEmail() {
-		List<User> result = new ArrayList<User>();
-		result.addAll(uRepo.findByUserEmail("test@gmail"));
-		if(result.isEmpty()){
-			System.out.println("result is empty");
-		}
-		assertEquals(1, result.size());
-		System.out.print(result.get(0));
-	}
+//	@Test
+//	@Order(1)
+//	public void testAddingUser() {
+//		User u1 = new User();
+//		u1.setEmail("test@gmail");
+//		u1.setFirstName("test");
+//		u1.setLastName("test");
+//		u1.setPassword("password");
+//		//u1.setDepartment("test");
+//		uRepo.saveAndFlush(u1);
+//		System.out.println("Added one user");
+//	}
+//	
+//	@Test
+//	@Order(2)
+//	public void testFindByUserEmail() {
+//		List<User> result = new ArrayList<User>();
+//		result.addAll(uRepo.findByUserEmail("test@gmail"));
+//		if(result.isEmpty()){
+//			System.out.println("result is empty");
+//		}
+//		assertEquals(1, result.size());
+//		System.out.print(result.get(0));
+//	}
+//	
+//	@Test
+//	@Order(3)
+//	public void testUpdateLoginDate() {
+//		List<User> result = new ArrayList<User>();
+//		result.addAll(uRepo.findByUserEmail("test@gmail"));
+//		User u1 = result.get(0);
+//		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//		Instant now = LocalDateTime.now().atZone(ZoneId.of("Asia/Singapore")).toInstant();
+//		u1.setLastLoginDate(Date.from(now));
+//		uRepo.save(u1);
+//	}
+//	
+//	@Test
+//	public void testFindUsersByApprovingOfficer() {
+//		User manager = uRepo.findByUserEmail("manager@manager").get(0);
+//		List<User> users = uRepo.findUsersByApprovingOfficer(manager);
+//		for(User u : users) {
+//			System.out.println(u);
+//		}
+//	}
 	
-	@Test
-	@Order(3)
-	public void testUpdateLoginDate() {
-		List<User> result = new ArrayList<User>();
-		result.addAll(uRepo.findByUserEmail("test@gmail"));
-		User u1 = result.get(0);
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		Instant now = LocalDateTime.now().atZone(ZoneId.of("Asia/Singapore")).toInstant();
-		u1.setLastLoginDate(Date.from(now));
-		uRepo.save(u1);
-	}
-	
-	@Test
-	public void testFindUsersByApprovingOfficer() {
-		User manager = uRepo.findByUserEmail("manager@manager").get(0);
-		List<User> users = uRepo.findUsersByApprovingOfficer(manager);
-		for(User u : users) {
-			System.out.println(u);
-		}
-	}
+//	@Test
+//	public void testDeleteUser() {
+//		User u = uService.findByUserEmail("admin@admin");
+//		System.out.println(u.getEmail());
+//		uRepo.delete(u);
+//	}
 	
 	
 	

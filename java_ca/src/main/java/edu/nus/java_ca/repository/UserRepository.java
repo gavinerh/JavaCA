@@ -43,4 +43,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	@Query("SELECT DISTINCT u FROM User u")
 	List<User> findAllWithDeleted();
+	
 }
