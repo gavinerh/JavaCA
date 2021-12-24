@@ -49,9 +49,8 @@ public class AdminLeaveController {
 	private LeaveService lservice;
 	
 	@Autowired
-
 	private HolidayService hService;
-
+	@Autowired
 	SessionManagement sess;
 
 	
