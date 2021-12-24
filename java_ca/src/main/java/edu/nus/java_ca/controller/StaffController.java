@@ -26,13 +26,13 @@ import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.SessionClass;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.service.EmailService;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
 import edu.nus.java_ca.service.UserService;
 import edu.nus.java_ca.service.UserServiceImpl;
 import edu.nus.java_ca.validator.LeaveValidator;
-
 
 
 @Controller
@@ -43,12 +43,16 @@ public class StaffController {
 		binder.addValidators(new LeaveValidator());
 	  }
 	public Integer pagesize;
-	public Integer leave;
+	/** Leave type and Balance to be use in Thymleaf*/
 	private ArrayList<String> s = new ArrayList<>();
+	private ArrayList<String> t = new ArrayList<>();
+	private String type;
 	@Autowired
 	LeaveBalanceService lbservice;
 	@Autowired
 	private LeaveService lservice;
+	@Autowired
+	private EmailService eService;
 	@Autowired
 	public void setLeaveService (LeaveServiceImpl lservice) {
 		this.lservice = lservice;
@@ -73,19 +77,30 @@ public class StaffController {
 
 	}
 	
-	
+	@GetMapping(value = "/leave/balance")
+	public ModelAndView checkbalance(HttpSession ses) {
+		User u = user(ses);
+		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
+		ModelAndView mav = new ModelAndView("staff/leave-balance");
+		mav.addObject("lbalance",lb);
+		return mav;
+	}
 	@GetMapping(value = "/leave/new")
 	public ModelAndView newLeave(HttpSession ses) {
 		User u = user(ses);
 		/**find leaves for current user and his leave types*/
 		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
 		s.clear();
+		t.clear();
+		/**Save in private array in the controller class*/
 		for(LeaveBalance b:lb) {
-			s.add(b.getLeavetype());
+			s.add(b.getLeavetype().toUpperCase());
+			t.add(b.getLeavetype().toUpperCase()+":\t"+b.getBalance().toString());
 		}
 		ModelAndView mav = new ModelAndView("staff/staff-new-leave");
 		mav.addObject("leave", new Leave());
 		mav.addObject("types",s);
+		mav.addObject("bal",t);
 		return mav;
 	}
 
@@ -94,6 +109,7 @@ public class StaffController {
 		User u = user(ses);
 		
 		model.addAttribute("types",s);
+		model.addAttribute("bal",t);
 		
 		if (result.hasErrors()){
 			return("staff/staff-new-leave");}
@@ -105,8 +121,10 @@ public class StaffController {
 		}
 		
 		/**Count the number of leaves and return error if the user has not enough leave**/
-		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate());
+		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate(),u);
 		System.out.println("Total leave days: "+count);
+		if(count==0) {	model.addAttribute("errormsg", "**Leave Application Failed!! You Applied on Holidays**");
+		return("staff/staff-new-leave");}
 		if(!lservice.deductleave(leave, u, count.intValue())) {
 			model.addAttribute("errormsg", "**Leave Application Failed! You don't Have Enough Leave**");
 			return("staff/staff-new-leave");
@@ -114,10 +132,12 @@ public class StaffController {
 		else {
 		LocalDate now = LocalDate.now();
 		leave.setAppliedDate(now);
+		leave.setLeavetaken(count.intValue());
 		leave.setStatus(LeaveStatus.APPLIED);
+		
 		leave.setUser(u);
 		lservice.createLeave(leave);
-		
+		eService.sendEmailApply(leave);
 		String message = "New Leave " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
 		u.getLb().forEach(System.out::println);
@@ -128,13 +148,11 @@ public class StaffController {
 	public ModelAndView editLeavePage(@PathVariable ("id")long id,HttpSession ses) {
 		User u = user(ses);
 		Leave l = lservice.findLeaveById(id);
-		
-		/**count the leaves to refund*/
-		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate());
-		this.leave = count.intValue();
+		this.type=l.getType();
 		ModelAndView mav = new ModelAndView("staff/leave-edit");
 		mav.addObject("leave", l);
 		mav.addObject("types",s);
+		mav.addObject("bal",t);
 		return mav;
 	}
 
@@ -142,22 +160,25 @@ public class StaffController {
 	public String editLeave(@ModelAttribute ("leave")@Valid Leave l, BindingResult result, Model model,HttpSession ses){
 		User u = user(ses);
 		model.addAttribute("types",s);
+		model.addAttribute("bal",t);
 		if (result.hasErrors()) {
 			return "staff/leave-edit";}
 		if(lservice.checkDupes(l.getStartDate(), l.getEndDate(),u)) {
 			model.addAttribute("errormsg", "**You've already Applied the same period**");
-			return("staff/staff-new-leave");
+			return("staff/leave-edit");
 		}
-		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate());
-		
+		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate(),u);
 		System.out.println("Total leave days: "+count);
+		if(count==0) {	model.addAttribute("errormsg", "**Leave Application Failed!! You Applied on Holidays**");
+		return("staff/leave-edit");}
 		if(!lservice.deductleave(l, u, count.intValue())) {
 			model.addAttribute("errormsg", "**Leave Application Failed! You don't Have Enough Leave**");
-			return("staff/staff-new-leave");
+			return("staff/leave-edit");
 		}
 		else {
-		lservice.refundleave(l, u,leave);
+		lservice.refundleave(this.type, u, l.getLeavetaken());
 		l.setStatus(LeaveStatus.UPDATED);
+		l.setLeavetaken(count.intValue());
 		LocalDate now = LocalDate.now();
 		l.setAppliedDate(now);
 		lservice.changeLeave(l);
@@ -169,8 +190,8 @@ public class StaffController {
 	public String deleteLeave(@PathVariable("id") long id,HttpSession ses) {
 		User u = user(ses);
 		Leave l = lservice.findLeaveById(id);
-		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate());
-		lservice.refundleave(l, u,count.intValue());
+		/**To refund leave*/
+		lservice.refundleave(l, u,l.getLeavetaken());
 		l.setStatus(LeaveStatus.DELETED);
 		lservice.changeLeave(l);
 		return "redirect:/staff/leave/list";
@@ -179,8 +200,8 @@ public class StaffController {
 	public String cancelLeave(@PathVariable("id") long id,HttpSession ses) {
 		User u = user(ses);
 		Leave l = lservice.findLeaveById(id);
-		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate());
-		lservice.refundleave(l, u,count.intValue());
+
+		lservice.refundleave(l, u,l.getLeavetaken());
 		l.setStatus(LeaveStatus.CANCELLED);
 		lservice.changeLeave(l);
 		return "redirect:/staff/leave/list";
@@ -223,10 +244,16 @@ public class StaffController {
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
+		List<Leave> userList =lservice.findByUser(u);
 		
-		int top = listWithPagination.size();
-		int top1 = (top/pagesize)+1;
-		
+		int top = userList.size();
+		int top1;
+		if (top % pagesize>0)
+		{
+			 top1 = (top/pagesize)+1;}
+		else {
+			 top1 = top/pagesize;
+		}
 
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
@@ -284,10 +311,6 @@ public class StaffController {
 	else {
 		 top1 = top/pagesize;
 	}
-	
-		
-		
-	
 	
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);

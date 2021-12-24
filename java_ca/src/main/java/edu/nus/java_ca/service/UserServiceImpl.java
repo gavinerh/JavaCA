@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService{
 		return result.get(0);
 	}
 
-	@Override
+	@Transactional
 	public void saveUser(User user) {
 		uRepo.saveAndFlush(user);
 	}

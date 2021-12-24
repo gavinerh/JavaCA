@@ -22,7 +22,6 @@ import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.repository.LeaveBalanceRepo;
 import edu.nus.java_ca.repository.UserRepository;
-import edu.nus.java_ca.security.Hash;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
@@ -78,13 +77,13 @@ public class AdminUserController {
 		if (bindingResult.hasErrors()) {
 			return "admin/user-form";
 		}
-		LeaveBalance lbAnnual = new LeaveBalance("annual", 0, user);
-		LeaveBalance lbCompensation = new LeaveBalance("compensation", 0, user);
-		LeaveBalance lbMedical = new LeaveBalance("medical", 0, user);
+		LeaveBalance lbAnnual = new LeaveBalance("annual", 10, user);
+		LeaveBalance lbCompensation = new LeaveBalance("compensation", 10, user);
+		LeaveBalance lbMedical = new LeaveBalance("medical", 10, user);
 		user.addLeaveBalance(lbAnnual);
 		user.addLeaveBalance(lbCompensation);
 		user.addLeaveBalance(lbMedical);
-		user.setPassword(Hash.hashPassword(user.getPassword()));
+
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}
@@ -109,11 +108,10 @@ public class AdminUserController {
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
-	public String editUser(@ModelAttribute @Valid User user, BindingResult result, @PathVariable Long id) {
+	public String editUser(@ModelAttribute("user") @Valid User user, BindingResult result, @PathVariable Long id) {
 		if (result.hasErrors()) {
 			return "admin/user-form";
 		}
-		user.setPassword(Hash.hashPassword(user.getPassword()));
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}
