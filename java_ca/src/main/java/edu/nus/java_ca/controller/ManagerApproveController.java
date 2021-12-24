@@ -61,6 +61,7 @@ public class ManagerApproveController {
 	public Integer pagesize;
 	private ArrayList<String> s = new ArrayList<>();
 	private ArrayList<String> t = new ArrayList<>();
+	private String type;
 
 	@RequestMapping(value="/home")
 	public String managerDashboard(HttpSession sessions, Model model) {
@@ -157,7 +158,59 @@ public class ManagerApproveController {
 		}
 		return "forward:/manager/home/";
 	}
-		
+	
+	@GetMapping(value = "/leave/edit/{id}")
+	public ModelAndView editLeavePage(@PathVariable ("id")long id,HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
+		User u = user(ses);
+		/**find leaves for current user and his leave types*/
+		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
+		s.clear();
+		t.clear();
+		/**Save in private array in the controller class*/
+		for(LeaveBalance b:lb) {
+			s.add(b.getLeavetype().toUpperCase());
+			t.add(b.getLeavetype().toUpperCase()+":\t"+b.getBalance().toString());
+		}
+		Leave l = lservice.findLeaveById(id);
+		this.type=l.getType();
+		ModelAndView mav = new ModelAndView("manager/leave-edit");
+		mav.addObject("leave", l);
+		mav.addObject("types",s);
+		mav.addObject("bal",t);
+		return mav;
+	}
+
+	@PostMapping(value = "/leave/edit")
+	public String editLeave(@ModelAttribute ("leave")@Valid Leave l, BindingResult result, Model model,HttpSession ses, SessionStatus status){
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
+		User u = user(ses);
+		model.addAttribute("types",s);
+		model.addAttribute("bal",t);
+		if (result.hasErrors()) {
+			return "manager/leave-edit";}
+		if(lservice.checkDupes(l.getStartDate(), l.getEndDate(),u)) {
+			model.addAttribute("errormsg", "**You've already Applied the same period**");
+			return("manager/leave-edit");
+		}
+		Long count = lservice.countLeaves(l.getStartDate(), l.getEndDate(),u);
+		System.out.println("Total leave days: "+count);
+		if(count==0) {	model.addAttribute("errormsg", "**Leave Application Failed!! You Applied on Holidays**");
+		return("manager/leave-edit");}
+		if(!lservice.deductleave(l, u, count.intValue())) {
+			model.addAttribute("errormsg", "**Leave Application Failed! You don't Have Enough Leave**");
+			return("manager/leave-edit");
+		}
+		else {
+		lservice.refundleave(this.type, u, l.getLeavetaken());
+		l.setStatus(LeaveStatus.UPDATED);
+		l.setLeavetaken(count.intValue());
+		LocalDate now = LocalDate.now();
+		l.setAppliedDate(now);
+		lservice.changeLeave(l);
+		return "redirect:/home";
+		}
+	}
 	public boolean checkManager (HttpSession sessions)
 	{
 		SessionClass session = (SessionClass)sessions.getAttribute("uSession");
@@ -180,7 +233,7 @@ public class ManagerApproveController {
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editUser(@PathVariable Long id, SessionStatus status, HttpSession session) {
+	public ModelAndView editUser(@PathVariable("id") Long id, SessionStatus status, HttpSession session) {
 		if (!sess.isLoggedIn(session, status)) return new ModelAndView("redirect:/");
 		ModelAndView mav = new ModelAndView("manager/manageredit", "user", uservice.findByUserId(id));
 
@@ -199,6 +252,7 @@ public class ManagerApproveController {
 		return "redirect:/manager/home";
 	}
 	
+	
 	@GetMapping(value = "/leave/balance")
 	public ModelAndView checkbalance(HttpSession ses, SessionStatus status) {
 		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
@@ -207,6 +261,28 @@ public class ManagerApproveController {
 		ModelAndView mav = new ModelAndView("manager/leave-balance");
 		mav.addObject("lbalance",lb);
 		return mav;
+	}
+	@RequestMapping(value = "/leave/delete/{id}")
+	public String deleteLeave(@PathVariable("id") long id,HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
+		User u = user(ses);
+		Leave l = lservice.findLeaveById(id);
+		/**To refund leave*/
+		lservice.refundleave(l, u,l.getLeavetaken());
+		l.setStatus(LeaveStatus.DELETED);
+		lservice.changeLeave(l);
+		return "redirect:/home";
+	}
+	@RequestMapping(value = "/leave/cancel/{id}")
+	public String cancelLeave(@PathVariable("id") long id,HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
+		User u = user(ses);
+		Leave l = lservice.findLeaveById(id);
+
+		lservice.refundleave(l, u,l.getLeavetaken());
+		l.setStatus(LeaveStatus.CANCELLED);
+		lservice.changeLeave(l);
+		return "redirect:/home";
 	}
 	
 	@GetMapping(value = "/leave/list")

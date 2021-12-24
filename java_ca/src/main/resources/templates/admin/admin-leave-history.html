@@ -51,7 +51,7 @@
 			<td>
 			<div th:if="${#strings.equals(leave.status, 'APPLIED')}or ${#strings.equals(leave.status, 'UPDATED')}">
 			<a href="#"class="btn btn-primary btn-sm"
-				th:href="@{/staff/leave/edit/}+${leave.leaveId}">Edit</a>
+				th:href="@{/AdminLeave/leave/edit/}+${leave.leaveId}">Edit</a>
 			</div>
 			</td>
 			<td>

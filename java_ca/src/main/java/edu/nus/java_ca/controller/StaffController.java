@@ -160,6 +160,14 @@ public class StaffController {
 	public ModelAndView editLeavePage(@PathVariable ("id")long id,HttpSession ses, SessionStatus status) {
 		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
 		User u = user(ses);
+		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
+		s.clear();
+		t.clear();
+		/**Save in private array in the controller class*/
+		for(LeaveBalance b:lb) {
+			s.add(b.getLeavetype().toUpperCase());
+			t.add(b.getLeavetype().toUpperCase()+":\t"+b.getBalance().toString());
+		}
 		Leave l = lservice.findLeaveById(id);
 		this.type=l.getType();
 		ModelAndView mav = new ModelAndView("staff/leave-edit");
@@ -222,6 +230,7 @@ public class StaffController {
 		lservice.changeLeave(l);
 		return "redirect:/home";
 	}
+	
 	
 	
 //	fro history pagination
