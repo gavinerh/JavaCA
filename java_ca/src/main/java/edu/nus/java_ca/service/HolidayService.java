@@ -10,14 +10,16 @@ public interface HolidayService {
 	
 	ArrayList<Holidays> findAll();
 	
-	ArrayList<LocalDate> findHolidays();
+	/* ArrayList<LocalDate> findHolidays(); */
 	
 	Holidays findById(Integer i);
-	
-	Holidays findByHoliday(LocalDate d);
 	
 	void deleteById(Integer i);
 	
 	void createHoliday(Holidays h);
+
+	Holidays findByHoliday(Integer i);
+
+	ArrayList<LocalDate> findHolidays();
 
 }

@@ -21,11 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.nus.java_ca.model.Holidays;
 import edu.nus.java_ca.model.Leave;
 import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.SessionClass;
 import edu.nus.java_ca.model.User;
+import edu.nus.java_ca.repository.HolidayRepo;
+import edu.nus.java_ca.service.HolidayService;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.SessionManagement;
@@ -46,7 +49,11 @@ public class AdminLeaveController {
 	private LeaveService lservice;
 	
 	@Autowired
+
+	private HolidayService hService;
+
 	SessionManagement sess;
+
 	
 	
 	private User user(HttpSession ses) {
@@ -107,10 +114,34 @@ public class AdminLeaveController {
 		return "redirect:/AdminUser";}
 	}
 	
+	@RequestMapping(value = "/holiday")
+	public String holiday(Model model) {
+		List<Holidays> holidays = hService.findAll();
+		model.addAttribute("holidays", holidays);
+		return "admin/holiday";
+	}
 	
+	@RequestMapping(value = "/holiday/new")
+	public ModelAndView newHoliday(HttpSession ses) {
+		ModelAndView mav = new ModelAndView("admin/holiday-form");
+		
+		mav.addObject("holiday", new Holidays());
+		
+		return mav;
+	}
 	
-	
-	
+	@RequestMapping(value = "/holiday/new", method = RequestMethod.POST)
+	public String saveMember(Model model, @ModelAttribute("holiday")  Holidays holidays,
+			BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "admin/holiday-form";
+		}
+		
+			hService.createHoliday(holidays);
+		
+
+		return "forward:/AdminLeave/holiday";
+	}
 	
 	@RequestMapping({ "/", "" })
 	public String dashboard(Model model, HttpSession ses, SessionStatus status) {

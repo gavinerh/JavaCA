@@ -2,6 +2,7 @@ package edu.nus.java_ca.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -21,7 +22,7 @@ public class HolidayServiceImpl implements HolidayService {
 	@Transactional
 	public ArrayList<Holidays> findAll() {
 		// TODO Auto-generated method stub
-		return (ArrayList<Holidays>)hrepo.findAll();
+		return (ArrayList<Holidays>) hrepo.findAll();
 	}
 
 	@Override
@@ -33,9 +34,9 @@ public class HolidayServiceImpl implements HolidayService {
 
 	@Override
 	@Transactional
-	public Holidays findByHoliday(LocalDate d) {
+	public Holidays findByHoliday(Integer i) {
 		// TODO Auto-generated method stub
-		return hrepo.findByHoliday(d);
+		return hrepo.findById(i).orElse(null);
 	}
 
 	@Override
@@ -50,23 +51,19 @@ public class HolidayServiceImpl implements HolidayService {
 	@Transactional
 	public void createHoliday(Holidays h) {
 		// TODO Auto-generated method stub
-		ArrayList<LocalDate> ho = findHolidays();
-		Long count = ho.stream()
-					.filter(x-> x.isEqual(h.getHoliday()))
-					.count();
-		if(count==0) {hrepo.saveAndFlush(h);}
+		hrepo.saveAndFlush(h);
 	}
 
 	@Override
 	public ArrayList<LocalDate> findHolidays() {
-		// TODO Auto-generated method stub
 		ArrayList<Holidays> ho = (ArrayList<Holidays>) hrepo.findAll();
 		ArrayList<LocalDate> d = new ArrayList<>();
 		for(Holidays h: ho) {
-			d.add(h.getHoliday());
+			d.addAll(h.getStartDate().datesUntil(h.getEndDate().plusDays(1))
+					.collect(Collectors
+		                    .toCollection(ArrayList::new)));
 		}
 		return d;
 	}
-	
 
 }
