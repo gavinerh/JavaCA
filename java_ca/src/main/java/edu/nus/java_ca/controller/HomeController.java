@@ -1,5 +1,7 @@
 package edu.nus.java_ca.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.servlet.http.HttpSession;
@@ -45,7 +47,6 @@ public class HomeController {
 	public String registerNewUser(@ModelAttribute("user") @Valid User user, BindingResult binding,
 			HttpSession session, SessionStatus status) {
 		User result = uService.findByUserEmail(user.getEmail());
-		System.out.println(sess.getUserEmail(session).equals("admin@admin"));
 		if (result == null) { 
 			// create a new user
 			if(user.getEmail().equals("admin@admin")) {
@@ -53,18 +54,26 @@ public class HomeController {
 				binding.addError(err);
 				return "register/register";
 			}
-			if (sess.getUserEmail(session).equals("admin@admin")) {
+			User u = (User) session.getAttribute("temp");
+			if(u.getEmail().equals("admin@admin")) {
 				// set the registered admin
 				System.out.println("Code got here");
-				uService.deleteUser(uService.findByUserEmail("admin@admin"));
-				status.setComplete();
-				sess.removeSession(session, status);
+				session.invalidate();
 			}
 			String password = user.getPassword();
 			// hash the password
 			String hashedPassword = Hash.hashPassword(password);
 			user.setPassword(hashedPassword);
-			
+			uService.deleteUser(u);
+			Collection<LeaveBalance> lb = new ArrayList<LeaveBalance>();
+			LeaveBalance lbAnnual = new LeaveBalance("annual", 18, user);
+			LeaveBalance lbCompensation = new LeaveBalance("compensation", 0, user);
+			LeaveBalance lbMedical = new LeaveBalance("medical", 60, user);
+
+			lb.add(lbMedical);
+			lb.add(lbCompensation);
+			lb.add(lbAnnual);
+			user.setLb(lb);
 			uService.saveUser(user);
 			return "register/registerSuccess";
 		}
@@ -102,7 +111,7 @@ public class HomeController {
 		}
 		if (result.getEmail().equals("admin@admin") && result.getPassword().equals("password") && !result.isDeleted()) {
 			// admin logs in for the first time, create a temporary session
-			sess.createSession(session, result);
+			session.setAttribute("temp", result);
 			return "redirect:/adminInitialLogin";
 		}
 		// compare the email and password
@@ -122,7 +131,7 @@ public class HomeController {
 	
 	@RequestMapping("/adminInitialLogin")
 	public String adminInitialLogin(HttpSession session, SessionStatus status, Model model) {
-		if (!sess.isLoggedIn(session, status)) return "redirect:/";
+		if (session.getAttribute("temp") == null) return "redirect:/";
 		model.addAttribute("user", uService.findByUserEmail("admin@admin"));
 		return "register/register";
 	}
