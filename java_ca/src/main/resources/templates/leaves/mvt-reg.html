@@ -86,21 +86,30 @@
 	
 	<!--PAGINATION-->
 	<div class="pagination"> 
-    	<a class="paginate" th:href="@{/leave/mvtreg/backward/}+${currentPage}">&laquo;</a>
-        <a th:each="i: ${#numbers.sequence(1, top1)}" class="paginate" th:href="@{/leave/mvtreg/navigate(pageNo=${i})}" th:text= "${i}"></a >
-            
-        <a class="paginate" th:href="@{/leave/mvtreg/forward/}+${currentPage}">&raquo;</a>
-    </div>
+	  <nav aria-label="..." class="col-6">
+  		<ul class="pagination pagination-sm">
+			<li class="page-item"><a class="page-link" th:href="@{/leave/mvtreg/backward/}+${currentPage}">&laquo;</a></li>
+		    <li class="page-item"th:each="i: ${#numbers.sequence(1, top1)}" ><a class="page-link" th:href="@{/leave/mvtreg/navigate(pageNo=${i})}" th:text="${i}"></a ></li>
+		    <li class="page-item"><a class="page-link" th:href="@{/leave/mvtreg/forward/}+${currentPage}">&raquo;</a></li>
+  		</ul>
+	  </nav>
      
-     <div class="col-12">
-		<a class="btn btn-primary me-2" th:href="@{/leave/mvt-reg/1}">1</a> 
-		<a class="btn btn-primary me-2" th:href="@{/leave/mvt-reg/2}">2</a> 
-		<a class="btn btn-primary me-2" th:href="@{/leave/mvt-reg/3}">3</a> 
+     	<div class="col-12">
+     <label for="Display number" class="form-label">Display number : </label> 			
+		<select th:onchange="'window.location.href=\'/leave/leaves/mvt-reg/\' + this.value;'" id="pageSize" name="pageSize">
+			<option th:value="10" th:text="10" th:selected="${pageSize == 10}"></option> 
+			<option th:value="20" th:text="20" th:selected="${pageSize == 20}"></option>
+			<option th:value="25" th:text="25" th:selected="${pageSize == 25}"></option> 
+			<option th:value="30" th:text="30" th:selected="${pageSize == 30}"></option> 
+		</select >
+
+
 	</div>
+	</div>
+	
 	
 	<div th:replace="fragment/layout-admin.html :: js_script" />
     
-
 	</main>	
 </body>
 </html>
