@@ -58,7 +58,7 @@
 
 					<div class="col-sm-6">
 						<label for="reason" class="form-label">Reason</label> <input
-							th:field="*{reason}" type="text" class="form-control" id="reason">
+							th:field="*{reason}" type="text" class="form-control" id="reason" required>
 						<p th:if="${#fields.hasErrors('reason')}" th:errorclass="error" th:errors="*{reason}"></p>
 					</div>
 
