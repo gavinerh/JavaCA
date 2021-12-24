@@ -29,6 +29,7 @@ import edu.nus.java_ca.model.LeaveStatus;
 import edu.nus.java_ca.model.SessionClass;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.repository.HolidayRepo;
+import edu.nus.java_ca.service.EmailService;
 import edu.nus.java_ca.service.HolidayService;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
@@ -47,6 +48,9 @@ public class AdminLeaveController {
 	LeaveBalanceService lbService;
 	
 	@Autowired
+	private EmailService eService;
+	
+	@Autowired
 	private LeaveService lservice;
 	
 	@Autowired
@@ -54,7 +58,8 @@ public class AdminLeaveController {
 
 	@Autowired
 	SessionManagement sess;
-
+	private ArrayList<String> s = new ArrayList<>();
+	private ArrayList<String> t = new ArrayList<>();
 	
 	
 	private User user(HttpSession ses) {
@@ -67,15 +72,20 @@ public class AdminLeaveController {
 	@GetMapping(value = "/leave/new")
 	public ModelAndView newLeave(HttpSession ses, SessionStatus status) {
 		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
-		ModelAndView mav = new ModelAndView("admin/admin-new-leave");
 		User u = user(ses);
+		/**find leaves for current user and his leave types*/
 		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
-		ArrayList<String> s = new ArrayList<String>();
+		s.clear();
+		t.clear();
+		/**Save in private array in the controller class*/
 		for(LeaveBalance b:lb) {
-			s.add(b.getLeavetype());
+			s.add(b.getLeavetype().toUpperCase());
+			t.add(b.getLeavetype().toUpperCase()+":\t"+b.getBalance().toString());
 		}
+		ModelAndView mav = new ModelAndView("admin/admin-new-leave");
 		mav.addObject("leave", new Leave());
 		mav.addObject("types",s);
+		mav.addObject("bal",t);
 		return mav;
 	}
 
@@ -83,37 +93,43 @@ public class AdminLeaveController {
 	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses, SessionStatus status) {
 		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		User u = user(ses);
-		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
-		ArrayList<String> s = new ArrayList<String>();
-		for(LeaveBalance b:lb) {
-			s.add(b.getLeavetype());
-		}
+		
 		model.addAttribute("types",s);
+		model.addAttribute("bal",t);
+		
 		if (result.hasErrors()){
 			return("admin/admin-new-leave");}
+		
+		/**Check for Duplication and return error**/
 		if(lservice.checkDupes(leave.getStartDate(), leave.getEndDate(),u)) {
 			model.addAttribute("errormsg", "**You've already Applied the same period**");
 			return("admin/admin-new-leave");
 		}
-	
+		
+		/**Count the number of leaves and return error if the user has not enough leave**/
 		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate(),u);
 		System.out.println("Total leave days: "+count);
+		if(count==0) {	model.addAttribute("errormsg", "**Leave Application Failed!! You Applied on Holidays**");
+		return("Admin/admin-new-leave");}
 		if(!lservice.deductleave(leave, u, count.intValue())) {
 			model.addAttribute("errormsg", "**Leave Application Failed! You don't Have Enough Leave**");
-			return("admin/admin-new-leave");
+			return("AdminLeave/admin-new-leave");
 		}
 		else {
 		LocalDate now = LocalDate.now();
 		leave.setAppliedDate(now);
+		leave.setLeavetaken(count.intValue());
 		leave.setStatus(LeaveStatus.APPLIED);
+		
 		leave.setUser(u);
-	
 		lservice.createLeave(leave);
+		eService.sendEmailApply(leave);
 		String message = "New Leave " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
 		u.getLb().forEach(System.out::println);
 		return "redirect:/AdminUser";}
 	}
+	
 	
 	@RequestMapping(value = "/holiday")
 	public String holiday(Model model) {
@@ -177,22 +193,29 @@ public class AdminLeaveController {
 		return "forward:/AdminLeave/";
 	}
 	
+	@GetMapping(value = "/leave/balance")
+	public ModelAndView checkbalance(HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
+		User u = user(ses);
+		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
+		ModelAndView mav = new ModelAndView("admin/leave-balance");
+		mav.addObject("lbalance",lb);
+		return mav;
+	}
 	
-	@GetMapping(value = "/leave/list")
+	@RequestMapping(value = "/leave/list")
 	public String list(Model model, HttpSession session, SessionStatus status) {
 		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 	
 		
+		this.pagesize = 10;
 		User u = user(session);
 		int currentpage = 0;
-
-		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, 10,u);
-		long top = listWithPagination.size();
-		long top1 = top/10+1;
-
-		Leave lea = (Leave) session.getAttribute("currentLeave");
-		
-		model.addAttribute("leave", lea);
+		int num = 10;
+		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, num,u);
+		int top = listWithPagination.size();
+		int top1 = (top/num)+1;
+		model.addAttribute("pageSize", this.pagesize);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", currentpage);
 		model.addAttribute("top1",top1);
@@ -200,14 +223,11 @@ public class AdminLeaveController {
 		return "admin/admin-leave-history";
 	}
 
-	@GetMapping(value = "/leave/navigate")
-	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session, SessionStatus status) {
-		if (!sess.isLoggedIn(session, status)) return "redirect:/";
+	@RequestMapping(value = "/leave/navigate")
+	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
-		Leave lea = (Leave) session.getAttribute("currentLeave");
 		List<Leave> userList =lservice.findByUser(u);
-		
 		int top = userList.size();
 		int top1;
 		if (top % pagesize>0)
@@ -216,8 +236,8 @@ public class AdminLeaveController {
 		else {
 			 top1 = top/pagesize;
 		}
-
-		model.addAttribute("leave", lea);
+		
+		model.addAttribute("pageSize", this.pagesize);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", pageNo-1);
 		model.addAttribute("top1",top1);
@@ -240,17 +260,12 @@ public class AdminLeaveController {
 	}
 		if (i >= top1-1)
 			i--;
-		
-		
-		List<Leave> listWithPagination = lservice.getAllLeaves(i+1,pagesize,u);
-		Leave lea = (Leave) session.getAttribute("currentLeave");
-		
-		
-		
-		model.addAttribute("leave", lea);
-		model.addAttribute("leaves", listWithPagination);
-		model.addAttribute("currentPage", i+1);
-		model.addAttribute("top1",top1);
+	List<Leave> listWithPagination = lservice.getAllLeaves(i+1,pagesize,u);
+    model.addAttribute("pageSize", this.pagesize);
+	model.addAttribute("leaves", listWithPagination);
+	model.addAttribute("currentPage", i+1);
+	model.addAttribute("top1",top1);
+	
 		
 		return "admin/admin-leave-history";
 	}
@@ -262,26 +277,21 @@ public class AdminLeaveController {
 		Integer i = Integer.parseInt(pageNo);
 		if (i == 0)
 			i++;
-
-	
 		List<Leave> listWithPagination = lservice.getAllLeaves(i-1,pagesize,u);
 		List<Leave> userList =lservice.findByUser(u);
-        Leave lea = (Leave) session.getAttribute("currentLeave");
 		int top = userList.size();
 		int top1;
-	if (top % pagesize>0)
-	{
-		 top1 = (top/pagesize)+1;}
-	else {
-		 top1 = top/pagesize;
-	}
-	
-		
-		
-		model.addAttribute("leave", lea);
+		if (top % pagesize>0)
+		{
+			 top1 = (top/pagesize)+1;}
+		else {
+			 top1 = top/pagesize;
+		}
+		model.addAttribute("pageSize", this.pagesize);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", i-1);
 		model.addAttribute("top1",top1);
+		
 		
 		return "admin/admin-leave-history";
 	}
@@ -289,30 +299,21 @@ public class AdminLeaveController {
 	@GetMapping(value = "/leave/list/{id}")
 	public String list(@PathVariable("id") int id ,Model model, HttpSession session, SessionStatus status) {
 		if (!sess.isLoggedIn(session, status)) return "redirect:/";
-	this.pagesize= id;
-	User u = user(session);
-	int currentpage = 0;
-	List<Leave> userList =lservice.findByUser(u);
-	int top = userList.size();
-	int top1;
-if (top % pagesize>0)
-{
-	 top1 = (top/pagesize)+1;}
-else {
-	 top1 = top/pagesize;
-}
-
-		
-		
-		
-		
+		System.out.println("Page Size:" + id);
+		this.pagesize= id;
+		User u = user(session);
+		int currentpage = 0;
+		List<Leave> userList =lservice.findByUser(u);
+		int top = userList.size();
+		int top1;
+		if (top % pagesize>0)
+		{
+			 top1 = (top/pagesize)+1;}
+		else {
+			 top1 = top/pagesize;
+		}
 		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, pagesize,u);
-
-		Leave lea = (Leave) session.getAttribute("currentLeave");
-		
-
-		
-		model.addAttribute("leave", lea);
+		model.addAttribute("pageSize", this.pagesize);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", currentpage);
 		model.addAttribute("top1",top1);

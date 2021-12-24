@@ -21,8 +21,10 @@
 			<h4 class="mb-3">Staff Leave History</h4>
 		<!-- some sessions code -->		 
 
-	<h2 th:if="${#lists.isEmpty(leaves)}">No Leave Applied</h2>
-	<table th:if="${not #lists.isEmpty(leaves)}" >
+	<h4 class="mb-3" th:if="${#lists.isEmpty(leaves)}">No Leave Applied</h4>
+	   <div class="table-responsive">
+          <table th:if="${not #lists.isEmpty(leaves)}"  class="table table-hover">
+	 <thead>
 		<tr >
 			<th >Leave Id</th>
 			<th >Start Date</th>
@@ -30,9 +32,12 @@
 			<th >Reason</th>
 			<th >Status</th>
 			<th >Leave Type</th>
+			<th >Leave Taken</th>
 			<th >Work Dissemination</th>
 			<th >Contact Details</th >
 		</tr>
+		 </thead>
+		 <tbody>
 		<tr th:each="leave:${leaves}" class="table-row">
 			<td th:text=${leave.leaveId}>Id</td>
 			<td th:text="${#temporals.format(leave.startDate, 'dd/MM/yyyy')}">Start Date</td>
@@ -40,51 +45,61 @@
 			<td th:text=${leave.reason}>reason</td>
 			<td th:text=${leave.status}>status</td>
 			<td th:text=${leave.type}>type</td>
+			<td th:text=${leave.leavetaken}>leave taken</td>
 			<td th:text=${leave.workdissem}>Work Dissem</td>
 			<td th:text=${leave.contactdetail}>Contact detail</td>
 			
 			<td>
-			<div th:if="${#strings.equals(leave.status, 'APPLIED')}">
-			<a href="#"
-				th:href="@{/AdminLeave/leave/edit/}+${leave.leaveId}">Edit</a>
+			<div th:if="${#strings.equals(leave.status, 'APPLIED')}or ${#strings.equals(leave.status, 'UPDATED')}">
+			<a href="#"class="btn btn-primary btn-sm"
+				th:href="@{/staff/leave/edit/}+${leave.leaveId}">Edit</a>
 			</div>
 			</td>
 			<td>
-			<div <div th:if="${#strings.equals(leave.status, 'APPLIED')}">
-			<a href="#"
-				th:href="@{/AdminLeave/leave/delete/}+${leave.leaveId}">Delete</a>
+			<div <div th:if="${#strings.equals(leave.status, 'APPLIED')}or ${#strings.equals(leave.status, 'UPDATED')}">
+			<a href="#"class="btn btn-secondary btn-sm"
+				th:href="@{/staff/leave/delete/}+${leave.leaveId}">Delete</a>
 			</div>
 			</td>
 			<td>
 			<div
 				th:if="${#strings.equals(leave.status, 'APPROVED')}">
-				<a th:href="@{/AdminLeave/leave/cancel/}+${leave.leaveId}">Cancel</a>
+				<a class="btn btn-secondary btn-sm"th:href="@{/staff/leave/cancel/}+${leave.leaveId}">Cancel</a>
 			</div>
 			</td>
 		</tr>
+		 </tbody>
 	</table>
-	
+	   </div>
+	   
+<!--pagination-->	
+<div>
+<nav aria-label="..." class="col-6">
+  <ul class="pagination pagination-sm">
+    <li class="page-item"><a class="page-link" th:href="@{/AdminLeave/leave/backward/}+${currentPage}">&laquo;</a></li>
+    <li class="page-item"th:each="i: ${#numbers.sequence(1, top1)}" ><a class="page-link" th:href="@{/staff/leave/navigate(pageNo=${i})}" th:text="${i}"></a ></li>
+    <li class="page-item"><a class="page-link" th:href="@{/AdminLeave/leave/forward/}+${currentPage}">&raquo;</a></li>
+  </ul>
+</nav>
 
-
-	<div class="pagination"> 
-          <a class="paginate" th:href="@{/AdminLeave/leave/backward/}+${currentPage}">&laquo;</a>
-          <a th:each="i: ${#numbers.sequence(1, top1)}" class="paginate" th:href="@{/AdminLeave/leave/navigate(pageNo=${i})}" th:text= "${i}"></a >
-          
-          
-          <a class="paginate" th:href="@{/AdminLeave/leave/forward/}+${currentPage}">&raquo;</a>
-     </div>
-    <!--<fieldset>
-			pagesize <select >
-				<option><a href="@{/staff/leave/list/1}">1</a></option>  
-				<option><a href="@{/staff/leave/list/2}">2</a></option>
-				<option><a href="@{/staff/leave/list/3}">3</a></option>
-			</select>
-	</fieldset>-->
-     
-     <div class="col-12">
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/1}">1</a> 
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/2}">2</a> 
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/3}">3</a> 
-					</div>
+  <!--other button for pagination-->
+     <!--<div class="col-12">
+     <label for="Display number" class="form-label">Display number : </label> 
+						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/10}">10 </a> 
+						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/20}">20</a> 
+						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/25}">25</a> 
+						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/40}">40</a> 
+					</div>-->
+					
+		<div class="col-12">
+     <label for="Display number" class="form-label">Display number : </label> 			
+		<select th:onchange="'window.location.href=\'/AdminLeave/leave/list/\' + this.value;'" id="pageSize" name="pageSize">
+			<option th:value="10" th:text="10" th:selected="${pageSize == 10}"></option> 
+			<option th:value="20" th:text="20" th:selected="${pageSize == 20}"></option>
+			<option th:value="25" th:text="25" th:selected="${pageSize == 25}"></option> 
+			<option th:value="30" th:text="30" th:selected="${pageSize == 30}"></option> 
+		</select >
+</div>
+</div>
 </body>
 </html>

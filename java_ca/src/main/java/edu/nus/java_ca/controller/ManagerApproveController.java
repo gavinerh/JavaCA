@@ -58,6 +58,8 @@ public class ManagerApproveController {
 	@Autowired
 	private LeaveBalanceService lbService;
 	public Integer pagesize;
+	private ArrayList<String> s = new ArrayList<>();
+	private ArrayList<String> t = new ArrayList<>();
 
 	@RequestMapping(value="/home")
 	public String managerDashboard(HttpSession sessions, Model model) {
@@ -82,35 +84,44 @@ public class ManagerApproveController {
 	@GetMapping(value = "/leave/new")
 	public ModelAndView newLeave(HttpSession ses, SessionStatus status) {
 		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
-		ModelAndView mav = new ModelAndView("manager/manager-new-leave");
 		User u = user(ses);
+		/**find leaves for current user and his leave types*/
 		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
-		ArrayList<String> s = new ArrayList<String>();
+		s.clear();
+		t.clear();
+		/**Save in private array in the controller class*/
 		for(LeaveBalance b:lb) {
-			s.add(b.getLeavetype());
+			s.add(b.getLeavetype().toUpperCase());
+			t.add(b.getLeavetype().toUpperCase()+":\t"+b.getBalance().toString());
 		}
+		ModelAndView mav = new ModelAndView("manager/manager-new-leave");
 		mav.addObject("leave", new Leave());
 		mav.addObject("types",s);
+		mav.addObject("bal",t);
 		return mav;
 	}
 	@PostMapping(value = "/leave/new")
 	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses, SessionStatus status) {
 		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		User u = user(ses);
-		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
-		ArrayList<String> s = new ArrayList<String>();
-		for(LeaveBalance b:lb) {
-			s.add(b.getLeavetype());
-		}
+		
 		model.addAttribute("types",s);
+		model.addAttribute("bal",t);
+		
 		if (result.hasErrors()){
 			return("manager/manager-new-leave");}
+		
+		/**Check for Duplication and return error**/
 		if(lservice.checkDupes(leave.getStartDate(), leave.getEndDate(),u)) {
 			model.addAttribute("errormsg", "**You've already Applied the same period**");
 			return("manager/manager-new-leave");
 		}
+		
+		/**Count the number of leaves and return error if the user has not enough leave**/
 		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate(),u);
 		System.out.println("Total leave days: "+count);
+		if(count==0) {	model.addAttribute("errormsg", "**Leave Application Failed!! You Applied on Holidays**");
+		return("staff/staff-new-leave");}
 		if(!lservice.deductleave(leave, u, count.intValue())) {
 			model.addAttribute("errormsg", "**Leave Application Failed! You don't Have Enough Leave**");
 			return("manager/manager-new-leave");
@@ -118,14 +129,16 @@ public class ManagerApproveController {
 		else {
 		LocalDate now = LocalDate.now();
 		leave.setAppliedDate(now);
+		leave.setLeavetaken(count.intValue());
 		leave.setStatus(LeaveStatus.APPLIED);
+		
 		leave.setUser(u);
-	
 		lservice.createLeave(leave);
+		eService.sendEmailApply(leave);
 		String message = "New Leave " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
 		u.getLb().forEach(System.out::println);
-		return "redirect:/manager/home";}
+		return "redirect:/home";}
 	}
 		
 	public boolean checkManager (HttpSession sessions)
