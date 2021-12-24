@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.security.Hash;
@@ -63,6 +64,7 @@ public class HomeController {
 			// hash the password
 			String hashedPassword = Hash.hashPassword(password);
 			user.setPassword(hashedPassword);
+			
 			uService.saveUser(user);
 			return "register/registerSuccess";
 		}
