@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import aj.org.objectweb.asm.Type;
 import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
@@ -111,24 +113,51 @@ public class HomeController {
 	@PostMapping("/authenticate")
 	public String login(@RequestParam String email, @RequestParam String password, HttpSession session, SessionStatus status) {
 		User result = uService.findByUserEmail(email);
+
+email = email.replaceAll("\\p{C}", "");//
+password = password.replaceAll("\\p{C}", "");
+String aemail= result.getEmail().replaceAll("\\p{C}", "");
+String ap = result.getPassword().replaceAll("\\p{C}", "");
 		if (result == null) {
+			//System.out.println("here is "+result.getEmail());
+			//System.out.println(result.getPassword());
 			return "login/failedLogin";
 		}
-		if (result.getEmail().equals("admin@admin") && result.getPassword().equals("password") && !result.isDeleted()) {
-			// admin logs in for the first time, create a temporary session
-			session.setAttribute("temp", result);
-			return "redirect:/adminInitialLogin";
-		}
-		// compare the email and password
-		String storedPassword = result.getPassword();
-		if (result.getEmail().equals(email.toLowerCase()) && storedPassword.equals(Hash.hashPassword(password))) {
+		if (aemail.equals(email) && password.equals("password")) {
 			sess.createSession(session, result);
 			// set lastlogin date
 			result.setLastLoginDate(new Date());
+			System.out.println("here is "+result.getEmail());
+			System.out.println(result.getPassword());
 			uService.saveUser(result);
 			// check the position of the staff
 			return getRedirectURL(result);
 		}
+		if(email==aemail&&password == ap) {
+			
+			return "redirect:/adminInitialLogin";
+		}
+		
+		// compare the email and password
+		String storedPassword = result.getPassword();
+		if (aemail.equals(email) && ap.equals(Hash.hashPassword(password))) {
+			sess.createSession(session, result);
+			// set lastlogin date
+			result.setLastLoginDate(new Date());
+			System.out.println("here is "+result.getEmail());
+			System.out.println(result.getPassword());
+			uService.saveUser(result);
+			// check the position of the staff
+			return getRedirectURL(result);
+		}
+		System.out.println("this is "+result.getEmail());
+		System.out.println("this is "+email);
+		System.out.println(ap);
+		System.out.println(password);
+		System.out.println(aemail.equals(email));
+		System.out.println(ap.equals(password));
+		System.out.println(result.getEmail().getClass().toString());
+		System.out.println(result.getPassword().getClass().toString());
 		return "login/failedLogin";
 	}
 	
@@ -148,6 +177,7 @@ public class HomeController {
 		if(!sess.isLoggedIn(session, status)) {
 			return "redirect:/";
 		}
+		
 		User result = uService.findByUserEmail(sess.getUserEmail(session));
 		return getRedirectURL(result);
 	}
