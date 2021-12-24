@@ -127,12 +127,6 @@ public class StaffController {
 			return("staff/staff-new-leave");
 		}
 		
-		//check for approving officer to send email to
-		if(u.getApprovingOfficer() == null) {
-			model.addAttribute("errormsg", "**You have no approving officer**");
-			return("staff/staff-new-leave");
-		}
-		
 		/**Count the number of leaves and return error if the user has not enough leave**/
 		Long count = lservice.countLeaves(leave.getStartDate(), leave.getEndDate(),u);
 		System.out.println("Total leave days: "+count);
@@ -316,7 +310,7 @@ public class StaffController {
 		@GetMapping(value = "/leave/list/{id}")
 		public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
 			
-			System.out.println("Page Size:" + id);
+			
 			this.pagesize= id;
 			User u = user(session);
 			int currentpage = 0;
