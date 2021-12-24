@@ -2,6 +2,7 @@ package edu.nus.java_ca.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -143,6 +144,14 @@ public class AdminLeaveController {
 		return "forward:/AdminLeave/holiday";
 	}
 	
+	@RequestMapping(value = "holiday/delete/{id}")
+	public String deleteHoliday(@PathVariable("id") Integer id, HttpSession ses, SessionStatus status) {
+		
+		hService.deleteById(id);
+
+
+		return "forward:/AdminLeave/holiday";
+	}
 	@RequestMapping({ "/", "" })
 	public String dashboard(Model model, HttpSession ses, SessionStatus status) {
 		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
@@ -167,6 +176,7 @@ public class AdminLeaveController {
 		lbService.saveLeaveBalance(lb);
 		return "forward:/AdminLeave/";
 	}
+	
 	
 	@GetMapping(value = "/leave/list")
 	public String list(Model model, HttpSession session, SessionStatus status) {

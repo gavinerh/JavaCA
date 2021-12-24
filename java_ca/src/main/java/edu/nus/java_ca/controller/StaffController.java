@@ -148,7 +148,7 @@ public class StaffController {
 		String message = "New Leave " + leave.getLeaveId()+" Created ";
 		System.out.println(message);
 		u.getLb().forEach(System.out::println);
-		return "redirect:/staff/list";}
+		return "redirect:/home";}
 	}
 
 	@GetMapping(value = "/leave/edit/{id}")
@@ -191,7 +191,7 @@ public class StaffController {
 		LocalDate now = LocalDate.now();
 		l.setAppliedDate(now);
 		lservice.changeLeave(l);
-		return "redirect:/staff/list";
+		return "redirect:/home";
 		}
 	}
 	
@@ -204,7 +204,7 @@ public class StaffController {
 		lservice.refundleave(l, u,l.getLeavetaken());
 		l.setStatus(LeaveStatus.DELETED);
 		lservice.changeLeave(l);
-		return "redirect:/staff/leave/list";
+		return "redirect:/home";
 	}
 	@RequestMapping(value = "/leave/cancel/{id}")
 	public String cancelLeave(@PathVariable("id") long id,HttpSession ses, SessionStatus status) {
@@ -215,7 +215,7 @@ public class StaffController {
 		lservice.refundleave(l, u,l.getLeavetaken());
 		l.setStatus(LeaveStatus.CANCELLED);
 		lservice.changeLeave(l);
-		return "redirect:/staff/leave/list";
+		return "redirect:/home";
 	}
 	
 	

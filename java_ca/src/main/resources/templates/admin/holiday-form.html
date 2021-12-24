@@ -40,6 +40,7 @@
 
 					<div class="col-md-6">
 						<label for="endDate" class="form-label">End Date</label> 
+				
 						<input type="date" th:field="*{endDate}" placeholder="dd/MM/yyyy"
 				th:text="${#temporals.format(holiday.endDate, 'dd/MM/yyyy')}"
 							class="form-control" id="enddate1" />
