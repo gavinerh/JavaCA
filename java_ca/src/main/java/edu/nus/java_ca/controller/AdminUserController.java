@@ -81,6 +81,11 @@ public class AdminUserController {
 		if (bindingResult.hasErrors()) {
 			return "admin/user-form";
 		}
+		if (Uservice.checkDuplicatesEmail(user.getEmail()))
+		{
+			model.addAttribute("errormsg", "**Email is used**");
+			return "admin/user-form";
+		}
 		Collection<LeaveBalance> lb = new ArrayList<LeaveBalance>();
 
 		LeaveBalance lbAnnual = new LeaveBalance("annual", 18, user);

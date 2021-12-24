@@ -15,4 +15,7 @@ public interface UserService {
 	List<User> findByPosition(Position position);
 	void deleteUserById(Long id);
 	List<User> findAllWithDeleted();
+	
+	boolean checkDuplicatesEmail(String email);
+	
 }

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <head th:replace="fragment/layout-admin.html :: html_head"/>
-
+     <style>
+    .error {
+        color: red;
+    }
+        </style>
 <body>
 	<div th:replace="fragment/layout-admin.html :: nav_topbar"/>
 	<div th:replace="fragment/layout-admin.html :: nav_sidebar"/> 
@@ -9,6 +13,7 @@
 
         <!-- FORM -->
         <div class="pt-3 col-md-7 col-lg-8">
+   
           <h4 class="mb-3">Create/Edit User Form</h4>
           <form th:object="${user}" method="post" th:action="@{/AdminUser/add}">
             <div class="row g-3">
@@ -62,6 +67,10 @@
               <div th:if="${#fields.hasAnyErrors()}">
 						<p th:each="err : ${#fields.allErrors()}" th:text="${err}" style="color:red;" />
 						</div>
+			<div class="col-sm-6">
+	
+						<p th:if="${errormsg != null}" th:class="error" th:text="${errormsg}"></p>
+			</div>
 
               <div class="col-12">
                 <input class="btn btn-primary me-2" type="submit" value="Submit" />

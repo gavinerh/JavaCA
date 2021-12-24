@@ -31,6 +31,16 @@ public class UserServiceImpl implements UserService{
 		}
 		return result.get(0);
 	}
+	
+	@Override public boolean checkDuplicatesEmail(String email)
+	{
+		List <User> users =uRepo.findByUserEmail(email);
+		if(users == null)
+		{
+			return false;
+		}
+		return true;
+	}
 
 	@Transactional
 	public void saveUser(User user) {
