@@ -23,6 +23,7 @@ import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.security.Hash;
+import edu.nus.java_ca.service.SeedingImpl;
 import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
 
@@ -34,6 +35,9 @@ public class HomeController {
 	
 	@Autowired
 	SessionManagement sess;
+	
+	@Autowired
+	SeedingImpl seed;
 	
 	// display register new user form
 	@RequestMapping("/register")
@@ -60,6 +64,7 @@ public class HomeController {
 				System.out.println("Code got here");
 				session.invalidate();
 			}
+			seed.createSeedingUser();
 			String password = user.getPassword();
 			// hash the password
 			String hashedPassword = Hash.hashPassword(password);
