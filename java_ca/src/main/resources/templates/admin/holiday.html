@@ -31,7 +31,7 @@
 			<td th:text="${#temporals.format(holiday.startDate, 'dd/MM/yyyy')}">Start Date</td>
 			<td th:text="${#temporals.format(holiday.endDate, 'dd/MM/yyyy')}">End Date</td>
 			<td><a
-				th:href="@{/AdminLeave/holiday/delete}+${holiday.holidayId}">Delete</a></td>
+				th:href="@{/AdminLeave/holiday/delete/}+${holiday.holidayId}">Delete</a></td>
 		</tr>
 	</table>
 	
