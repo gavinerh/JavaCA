@@ -154,9 +154,16 @@ public class AdminLeaveController {
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
+		List<Leave> userList =lservice.findByUser(u);
 		
-		long top = listWithPagination.size();
-		long top1 = top/pagesize+1;
+		int top = userList.size();
+		int top1;
+		if (top % pagesize>0)
+		{
+			 top1 = (top/pagesize)+1;}
+		else {
+			 top1 = top/pagesize;
+		}
 
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
@@ -168,14 +175,24 @@ public class AdminLeaveController {
 	@GetMapping(value = "/leave/forward/{currentPage}")
 	public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session) {
 		Integer i = Integer.parseInt(pageNo);
-		if (i == 2)
-			i--;
 		User u = user(session);
+		List<Leave> userList =lservice.findByUser(u);
+		int top = userList.size();
+		int top1;
+	if (top % pagesize>0)
+	{
+		 top1 = (top/pagesize)+1;}
+	else {
+		 top1 = top/pagesize;
+	}
+		if (i >= top1-1)
+			i--;
+		
+		
 		List<Leave> listWithPagination = lservice.getAllLeaves(i+1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
-		long top = listWithPagination.size();
-		long top1 = top/pagesize+1;
+		
 		
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
@@ -191,11 +208,21 @@ public class AdminLeaveController {
 		Integer i = Integer.parseInt(pageNo);
 		if (i == 0)
 			i++;
-		List<Leave> listWithPagination = lservice.getAllLeaves(i-1, pagesize,u);
-		Leave lea = (Leave) session.getAttribute("currentLeave");
+
+	
+		List<Leave> listWithPagination = lservice.getAllLeaves(i-1,pagesize,u);
+		List<Leave> userList =lservice.findByUser(u);
+        Leave lea = (Leave) session.getAttribute("currentLeave");
+		int top = userList.size();
+		int top1;
+	if (top % pagesize>0)
+	{
+		 top1 = (top/pagesize)+1;}
+	else {
+		 top1 = top/pagesize;
+	}
+	
 		
-		long top = listWithPagination.size();
-		long top1 = top/pagesize+1;
 		
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
@@ -209,16 +236,27 @@ public class AdminLeaveController {
 	public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
 		
 	this.pagesize= id;
-		
-		User u = user(session);
-		int currentpage = 0;
+	User u = user(session);
+	int currentpage = 0;
+	List<Leave> userList =lservice.findByUser(u);
+	int top = userList.size();
+	int top1;
+if (top % pagesize>0)
+{
+	 top1 = (top/pagesize)+1;}
+else {
+	 top1 = top/pagesize;
+}
 
+		
+		
+		
+		
 		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, pagesize,u);
 
 		Leave lea = (Leave) session.getAttribute("currentLeave");
 		
-		long top = listWithPagination.size();
-		long top1 = top/pagesize+1;
+
 		
 		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
