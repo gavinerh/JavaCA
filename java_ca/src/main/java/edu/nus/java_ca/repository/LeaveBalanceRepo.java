@@ -34,7 +34,5 @@ public interface LeaveBalanceRepo extends JpaRepository<LeaveBalance, Integer> {
 	
 	List<LeaveBalance> findByLeavetype(String leavetype);
 	
-	
-	@Query("SELECT DISTINCT lb.leavetype FROM LeaveBalance lb")
-	List<String> findDistinctLeaveType();
+
 }

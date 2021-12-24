@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import edu.nus.java_ca.model.Department;
 import edu.nus.java_ca.model.Leave;
+import edu.nus.java_ca.model.TypesOfLeave;
 import edu.nus.java_ca.model.User;
 
 public interface LeaveService {
@@ -43,4 +44,6 @@ public interface LeaveService {
 			//public List<Module> listModuleByStudentId(int id);
 		List<Leave> getAllLeaves(int pageNo, int pageSize, User u);
 
+		
+	List<TypesOfLeave> findDistinctLeaveType();
 }

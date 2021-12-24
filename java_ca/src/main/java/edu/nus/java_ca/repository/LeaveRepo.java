@@ -2,6 +2,7 @@ package edu.nus.java_ca.repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,4 +53,8 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	Page<Leave> findBypageUser(@Param("user")User user,Pageable page);
 	
 	ArrayList<Leave> findByUser(User u);
+	
+	@Query("SELECT DISTINCT l.type FROM Leave l")
+	List<String> findDistinctLeaveType();
+	
 }

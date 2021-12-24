@@ -116,7 +116,7 @@ public class ReportRepositoryTest {
 	
 //	@Test
 //	public void testFindDistinctLeaveType() {
-//		List<String> lists = lbRepo.findDistinctLeaveType();
+//		List<String> lists = lRepo.findDistinctLeaveType();
 //		for(String s : lists) {
 //			System.out.println(s);
 //		}

@@ -71,7 +71,7 @@ public class ReportController {
 	public String listAll(HttpSession session, Model model, SessionStatus status) {
 		if(!sess.isLoggedIn(session, status)) return "redirect:/";
 		visited = false;
-		List<TypesOfLeave> types = lbService.findDistinctLeaveType();
+		List<TypesOfLeave> types = lService.findDistinctLeaveType();
 		PageDetails pageD = new PageDetails();
 		setPageDetails(pageD, 1);
 		
@@ -83,6 +83,9 @@ public class ReportController {
 		List<Leave> filtered = paginateView(all, 1);
 		if(filtered.size() == 0) {
 			all = null;
+		}
+		for(Leave l : all) {
+			System.out.println(l.getStartDate());
 		}
 		model.addAttribute("leaves", filtered);
 		model.addAttribute("pageDetails", pageD);
@@ -112,7 +115,7 @@ public class ReportController {
 		if(filtered.size() < rowsPerPage) {
 			pageD.setNext(null);
 		}
-		List<TypesOfLeave> types = lbService.findDistinctLeaveType();
+		List<TypesOfLeave> types = lService.findDistinctLeaveType();
 		
 		model.addAttribute("filtering", fd);
 		model.addAttribute("pageDetails", pageD);
@@ -211,6 +214,7 @@ public class ReportController {
 	
 	private List<Leave> getLeaveList(HttpSession session){
 		User manager = uService.findByUserEmail(sess.getUserEmail(session));
+		System.out.println(manager.getEmail());
 		return rService.findLeaveByApprovingOfficer(manager);
 	}
 	

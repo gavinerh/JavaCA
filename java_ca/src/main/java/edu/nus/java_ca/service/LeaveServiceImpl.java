@@ -20,6 +20,7 @@ import edu.nus.java_ca.model.Department;
 import edu.nus.java_ca.model.Leave;
 import edu.nus.java_ca.model.LeaveBalance;
 import edu.nus.java_ca.model.LeaveStatus;
+import edu.nus.java_ca.model.TypesOfLeave;
 import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.repository.HolidayRepo;
 import edu.nus.java_ca.repository.LeaveBalanceRepo;
@@ -244,6 +245,17 @@ public class LeaveServiceImpl implements LeaveService {
 	public ArrayList<Leave> findByUser(User u) {
 		// TODO Auto-generated method stub
 		return lrepo.findByUser(u);
+	}
+	
+	@Override
+	public List<TypesOfLeave> findDistinctLeaveType(){
+		List<String> result = lrepo.findDistinctLeaveType();
+		List<TypesOfLeave> list = new ArrayList<TypesOfLeave>();
+		for(int i=0; i<result.size(); i++) {
+			list.add(new TypesOfLeave(result.get(i)));
+		}
+		list.add(new TypesOfLeave("All"));
+		return list;
 	}
 
 }

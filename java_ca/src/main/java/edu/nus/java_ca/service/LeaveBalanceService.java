@@ -29,6 +29,5 @@ public interface LeaveBalanceService {
 	
 	List<LeaveBalance> findByLeavetype2(String leavetype);
 	
-	List<TypesOfLeave> findDistinctLeaveType();
 
 }
