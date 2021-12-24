@@ -82,6 +82,7 @@ public class AdminLeaveController {
 			s.add(b.getLeavetype().toUpperCase());
 			t.add(b.getLeavetype().toUpperCase()+":\t"+b.getBalance().toString());
 		}
+		
 		ModelAndView mav = new ModelAndView("admin/admin-new-leave");
 		mav.addObject("leave", new Leave());
 		mav.addObject("types",s);
@@ -108,7 +109,7 @@ public class AdminLeaveController {
 		
 		//check for approving officer to send email to
 		if(u.getApprovingOfficer() == null) {
-			model.addAttribute("errormsg", "**You have no approving officer**");
+			model.addAttribute("errormsg", "**You have no approving officer to approve your leave**");
 			return("staff/staff-new-leave");
 		}
 		
