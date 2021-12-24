@@ -82,6 +82,7 @@ public class AdminLeaveController {
 			s.add(b.getLeavetype().toUpperCase());
 			t.add(b.getLeavetype().toUpperCase()+":\t"+b.getBalance().toString());
 		}
+		
 		ModelAndView mav = new ModelAndView("admin/admin-new-leave");
 		mav.addObject("leave", new Leave());
 		mav.addObject("types",s);
@@ -104,6 +105,12 @@ public class AdminLeaveController {
 		if(lservice.checkDupes(leave.getStartDate(), leave.getEndDate(),u)) {
 			model.addAttribute("errormsg", "**You've already Applied the same period**");
 			return("admin/admin-new-leave");
+		}
+		
+		//check for approving officer to send email to
+		if(u.getApprovingOfficer() == null) {
+			model.addAttribute("errormsg", "**You have no approving officer to approve your leave**");
+			return("staff/staff-new-leave");
 		}
 		
 		/**Count the number of leaves and return error if the user has not enough leave**/

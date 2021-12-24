@@ -89,25 +89,22 @@ public class LeaveController {
 			List<Integer> yrlist = Arrays.asList(year-1, year, year+1);
 			model.addAttribute("mthlist", mthlist);
 			model.addAttribute("yrlist", yrlist);
-			
+
+//			User u = user(session);
 			this.pagesize = 10;
-			User u = user(session);
 			int currentpage = 0;
 			int num = 10;
-			
-			if(YY==null)
-				YY=0;
-			if(MM==null)
-				MM=0;
-			
+			if(YY==null) {this.YY=0;}
+			if(MM==null) {this.MM=0;}
 			List<Leave> listWithPagination = lservice.getMRLeaves(currentpage, num, YY, MM);
 			int top = listWithPagination.size();
 			int top1 = (top/num)+1;
-			Leave lea = (Leave) session.getAttribute("currentLeave");		
-			model.addAttribute("leave", lea);
+			
+			model.addAttribute("pageSize", this.pagesize);
 			model.addAttribute("mvtleaves", listWithPagination);
 			model.addAttribute("currentPage", currentpage);
 			model.addAttribute("top1",top1);
+			
 			return "leaves/mvt-reg";
 		}
 		@RequestMapping(value="/view") 
@@ -118,21 +115,14 @@ public class LeaveController {
 			this.MM=Integer.parseInt(mth);
 			this.YY=Integer.parseInt(yr);
 			
-//			int mthparsed = Integer.parseInt(mth);
-//			int yrparsed = Integer.parseInt(yr);
-//			List<Leave> mls = lservice.findLeavesByYearandMonth	//NEW QUERY IN LSERVICE
-//					(yrparsed, mthparsed);
-//			model.addAttribute("mvtleaves", mls);
-			
+//			User u = user(session);
 			this.pagesize = 10;
-			User u = user(session);
 			int currentpage = 0;
 			int num = 10;
 			List<Leave> listWithPagination = lservice.getMRLeaves(currentpage, num, YY, MM);
 			int top = listWithPagination.size();
 			int top1 = (top/num)+1;
-			Leave lea = (Leave) session.getAttribute("currentLeave");		
-			model.addAttribute("leave", lea);
+			model.addAttribute("pageSize", this.pagesize);
 			model.addAttribute("mvtleaves", listWithPagination);
 			model.addAttribute("currentPage", currentpage);
 			model.addAttribute("top1",top1);
@@ -140,36 +130,22 @@ public class LeaveController {
 			return "forward:/leave/leaves/mvt-reg/";
 		}
 		
-		//NEW ADDITION (PAGINATION STARTS)
-		@RequestMapping(value = "/mvt-reg/{id}")
-		public String list(@PathVariable("id") int id, Model model, 
-				HttpSession session) throws ParseException {
-			
-			this.pagesize= id;
-			User u = user(session);
-			int currentpage = 0;
-			List<Leave> listWithPagination = lservice.getMRLeaves(currentpage, pagesize, YY, MM);
-			Leave lea = (Leave) session.getAttribute("currentLeave");		
-			long top = listWithPagination.size();
-			long top1 = top/pagesize+1;
-			model.addAttribute("leave", lea);
-			model.addAttribute("mvtleaves", listWithPagination);
-			model.addAttribute("currentPage", currentpage);
-			model.addAttribute("top1",top1);
-			
-			return "leaves/mvt-reg";
-		}
-
-		//Pagination
+		// (PAGINATION)
 		@GetMapping(value = "/mvtreg/navigate")
 		public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
-			User u = user(session);
+//			User u = user(session);
 			List<Leave> listWithPagination = lservice.getMRLeaves(pageNo-1, pagesize, YY, MM);
 //			List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
-			Leave lea = (Leave) session.getAttribute("currentLeave");		
-			long top = listWithPagination.size();
-			long top1 = top/pagesize+1;
-			model.addAttribute("leave", lea);
+			List<Leave> MRList = lservice.findLeavesByYearandMonth(YY, MM);
+			int top = MRList.size();
+			int top1;
+			if (top % pagesize>0)
+			{
+				 top1 = (top/pagesize)+1;}
+			else {
+				 top1 = top/pagesize;
+			}
+			model.addAttribute("pageSize", this.pagesize);
 			model.addAttribute("mvtleaves", listWithPagination);
 			model.addAttribute("currentPage", pageNo-1);
 			model.addAttribute("top1",top1);
@@ -179,43 +155,76 @@ public class LeaveController {
 		@GetMapping(value = "/mvtreg/forward/{currentPage}")
 		public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session) {
 			Integer i = Integer.parseInt(pageNo);
-			if (i == 2)
-				i--;
-			User u = user(session);
-
+			List<Leave> MRList = lservice.findLeavesByYearandMonth(YY, MM);
+			int top = MRList.size();
+			int top1;
+			if (top % pagesize>0)
+			{
+				 top1 = (top/pagesize)+1;}
+			else {
+				 top1 = top/pagesize;
+			}
+				if (i >= top1-1)
+					i--;	
 			List<Leave> listWithPagination = lservice.getMRLeaves(i+1,pagesize, YY, MM);
 //			List<Leave> listWithPagination = lservice.getAllLeaves(i+1,pagesize,u);
-			
-			Leave lea = (Leave) session.getAttribute("currentLeave");		
-			long top = listWithPagination.size();
-			long top1 = top/pagesize+1;
-			model.addAttribute("leave", lea);
+		    model.addAttribute("pageSize", this.pagesize);
 			model.addAttribute("mvtleaves", listWithPagination);
 			model.addAttribute("currentPage", i+1);
 			model.addAttribute("top1",top1);		
+			
 			return "leaves/mvt-reg";
 		}
 
 		@GetMapping(value = "/mvtreg/backward/{currentPage}")
 		public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session) {
-			User u = user(session);
+//			User u = user(session);
 			Integer i = Integer.parseInt(pageNo);
 			if (i == 0)
 				i++;
 			List<Leave> listWithPagination = lservice.getMRLeaves(i-1,pagesize, YY, MM);
 //			List<Leave> listWithPagination = lservice.getAllLeaves(i-1, pagesize,u);
-			
-			Leave lea = (Leave) session.getAttribute("currentLeave");		
-			long top = listWithPagination.size();
-			long top1 = top/pagesize+1;
-			model.addAttribute("leave", lea);
+			List<Leave> MRList = lservice.findLeavesByYearandMonth(YY, MM);
+			int top = MRList.size();
+			int top1;
+			if (top % pagesize>0)
+			{
+				 top1 = (top/pagesize)+1;}
+			else {
+				 top1 = top/pagesize;
+			}
+			model.addAttribute("pageSize", this.pagesize);
 			model.addAttribute("mvtleaves", listWithPagination);
 			model.addAttribute("currentPage", i-1);
-			model.addAttribute("top1",top1);		
+			model.addAttribute("top1",top1);
+			
 			return "leaves/mvt-reg";
 		}
-		//NEW ADDITION (PAGINATION)ENDS
 		
+		@RequestMapping(value = "/mvt-reg/{id}")
+		public String list(@PathVariable("id") int id, Model model, 
+				HttpSession session) {
+			
+			this.pagesize= id;
+//			User u = user(session);
+			int currentpage = 0;
+			List<Leave> MRList = lservice.findLeavesByYearandMonth(YY, MM);
+			int top = MRList.size();
+			int top1;
+			if (top % pagesize>0)
+			{
+				 top1 = (top/pagesize)+1;}
+			else {
+				 top1 = top/pagesize;
+			}
+			List<Leave> listWithPagination = lservice.getMRLeaves(currentpage, pagesize, YY, MM);
+			model.addAttribute("pageSize", this.pagesize);
+			model.addAttribute("mvtleaves", listWithPagination);
+			model.addAttribute("currentPage", currentpage);
+			model.addAttribute("top1",top1);
+			
+			return "leaves/mvt-reg";
+		}
 		
 		
 	}

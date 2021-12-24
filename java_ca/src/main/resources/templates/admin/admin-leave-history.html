@@ -12,7 +12,6 @@
 	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
 		<!-- FORM -->
-		<div class="pt-3 col-md-7 col-lg-8">
 <style>
     .error {
         color: red;
@@ -56,7 +55,7 @@
 			</div>
 			</td>
 			<td>
-			<div <div th:if="${#strings.equals(leave.status, 'APPLIED')}or ${#strings.equals(leave.status, 'UPDATED')}">
+			<div th:if="${#strings.equals(leave.status, 'APPLIED')}or ${#strings.equals(leave.status, 'UPDATED')}">
 			<a href="#"class="btn btn-secondary btn-sm"
 				th:href="@{/staff/leave/delete/}+${leave.leaveId}">Delete</a>
 			</div>
@@ -81,15 +80,6 @@
     <li class="page-item"><a class="page-link" th:href="@{/AdminLeave/leave/forward/}+${currentPage}">&raquo;</a></li>
   </ul>
 </nav>
-
-  <!--other button for pagination-->
-     <!--<div class="col-12">
-     <label for="Display number" class="form-label">Display number : </label> 
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/10}">10 </a> 
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/20}">20</a> 
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/25}">25</a> 
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/40}">40</a> 
-					</div>-->
 					
 		<div class="col-12">
      <label for="Display number" class="form-label">Display number : </label> 			

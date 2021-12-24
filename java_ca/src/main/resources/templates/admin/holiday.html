@@ -7,9 +7,8 @@
 <body>
 	<div th:replace="fragment/layout-admin.html :: nav_topbar" />
 	<div th:replace="fragment/layout-admin.html :: nav_sidebar" />
-
-			<div
-          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+			<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">Holiday List</h1>
           <div class="btn-toolbar mb-2 mb-md-0">
             <a th:href="@{/AdminLeave/holiday/new}" class="btn btn-sm btn-outline-secondary">Create New holiday</a>
@@ -17,12 +16,14 @@
         </div>
 
 	<h2 th:if="${#lists.isEmpty(holidays)}">No holidays</h2>
-	<table th:if="${not #lists.isEmpty(holidays)}" >
+	<div class="table-responsive">
+	<table th:if="${not #lists.isEmpty(holidays)}" class="table table-hover">
 		<tr >
 			<th >Holiday Id</th>
 			<th >Holiday</th>
 			<th >Start Date</th>
 			<th >End Date</th>
+			<th >Delete</th>
 			
 		</tr>
 		<tr th:each="holiday:${holidays}" class="table-row">
@@ -34,28 +35,8 @@
 				th:href="@{/AdminLeave/holiday/delete/}+${holiday.holidayId}">Delete</a></td>
 		</tr>
 	</table>
+	</div>
 	
-
-<!-- 
-	<div class="pagination"> 
-          <a class="paginate" th:href="@{/AdminLeave/leave/backward/}+${currentPage}">&laquo;</a>
-          <a th:each="i: ${#numbers.sequence(1, top1)}" class="paginate" th:href="@{/AdminLeave/leave/navigate(pageNo=${i})}" th:text= "${i}"></a >
-          
-          
-          <a class="paginate" th:href="@{/AdminLeave/leave/forward/}+${currentPage}">&raquo;</a>
-     </div>
-    <fieldset>
-			pagesize <select >
-				<option><a href="@{/staff/leave/list/1}">1</a></option>  
-				<option><a href="@{/staff/leave/list/2}">2</a></option>
-				<option><a href="@{/staff/leave/list/3}">3</a></option>
-			</select>
-	</fieldset>
-     
-     <div class="col-12">
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/1}">1</a> 
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/2}">2</a> 
-						<a class="btn btn-primary me-2" th:href="@{/AdminLeave/leave/list/3}">3</a> 
-					</div> -->
+</main>
 </body>
 </html>

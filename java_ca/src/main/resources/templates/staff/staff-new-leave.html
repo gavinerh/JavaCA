@@ -28,7 +28,7 @@
 					<div class="col-md-6">
 						<label for="type" class="form-label">Leave Type</label><select
 							th:field="*{type}" class="form-select" id="type">
-							<option th:value="''" th:text="----Choose----"></option >
+							<option th:value="''" th:text="----Choose----" value="" disabled selected></option >
 							<option th:each="type:${types}" th:value="${type}" th:text="${type}"></option>
 						</select>
 						<p th:if="${#fields.hasErrors('type')}" th:class="error" th:errors="*{type}"></p>

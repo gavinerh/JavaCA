@@ -60,7 +60,7 @@
 		</button>
 
 		<div class="container-fluid">
-			<p class="navbar-text mb-0 fw-bold">Welcome!</p>
+			<p class="navbar-text mb-0 fw-bold" th:text="${'Welcome (' + session.uSession.getEmail() + ')'}">Welcome!</p>
 	
 		</div>
 
