@@ -9,6 +9,7 @@ import edu.nus.java_ca.model.Holidays;
 
 public interface HolidayRepo extends JpaRepository<Holidays, Integer> {
 	
-	Holidays findByHoliday(LocalDate holiday);
-
+	/*
+	 * Holidays findBy(LocalDate holiday);
+	 */
 }

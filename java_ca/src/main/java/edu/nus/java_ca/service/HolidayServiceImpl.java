@@ -50,23 +50,19 @@ public class HolidayServiceImpl implements HolidayService {
 	@Transactional
 	public void createHoliday(Holidays h) {
 		// TODO Auto-generated method stub
-		ArrayList<LocalDate> ho = findHolidays();
-		Long count = ho.stream()
-					.filter(x-> x.isEqual(h.getHoliday()))
-					.count();
-		if(count==0) {hrepo.saveAndFlush(h);}
+		/*
+		 * ArrayList<LocalDate> ho = findHolidays(); Long count = ho.stream()
+		 * .filter(x-> x.isEqual(h.getHoliday())) .count(); if(count==0)
+		 */
+		hrepo.saveAndFlush(h);
 	}
 
-	@Override
-	public ArrayList<LocalDate> findHolidays() {
-		// TODO Auto-generated method stub
-		ArrayList<Holidays> ho = (ArrayList<Holidays>) hrepo.findAll();
-		ArrayList<LocalDate> d = new ArrayList<>();
-		for(Holidays h: ho) {
-			d.add(h.getHoliday());
-		}
-		return d;
-	}
+	/*
+	 * @Override public ArrayList<LocalDate> findHolidays() { // TODO Auto-generated
+	 * method stub ArrayList<Holidays> ho = (ArrayList<Holidays>) hrepo.findAll();
+	 * ArrayList<LocalDate> d = new ArrayList<>(); for(Holidays h: ho) {
+	 * d.add(h.getHoliday()); } return d; }
+	 */
 	
 
 }
