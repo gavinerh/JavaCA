@@ -81,15 +81,6 @@
     <li class="page-item"><a class="page-link" th:href="@{/manager/leave/forward/}+${currentPage}">&raquo;</a></li>
   </ul>
 </nav>
-
-  <!--other button for pagination-->
-     <!--<div class="col-12">
-     <label for="Display number" class="form-label">Display number : </label> 
-						<a class="btn btn-primary me-2" th:href="@{/manager/leave/list/10}">10 </a> 
-						<a class="btn btn-primary me-2" th:href="@{/manager/leave/list/20}">20</a> 
-						<a class="btn btn-primary me-2" th:href="@{/manager/leave/list/25}">25</a> 
-						<a class="btn btn-primary me-2" th:href="@{/manager/leave/list/40}">40</a> 
-					</div>-->
 					
 		<div class="col-12">
      <label for="Display number" class="form-label">Display number : </label> 			
@@ -101,6 +92,7 @@
 		</select >
 </div>
 </div>
+	<div th:replace="fragment/layout-manager.html :: js_script" />
 </body>
 
 </html>

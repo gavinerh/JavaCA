@@ -99,11 +99,15 @@ public class LeaveController {
 			List<Leave> MRList = lservice.findLeavesByYearandMonth(YY, MM);
 			int top = MRList.size();
 			int top1;
-			if (top % num>0)
-			{
-				 top1 = (top/pagesize)+1;}
+			
+			if(top==0) {top1=1;}
 			else {
-				 top1 = top/pagesize;
+				if (top % num>0)
+				{
+					top1 = (top/pagesize)+1;}
+				else {
+					top1 = top/pagesize;
+				}
 			}
 			model.addAttribute("pageSize", this.pagesize);
 			model.addAttribute("mvtleaves", listWithPagination);
