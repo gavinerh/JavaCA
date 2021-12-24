@@ -22,10 +22,10 @@
                 <input th:field="*{lastName}" type="text" class="form-control" id="lastName" placeholder="" value="" required>
               </div>
 
-              <div class="col-md-6">
+             <!--  <div class="col-md-6">
                 <label for="email" class="form-label">Email</label>
                 <input th:field="*{email}" type="email" class="form-control" id="email" placeholder="you@example.com" required>
-              </div>
+              </div> -->
               
               <div class="col-md-6">
                 <label th:for="position" class="form-label">Position</label>
@@ -55,6 +55,7 @@
               <input type="hidden" th:field="*{userId}" />
               <input type="hidden" th:field="*{password}" />
               <input type="hidden" th:field="*{lb}" />
+              <input type="hidden" th:field="*{email}" />
               
               <div th:if="${#fields.hasAnyErrors()}">
 						<p th:each="err : ${#fields.allErrors()}" th:text="${err}" style="color:red;" />
