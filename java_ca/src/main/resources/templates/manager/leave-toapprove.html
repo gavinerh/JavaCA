@@ -20,6 +20,7 @@
 	<table th:if="${not #lists.isEmpty(leaves)}" class="table table-hover">
 		<thead>
 			<th>Leave Id</th>
+			<th>Employee Id</th>
 			<th>Employee's Name</th>>
 			<th>Leave Type</th>
 			<th>Leave Application Date</th>
@@ -32,7 +33,8 @@
 		</thead>
 		<tbody>
 		  <tr th:each="leave:${leaves}" class="table-row" >
-			<td th:text=${leave.leaveId}>Id</td>
+			<td th:text=${leave.leaveId}>Leave Id</td>
+			<td th:text="${leave.user.userId}">Employee Id</td>
 			<td th:text="${leave.user.firstName}"> Name</td>
 			<td th:text=${leave.type}>Leave Type</td>
 			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>

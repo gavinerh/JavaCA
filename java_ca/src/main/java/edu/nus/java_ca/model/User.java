@@ -54,6 +54,14 @@ public class User {
 	public User() {
 	}
 
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	public void addLeaveBalance(LeaveBalance lb) {
 		this.lb.add(lb);
 	}

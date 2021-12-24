@@ -50,7 +50,7 @@ public class AdminUserController {
 
 	@RequestMapping({ "/", "" })
 	public String dashboard(Model model, HttpSession session, SessionStatus status) {
-
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		String em = sess.getUserEmail(session);
 		User result = Uservice.findByUserEmail(em);
 		System.out.println(result.getLastName());
@@ -65,7 +65,8 @@ public class AdminUserController {
 
 	// 1234
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public ModelAndView addUser() {
+	public ModelAndView addUser(HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
 		ModelAndView mav = new ModelAndView("admin/user-form", "user", new User());
 		List<User> managerList = Uservice.findByPosition(Position.Manager);
 		mav.addObject("managerlist", managerList);
@@ -73,7 +74,8 @@ public class AdminUserController {
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String saveMember(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
+	public String saveMember(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model, HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		if (bindingResult.hasErrors()) {
 			return "admin/user-form";
 		}
@@ -89,7 +91,8 @@ public class AdminUserController {
 	}
 	
 	@RequestMapping(value = "/delete/{id}")
-	public String deleteMember(@PathVariable("id") Long id) {
+	public String deleteMember(@PathVariable("id") Long id, HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		User delUser = Uservice.findByUserId(id);
 		Uservice.deleteUser(delUser);
 
@@ -100,7 +103,8 @@ public class AdminUserController {
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editUser(@PathVariable Long id) {
+	public ModelAndView editUser(@PathVariable Long id, HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
 		ModelAndView mav = new ModelAndView("admin/user-form", "user", Uservice.findByUserId(id));
 		List<User> managerList = Uservice.findByPosition(Position.Manager);
 		mav.addObject("managerlist", managerList);
@@ -108,7 +112,8 @@ public class AdminUserController {
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
-	public String editUser(@ModelAttribute("user") @Valid User user, BindingResult result, @PathVariable Long id) {
+	public String editUser(@ModelAttribute("user") @Valid User user, BindingResult result, @PathVariable Long id, HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		if (result.hasErrors()) {
 			return "admin/user-form";
 		}

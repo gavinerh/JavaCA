@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.nus.java_ca.model.Department;
@@ -79,7 +80,8 @@ public class ManagerApproveController {
 	}
 	
 	@GetMapping(value = "/leave/new")
-	public ModelAndView newLeave(HttpSession ses) {
+	public ModelAndView newLeave(HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
 		ModelAndView mav = new ModelAndView("manager/manager-new-leave");
 		User u = user(ses);
 		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
@@ -92,7 +94,8 @@ public class ManagerApproveController {
 		return mav;
 	}
 	@PostMapping(value = "/leave/new")
-	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses) {
+	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		User u = user(ses);
 		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
 		ArrayList<String> s = new ArrayList<String>();
@@ -147,14 +150,16 @@ public class ManagerApproveController {
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editUser(@PathVariable Long id) {
+	public ModelAndView editUser(@PathVariable Long id, SessionStatus status, HttpSession session) {
+		if (!sess.isLoggedIn(session, status)) return new ModelAndView("redirect:/");
 		ModelAndView mav = new ModelAndView("manager/manageredit", "user", uservice.findByUserId(id));
 
 		return mav;
 	}
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String editUser(@ModelAttribute @Valid User user, BindingResult result, 
-			@PathVariable Long id) {
+			@PathVariable Long id, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		if (result.hasErrors()) {
 			return "manager/manageredit";
 		}
@@ -166,7 +171,8 @@ public class ManagerApproveController {
 	
 	
 	@GetMapping(value = "/leave/list")
-	public String list(Model model, HttpSession session) {		
+	public String list(Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		User u = user(session);
 		int currentpage = 0;
 		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, 10,u);
@@ -182,7 +188,8 @@ public class ManagerApproveController {
 	}
 
 	@GetMapping(value = "/leave/navigate")
-	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
+	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");		
@@ -196,7 +203,8 @@ public class ManagerApproveController {
 	}
 
 	@GetMapping(value = "/leave/forward/{currentPage}")
-	public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session) {
+	public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		Integer i = Integer.parseInt(pageNo);
 		if (i == 2)
 			i--;
@@ -213,7 +221,8 @@ public class ManagerApproveController {
 	}
 
 	@GetMapping(value = "/leave/backward/{currentPage}")
-	public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session) {
+	public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		User u = user(session);
 		Integer i = Integer.parseInt(pageNo);
 		if (i == 0)
@@ -230,8 +239,8 @@ public class ManagerApproveController {
 	}
 	
 	@GetMapping(value = "/leave/list/{id}")
-	public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
-		
+	public String list(@PathVariable("id") int id ,Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		this.pagesize= id;
 		User u = user(session);
 		int currentpage = 0;
@@ -249,8 +258,8 @@ public class ManagerApproveController {
 	//NEW EDIT!
 	//Manager Actions
 	@RequestMapping(value = "/pendingapprovelist")
-	public String list(HttpSession sessions, Model model) {
-		
+	public String list(HttpSession sessions, Model model, SessionStatus status) {
+		if (!sess.isLoggedIn(sessions, status)) return "redirect:/";
 		if (!checkManager(sessions))
 		{
 			return "redirect:/logout";
@@ -262,21 +271,23 @@ public class ManagerApproveController {
 		ArrayList <Leave> pendingleave = (ArrayList<Leave>) lservice.listLeaveToApprove(department);
 		model.addAttribute("leaves", pendingleave);
 //		model.addAttribute("leaves", lservice.listLeaveToApprove());
-		return "leaves/leave-toapprove";
+		return "manager/leave-toapprove";
 	}
 
 	@RequestMapping(value="/send/{id}")
 	public String managerSetStatus(@PathVariable("id")Long id, 
-			Model model) {
+			Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		List<String> msetstatus = Arrays.asList("APPROVED", "REJECTED");
 		model.addAttribute("msetstatus", msetstatus);
 		model.addAttribute("leaveapplied",lservice.findLeaveById(id));
-		return "leaves/manager-setstatus";
+		return "manager/manager-setstatus";
 	}
 	@PostMapping(value="/confirm")
 	public String ApproveRejectLeave(@RequestParam("leaveId")String id, 
 		@RequestParam("mset")String mset, 
-		@RequestParam("mreason")String mrea, Model model) {
+		@RequestParam("mreason")String mrea, Model model, SessionStatus status, HttpSession session) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 			Leave ls = lservice.findLeaveById(Long.parseLong(id));
 			User user = ls.getUser();
 			Integer count = lservice.countLeaves(ls.getStartDate(), ls.getEndDate(),user).intValue();
