@@ -49,11 +49,11 @@ public class AdminLeaveController {
 	private LeaveService lservice;
 	
 	@Autowired
-<<<<<<< HEAD
+
 	private HolidayService hService;
-=======
+
 	SessionManagement sess;
->>>>>>> branch 'main' of https://github.com/gavinerh/JavaCA
+
 	
 	
 	private User user(HttpSession ses) {
@@ -121,17 +121,17 @@ public class AdminLeaveController {
 		return "admin/holiday";
 	}
 	
-	@GetMapping(value = "/holiday/new")
+	@RequestMapping(value = "/holiday/new")
 	public ModelAndView newHoliday(HttpSession ses) {
 		ModelAndView mav = new ModelAndView("admin/holiday-form");
 		
-		mav.addObject("Holidays", new Holidays());
+		mav.addObject("holiday", new Holidays());
 		
 		return mav;
 	}
 	
 	@RequestMapping(value = "/holiday/new", method = RequestMethod.POST)
-	public String saveMember(@ModelAttribute("holiday") @Valid Holidays holidays,
+	public String saveMember(Model model, @ModelAttribute("holiday")  Holidays holidays,
 			BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "admin/holiday-form";

@@ -19,7 +19,7 @@
 </style>
 			<h4 class="mb-3">Create holiday</h4>
 			<!-- create hidden id tag-->
-			<form action="#" th:object="${Holidays}" th:action="@{/AdminLeave/holiday/new}"
+			<form action="#" th:object="${holiday}" th:action="@{/AdminLeave/holiday/new}"
 				method="post">
 				<div class="row g-3">
 					<div class="col-sm-6">
@@ -28,22 +28,21 @@
 						<p th:if="${#fields.hasErrors('holidayDesc')}" th:errorclass="error" th:errors="*{holidayDesc}"></p>
 					</div>
 						
-					</div>
+					
 				</div>
 				<div class="mt-1 row g-3">
 					<div class="col-md-6">
-						<label for="startDate" class="form-label">Start Date</label>
+						<label for="startdate" class="form-label">Start Date</label>
 						<input th:field="*{startDate}" placeholder="dd/MM/yyyy"
-				th:text="${#temporals.format(Holidays.startDate, 'dd/MM/yyyy')}"
-							type="date" class="form-control" id="startDate" />
+							type="date" class="form-control" id="startdate1" />
 							<p th:if="${#fields.hasErrors('startDate')}" th:errorclass="error" th:errors="*{startDate}"></p>
-					</div>
+					</div>  
 
 					<div class="col-md-6">
 						<label for="endDate" class="form-label">End Date</label> 
 						<input type="date" th:field="*{endDate}" placeholder="dd/MM/yyyy"
-				th:text="${#temporals.format(Holidays.endDate, 'dd/MM/yyyy')}"
-							class="form-control" id="endDate" />
+				th:text="${#temporals.format(holiday.endDate, 'dd/MM/yyyy')}"
+							class="form-control" id="enddate1" />
 							<p th:if="${#fields.hasErrors('endDate')}" th:errorclass="error" th:errors="*{endDate}"></p>
 					</div>
 
