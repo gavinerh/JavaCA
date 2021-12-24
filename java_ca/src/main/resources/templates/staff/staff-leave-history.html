@@ -70,7 +70,8 @@
 		 </tbody>
 	</table>
 	   </div>
-	
+	   
+<!--pagination-->	
 <div>
 <nav aria-label="..." class="col-6">
   <ul class="pagination pagination-sm">
@@ -80,7 +81,7 @@
   </ul>
 </nav>
 
-  
+  <!--other button for pagination-->
      <!--<div class="col-12">
      <label for="Display number" class="form-label">Display number : </label> 
 						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list/10}">10 </a> 
@@ -89,6 +90,8 @@
 						<a class="btn btn-primary me-2" th:href="@{/staff/leave/list/40}">40</a> 
 					</div>-->
 					
+		<div class="col-12">
+     <label for="Display number" class="form-label">Display number : </label> 			
 		<select th:onchange="'window.location.href=\'/staff/leave/list/\' + this.value;'" id="pageSize" name="pageSize">
 			<option th:value="10" th:text="10" th:selected="${pageSize == 10}"></option> 
 			<option th:value="20" th:text="20" th:selected="${pageSize == 20}"></option>
@@ -96,6 +99,6 @@
 			<option th:value="30" th:text="30" th:selected="${pageSize == 30}"></option> 
 		</select >
 </div>
-
+</div>
 </body>
 </html>

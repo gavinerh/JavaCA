@@ -211,7 +211,6 @@ public class StaffController {
 	@RequestMapping(value = "/leave/list")
 	public String list(Model model, HttpSession session) {
 		
-	
 		this.pagesize = 10;
 		User u = user(session);
 		int currentpage = 0;
@@ -219,10 +218,7 @@ public class StaffController {
 		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, num,u);
 		int top = listWithPagination.size();
 		int top1 = (top/num)+1;
-		Leave lea = (Leave) session.getAttribute("currentLeave");
-		
 		model.addAttribute("pageSize", this.pagesize);
-		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", currentpage);
 		model.addAttribute("top1",top1);
@@ -234,9 +230,7 @@ public class StaffController {
 	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
-		Leave lea = (Leave) session.getAttribute("currentLeave");
 		List<Leave> userList =lservice.findByUser(u);
-		
 		int top = userList.size();
 		int top1;
 		if (top % pagesize>0)
@@ -247,36 +241,29 @@ public class StaffController {
 		}
 		
 		model.addAttribute("pageSize", this.pagesize);
-		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", pageNo-1);
 		model.addAttribute("top1",top1);
 		return "staff/staff-leave-history";
 	}
 
-	@GetMapping(value = "/leave/forward/{currentPage}")
-	public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session) {
-		Integer i = Integer.parseInt(pageNo);
-		User u = user(session);
-		List<Leave> userList =lservice.findByUser(u);
-		int top = userList.size();
-		int top1;
-	if (top % pagesize>0)
-	{
-		 top1 = (top/pagesize)+1;}
-	else {
-		 top1 = top/pagesize;
-	}
-		if (i >= top1-1)
-			i--;
-		
-		
+		@GetMapping(value = "/leave/forward/{currentPage}")
+		public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session) {
+			Integer i = Integer.parseInt(pageNo);
+			User u = user(session);
+			List<Leave> userList =lservice.findByUser(u);
+			int top = userList.size();
+			int top1;
+		if (top % pagesize>0)
+		{
+			 top1 = (top/pagesize)+1;}
+		else {
+			 top1 = top/pagesize;
+		}
+			if (i >= top1-1)
+				i--;
 		List<Leave> listWithPagination = lservice.getAllLeaves(i+1,pagesize,u);
-		
-        Leave lea = (Leave) session.getAttribute("currentLeave");
-		
         model.addAttribute("pageSize", this.pagesize);
-		model.addAttribute("leave", lea);
 		model.addAttribute("leaves", listWithPagination);
 		model.addAttribute("currentPage", i+1);
 		model.addAttribute("top1",top1);
@@ -284,63 +271,52 @@ public class StaffController {
 		return "staff/staff-leave-history";
 	}
 
-	@GetMapping(value = "/leave/backward/{currentPage}")
-	public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session) {
-		User u = user(session);
-		Integer i = Integer.parseInt(pageNo);
-		if (i == 0)
-			i++;
-
-	
-		List<Leave> listWithPagination = lservice.getAllLeaves(i-1,pagesize,u);
-		List<Leave> userList =lservice.findByUser(u);
-        Leave lea = (Leave) session.getAttribute("currentLeave");
-		int top = userList.size();
-		int top1;
-	if (top % pagesize>0)
-	{
-		 top1 = (top/pagesize)+1;}
-	else {
-		 top1 = top/pagesize;
-	}
+		@GetMapping(value = "/leave/backward/{currentPage}")
+		public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session) {
+			User u = user(session);
+			Integer i = Integer.parseInt(pageNo);
+			if (i == 0)
+				i++;
+			List<Leave> listWithPagination = lservice.getAllLeaves(i-1,pagesize,u);
+			List<Leave> userList =lservice.findByUser(u);
+			int top = userList.size();
+			int top1;
+			if (top % pagesize>0)
+			{
+				 top1 = (top/pagesize)+1;}
+			else {
+				 top1 = top/pagesize;
+			}
+			model.addAttribute("pageSize", this.pagesize);
+			model.addAttribute("leaves", listWithPagination);
+			model.addAttribute("currentPage", i-1);
+			model.addAttribute("top1",top1);
+			
+			return "staff/staff-leave-history";
+		}
 		
-		model.addAttribute("pageSize", this.pagesize);
-		model.addAttribute("leave", lea);
-		model.addAttribute("leaves", listWithPagination);
-		model.addAttribute("currentPage", i-1);
-		model.addAttribute("top1",top1);
-		
-		return "staff/staff-leave-history";
-	}
-	
-	@GetMapping(value = "/leave/list/{id}")
-	public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
-		
-		System.out.println("Page Size:" + id);
-	this.pagesize= id;
-		
-		User u = user(session);
-		int currentpage = 0;
-		List<Leave> userList =lservice.findByUser(u);
-		int top = userList.size();
-		int top1;
-	if (top % pagesize>0)
-	{
-		 top1 = (top/pagesize)+1;}
-	else {
-		 top1 = top/pagesize;
-	}
-
-
-		List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, pagesize,u);
-		Leave lea = (Leave) session.getAttribute("currentLeave");
-		
-		model.addAttribute("pageSize", this.pagesize);
-		model.addAttribute("leave", lea);
-		model.addAttribute("leaves", listWithPagination);
-		model.addAttribute("currentPage", currentpage);
-		model.addAttribute("top1",top1);
-		
-		return "staff/staff-leave-history";
+		@GetMapping(value = "/leave/list/{id}")
+		public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
+			
+			System.out.println("Page Size:" + id);
+			this.pagesize= id;
+			User u = user(session);
+			int currentpage = 0;
+			List<Leave> userList =lservice.findByUser(u);
+			int top = userList.size();
+			int top1;
+			if (top % pagesize>0)
+			{
+				 top1 = (top/pagesize)+1;}
+			else {
+				 top1 = top/pagesize;
+			}
+			List<Leave> listWithPagination = lservice.getAllLeaves(currentpage, pagesize,u);
+			model.addAttribute("pageSize", this.pagesize);
+			model.addAttribute("leaves", listWithPagination);
+			model.addAttribute("currentPage", currentpage);
+			model.addAttribute("top1",top1);
+			
+			return "staff/staff-leave-history";
 }
 }
