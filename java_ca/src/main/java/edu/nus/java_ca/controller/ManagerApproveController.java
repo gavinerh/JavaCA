@@ -111,7 +111,10 @@ public class ManagerApproveController {
 		model.addAttribute("types",s);
 		model.addAttribute("bal",t);
 		
-		
+		if(u.getApprovingOfficer() == null) {
+			model.addAttribute("errormsg", "**You have no approving officer to approve your leave, please assign a manager as an approving officer first**");
+			return("manager/manager-new-leave");
+		}
 		
 		if (result.hasErrors()){
 			return("manager/manager-new-leave");}

@@ -138,7 +138,7 @@
 					class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
 					<h1 class="h2"></h1>
 					<h2 th:if="${leaves == null}">No Leave is recorded</h2>
-					<h2 th:if="${#lists.isEmpty(leaves)}">No more records found</h2>
+					<h2 th:if="${#lists.isEmpty(leaves) && leaves != null}">No more records found</h2>
 					<p th:if="${filtering != null}" class="custom-p"
 						th:text="${'Date filtering from: ' + filtering.getStartDate() + ' to ' + filtering.getEndDate()}"></p>
 					<p></p>

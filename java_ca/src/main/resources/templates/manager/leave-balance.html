@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragment/layout-staff.html :: html_head" />
+<head th:replace="fragment/layout-admin.html :: html_head" />
 
 <body>
 	<div th:replace="fragment/layout-manager.html :: nav_topbar" />
@@ -12,34 +12,34 @@
 	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
 		<!-- FORM -->
+		<div class="pt-3 col-md-7 col-lg-8">
 <style>
     .error {
         color: red;
     }
 </style>
+			
 			<h4 class="mb-3">Admin Leave Balance</h4>
 		<!-- some sessions code -->		 
 
 	<div class="table-responsive">
-	  
-          <table  class="table table-bordered">
-
-	 <thead class="table-light">
-		<tr >
-			<th >Leave Type</th>
-			<th >Leave Balance</th>
-		</tr>
+    	<table  class="table table-bordered">
+		 <thead class="table-light">
+			<tr >
+				<th >Leave Type</th>
+				<th >Leave Balance</th>
+			</tr>
 		 </thead >
 	
 		<tr th:each="leave:${lbalance}" class="table-row">
 			<td th:text="${#strings.toUpperCase(leave.leavetype)}">type</td>
 			<td th:text=${leave.balance}>balance</td>
-		</tr>
- 
-		 </table>
- 
-	
+		</tr> 
+		</table>	
+	</div>
 </div>
+
+<div th:replace="fragment/layout-manager.html :: js_script" />
 
 </body>
 </html>

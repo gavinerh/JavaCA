@@ -76,16 +76,14 @@ public class ReportController {
 		setPageDetails(pageD, 1);
 		
 		List<Leave> all = getLeaveList(session);
+		System.out.println(all.size());
 		if(all.size() < rowsPerPage) {
 			pageD.setNext(null);
 		}
 		cachedLeave = all;
 		List<Leave> filtered = paginateView(all, 1);
 		if(filtered.size() == 0) {
-			all = null;
-		}
-		for(Leave l : all) {
-			System.out.println(l.getStartDate());
+			filtered = null;
 		}
 		model.addAttribute("leaves", filtered);
 		model.addAttribute("pageDetails", pageD);

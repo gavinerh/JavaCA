@@ -84,7 +84,7 @@ public class LeaveController {
 		@RequestMapping(value="/leaves/mvt-reg")
 		public String viewMvtReg(Model model, HttpSession session) {
 			model.addAttribute("leave", new Leave());	
-			List<Integer> mthlist = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11);
+			List<Integer> mthlist = Arrays.asList(1,2,3,4,5,6,7,8,9,10,11,12);
 			int year = Year.now().getValue();
 			List<Integer> yrlist = Arrays.asList(year-1, year, year+1);
 			model.addAttribute("mthlist", mthlist);

@@ -21,7 +21,8 @@
 		<h4 class="mb-3">My Leave History</h4>
 		<!-- some sessions code -->		 
 
-	<h4 class="mb-3" th:if="${#lists.isEmpty(leaves)}">No Leave Applied</h4>
+	<br /><p th:if="${#lists.isEmpty(leaves)}">No Leave Applied</p >
+	<!-- <h4 class="mb-3" th:if="${#lists.isEmpty(leaves)}">No Leave Applied</h4> -->
 	   <div class="table-responsive">
           <table th:if="${not #lists.isEmpty(leaves)}"  class="table table-hover">
 	 <thead>
