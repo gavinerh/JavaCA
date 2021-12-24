@@ -96,7 +96,7 @@
      
      	<div class="col-12">
      <label for="Display number" class="form-label">Display number : </label> 			
-		<select th:onchange="'window.location.href=\'/leave/leaves/mvt-reg/\' + this.value;'" id="pageSize" name="pageSize">
+		<select th:onchange="'window.location.href=\'/leave/mvt-reg/\' + this.value;'" id="pageSize" name="pageSize">
 			<option th:value="10" th:text="10" th:selected="${pageSize == 10}"></option> 
 			<option th:value="20" th:text="20" th:selected="${pageSize == 20}"></option>
 			<option th:value="25" th:text="25" th:selected="${pageSize == 25}"></option> 
