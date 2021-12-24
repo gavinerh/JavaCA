@@ -118,7 +118,13 @@ public class AdminUserController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView editUser(@PathVariable Long id) {
 		ModelAndView mav = new ModelAndView("admin/user-form-edit", "user", Uservice.findByUserId(id));
+		User u = Uservice.findByUserId(id);
+		
 		List<User> managerList = Uservice.findByPosition(Position.Manager);
+		if(managerList.contains(u)) {
+			managerList.remove(u);
+		}
+		
 		mav.addObject("managerlist", managerList);
 		return mav;
 	}
