@@ -26,7 +26,7 @@ import edu.nus.java_ca.service.UserServiceImpl;
 
 @Controller
 @RequestMapping(value = "/staff1")
-public class staff1 {
+public class staffchangepwController{
 
 	@Autowired
 	UserRepository urepo;

@@ -22,6 +22,7 @@
 	<table th:if="${not #lists.isEmpty(leaves)}" >
 		<tr >
 			<th>Leave Id</th>
+			<th>Employee Id</th>
 			<th>Employee's Name</th>>
 			<th>Leave Type</th>
 			<th>Leave Application Date</th>
@@ -34,7 +35,8 @@
 
 		</tr>
 		<tr th:each="leave:${leaves}" >
-			<td th:text="${leave.leaveId}">Id</td>
+			<td th:text="${leave.leaveId}">LeaveId</td>
+			<td th:text="${leave.user.userId}">Employee Id</td>
 			<td th:text="${leave.user.firstName}"> Name</td>
 			<td th:text="${leave.type}">Leave Type</td>
 			<td th:text="${#temporals.format(leave.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>

@@ -271,7 +271,7 @@ public class ManagerApproveController {
 		ArrayList <Leave> pendingleave = (ArrayList<Leave>) lservice.listLeaveToApprove(department);
 		model.addAttribute("leaves", pendingleave);
 //		model.addAttribute("leaves", lservice.listLeaveToApprove());
-		return "leaves/leave-toapprove";
+		return "manager/leave-toapprove";
 	}
 
 	@RequestMapping(value="/send/{id}")
@@ -281,7 +281,7 @@ public class ManagerApproveController {
 		List<String> msetstatus = Arrays.asList("APPROVED", "REJECTED");
 		model.addAttribute("msetstatus", msetstatus);
 		model.addAttribute("leaveapplied",lservice.findLeaveById(id));
-		return "leaves/manager-setstatus";
+		return "manager/manager-setstatus";
 	}
 	@PostMapping(value="/confirm")
 	public String ApproveRejectLeave(@RequestParam("leaveId")String id, 
