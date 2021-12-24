@@ -98,7 +98,7 @@ public class AdminUserController {
 		lb.add(lbCompensation);
 		lb.add(lbAnnual);
 		user.setLb(lb);
-
+		user.setPassword(Hash.hashPassword(user.getPassword()));
 		Uservice.saveUser(user);
 		return "forward:/AdminUser/";
 	}
