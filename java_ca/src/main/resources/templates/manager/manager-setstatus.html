@@ -20,6 +20,7 @@
 	  	<table  class="table table-hover">
 		  	<thead>
 				<th>Leave Id</th>
+				<th>Employee Id</th>
 				<th>Employee's Name</th>>
 				<th>Leave Type</th>
 				<th>Leave Application Date</th>
@@ -29,7 +30,8 @@
 				<th>Work Dissemination(if any)</th>
 			</thead>
 		  	<tbody>
-				<td th:text="${leaveapplied.leaveId}">Id</td>
+				<td th:text="${leaveapplied.leaveId}">Leave Id</td>
+				<td th:text="${leaveapplied.user.userId}">Employee Id</td>
 				<td th:text="${leaveapplied.user.firstName}"> Name</td>
 				<td th:text=${leaveapplied.type}>Leave Type</td>
 				<td th:text="${#temporals.format(leaveapplied.appliedDate, 'dd-MM-yyyy')}">Applied Date</td>
