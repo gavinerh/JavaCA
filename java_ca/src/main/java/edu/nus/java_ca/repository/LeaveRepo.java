@@ -41,6 +41,10 @@ public interface LeaveRepo extends JpaRepository<Leave, Integer> {
 	@Query("SELECT l FROM Leave l WHERE year(l.startDate)=?1 AND month(l.startDate)=?2")
 	public ArrayList<Leave> getByYearandMonth(int year, int month);
 		
+	@Query("SELECT l FROM Leave l WHERE year(l.startDate)=?1 AND month(l.startDate)=?2")
+	Page<Leave> getByPageYearandMonth(int year, int month,Pageable page);
+	
+	
 	@Query("SELECT c from Leave c WHERE c.status='APPLIED' OR c.status='APPROVED' OR c.status='UPDATED'")
 	ArrayList<Leave> findAppliedLeaves();
 	

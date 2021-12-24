@@ -71,7 +71,6 @@ public class LeaveServiceImpl implements LeaveService {
 		lrepo.save(l);
 	}
 
-	//NEW QUERY
 	@Transactional
 	public List<Leave> findLeavesByYearandMonth(int yy, int mm){
 		List<Leave> LeavesByMMYY = lrepo.getByYearandMonth(yy, mm);
@@ -246,6 +245,22 @@ public class LeaveServiceImpl implements LeaveService {
 		// TODO Auto-generated method stub
 		return lrepo.findByUser(u);
 	}
+	
+	//Pagination for mvt-reg
+		@Override
+		@Transactional
+		public Page<Leave> findByYrMth(int yy, int mm, Pageable p) {
+			// TODO Auto-generated method stub
+			return lrepo.getByPageYearandMonth(yy, mm, p);
+		}
+		@Override
+		public List<Leave> getMRLeaves(int pageNo, int pageSize, int yy, int mm) {
+			Pageable paging = PageRequest.of(pageNo, pageSize);
+			Page<Leave> pageResult = findByYrMth(yy, mm, paging);
+			List<Leave> list = pageResult.getContent();
+
+			return list;
+		}
 	
 	@Override
 	public List<TypesOfLeave> findDistinctLeaveType(){

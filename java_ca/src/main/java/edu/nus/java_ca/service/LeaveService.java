@@ -44,6 +44,8 @@ public interface LeaveService {
 			//public List<Module> listModuleByStudentId(int id);
 		List<Leave> getAllLeaves(int pageNo, int pageSize, User u);
 
+		public Page<Leave> findByYrMth(int yy, int mm, Pageable p);
+		List<Leave> getMRLeaves(int pageNo, int pageSize, int yy, int mm);
 		
 	List<TypesOfLeave> findDistinctLeaveType();
 }
