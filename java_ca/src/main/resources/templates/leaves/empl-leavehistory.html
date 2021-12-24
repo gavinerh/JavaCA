@@ -24,7 +24,7 @@
 		 method="post">
 	  		<fieldset>
 				<label>Employee ID: </label><br />
-				<input type="text" th:field="*{user.userId}" />
+				<input type="text" th:field="*{user.userId}" required/>
 				<p th:if="${#fields.hasErrors('user.userId')}" th:errors="*{user.userId}"></p>
 			</fieldset><br />
 			<fieldset>
