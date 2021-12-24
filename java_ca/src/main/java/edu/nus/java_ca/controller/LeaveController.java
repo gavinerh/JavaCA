@@ -1,44 +1,39 @@
 package edu.nus.java_ca.controller;
 
+
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.support.SessionStatus;
 
 import edu.nus.java_ca.model.Leave;
-import edu.nus.java_ca.model.User;
-import edu.nus.java_ca.model.LeaveStatus;
-import edu.nus.java_ca.model.Position;
 import edu.nus.java_ca.model.SessionClass;
-import edu.nus.java_ca.service.UserService;
-import edu.nus.java_ca.service.UserServiceImpl;
-import edu.nus.java_ca.service.LeaveBalanceService;
+import edu.nus.java_ca.model.User;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
 import edu.nus.java_ca.service.SessionManagement;
+import edu.nus.java_ca.service.UserService;
+import edu.nus.java_ca.service.UserServiceImpl;
 
 @Controller
 @RequestMapping("/leave")
 public class LeaveController {
 
+	@Autowired
+	SessionManagement sess;
 	
 	@Autowired
 	private LeaveService lservice;
@@ -69,13 +64,15 @@ public class LeaveController {
  
 	//Subordinate leave history
 	@RequestMapping(value="/leaves/empl-leavehistory")
-	public String empLeaveHistSearchPage(Model model) {
+	public String empLeaveHistSearchPage(Model model, SessionStatus status, HttpSession ses) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		model.addAttribute("leave", new Leave());
 		return "leaves/empl-leavehistory";
 	}
 	@PostMapping(value="/search")
 	public String searchLeavesByUserId(@RequestParam("user.userId") 
-		String UserId, Model model) {
+		String UserId, Model model, SessionStatus status, HttpSession ses) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		ArrayList<Leave> lls = (ArrayList<Leave>) 
 				lservice.listLeavesByUserId(Long.parseLong(UserId));
 		model.addAttribute("emleaves", lls);
@@ -84,7 +81,8 @@ public class LeaveController {
 	
 	//Movement Register
 	@RequestMapping(value="/leaves/mvt-reg")
-	public String viewMvtReg(Model model, HttpSession session) {
+	public String viewMvtReg(Model model, HttpSession session, HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		model.addAttribute("leave", new Leave());	
 		List<Integer> mthlist = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11);
 		int year = Year.now().getValue();
@@ -108,7 +106,8 @@ public class LeaveController {
 	}
 	@PostMapping(value="/view") 
 	public String viewMvtRegChooseMth(@RequestParam("mth")String mth, 
-			@RequestParam("yr")String yr, Model model) throws ParseException {				
+			@RequestParam("yr")String yr, Model model, SessionStatus status, HttpSession ses) throws ParseException {	
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		int mthparsed = Integer.parseInt(mth);
 		int yrparsed = Integer.parseInt(yr);
 		List<Leave> mls = lservice.findLeavesByYearandMonth	//NEW QUERY IN LSERVICE
@@ -123,8 +122,8 @@ public class LeaveController {
 	
 	//NEW ADDITION (PAGINATION STARTS)
 	@GetMapping(value = "/view/{id}")
-	public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
-		
+	public String list(@PathVariable("id") int id ,Model model, HttpSession session, SessionStatus status, HttpSession ses) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		this.pagesize= id;
 		User u = user(session);
 		int currentpage = 0;
@@ -141,7 +140,8 @@ public class LeaveController {
 
 	//Pagination
 	@GetMapping(value = "/navigate")
-	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
+	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session, SessionStatus status, HttpSession ses) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");		
@@ -155,7 +155,8 @@ public class LeaveController {
 	}
 	
 	@GetMapping(value = "/leave/forward/{currentPage}")
-	public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session) {
+	public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		Integer i = Integer.parseInt(pageNo);
 		if (i == 2)
 			i--;
@@ -172,7 +173,8 @@ public class LeaveController {
 	}
 
 	@GetMapping(value = "/leave/backward/{currentPage}")
-	public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session) {
+	public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		User u = user(session);
 		Integer i = Integer.parseInt(pageNo);
 		if (i == 0)

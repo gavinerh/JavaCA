@@ -45,6 +45,7 @@ public class staff1 {
 	
 	@RequestMapping({"/main"})
 	public String dashboard(Model model,HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		String	em = sess.getUserEmail(session);
 	    User result = Uservice.findByUserEmail(em);
 		System.out.println(result.getLastName());
@@ -56,7 +57,8 @@ public class staff1 {
 	
 	
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editUser(@PathVariable Long id) {
+	public ModelAndView editUser(@PathVariable Long id, SessionStatus status, HttpSession session) {
+		if (!sess.isLoggedIn(session, status)) return new ModelAndView("redirect:/");
 		ModelAndView mav = new ModelAndView("staff/staff-edit", "user", Uservice.findByUserId(id));
 
 		return mav;
@@ -64,7 +66,8 @@ public class staff1 {
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String editUser(@ModelAttribute @Valid User user, BindingResult result, 
-			@PathVariable Long id) {
+			@PathVariable Long id, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		if (result.hasErrors()) {
 			return "staff/staff-edit";
 		}

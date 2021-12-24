@@ -125,7 +125,6 @@ public class ReportController {
 	public String filterByDateTesting(@RequestParam("startDate") String start, @RequestParam("endDate") String end,
 			@RequestParam("leaveType") String type,
 			Model model, HttpSession session, SessionStatus status) {
-		System.out.println(type);
 		if(!sess.isLoggedIn(session, status)) return "redirect:/";
 		visited = true;
 		cachedLeaveByDate = getLeaveList(session);

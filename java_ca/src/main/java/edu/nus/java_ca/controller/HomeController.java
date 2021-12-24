@@ -73,22 +73,7 @@ public class HomeController {
 		return "register/register";
 	}
 	
-//	@PostMapping("/register")
-//	public String registerNewUser(@ModelAttribute("user") @Valid User user, BindingResult binding) {
-//		User result = uService.findByUserEmail(user.getEmail());
-//		if(result == null) {
-//			// create a new user
-//			String hashedPassword = Hash.hashPassword(user.getPassword());
-//			user.setPassword(hashedPassword);
-//			uService.saveUser(user);
-//			return "register/registerSuccess";
-//		}
-//		// add validation
-//		ObjectError err = new ObjectError("Username error", "Email is already used");
-//		binding.addError(err);
-//		return "register/register";
-//	}
-	
+
 	
 	@RequestMapping({ "/login", "", "/" })
 	public String login(HttpSession session, SessionStatus status) {
@@ -105,17 +90,6 @@ public class HomeController {
 		}
 		return "login/login";
 	}
-	
-
-	// display login form for user to login
-//	@RequestMapping({"/login", "", "/"})
-//	public String login(HttpSession session, SessionStatus status) {
-//		if(sess.isLoggedIn(session, status)) {
-//			return "redirect:/home";
-//		}
-//		return "login/login";
-//	}
-	
 	
 	
 	@PostMapping("/authenticate")
@@ -142,35 +116,11 @@ public class HomeController {
 		return "login/failedLogin";
 	}
 	
-	
-	
-	// Receive login information from html form and authenticate
-//	@PostMapping("/authenticate")
-//	public String login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-//		User result = uService.findByUserEmail(email);
-//		System.out.println(result);
-//		if(result == null) {
-//			return "login/failedLogin";
-//		}
-//		// compare the email and password
-//		String storedPassword = result.getPassword();
-//		
-//		if(result.getEmail().equals(email.toLowerCase()) && storedPassword.equals(Hash.hashPassword(password))) {
-//			sess.createSession(session, result);
-//			// set lastlogin date
-//			result.setLastLoginDate(new Date());
-//			uService.saveUser(result);
-//			//check the position of the staff
-//			return getRedirectURL(result);
-//		}
-//		return "login/failedLogin";
-//	}
 
 	
 	@RequestMapping("/adminInitialLogin")
 	public String adminInitialLogin(HttpSession session, SessionStatus status, Model model) {
-		if (!sess.isLoggedIn(session, status))
-			return "redirect:/";
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		model.addAttribute("user", uService.findByUserEmail("admin@admin"));
 		return "register/register";
 	}
@@ -182,7 +132,8 @@ public class HomeController {
 		if(!sess.isLoggedIn(session, status)) {
 			return "redirect:/";
 		}
-		return "index";
+		User result = uService.findByUserEmail(sess.getUserEmail(session));
+		return getRedirectURL(result);
 	}
 	
 	@RequestMapping("/logout")

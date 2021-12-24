@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.nus.java_ca.model.Leave;
@@ -30,6 +31,7 @@ import edu.nus.java_ca.service.EmailService;
 import edu.nus.java_ca.service.LeaveBalanceService;
 import edu.nus.java_ca.service.LeaveService;
 import edu.nus.java_ca.service.LeaveServiceImpl;
+import edu.nus.java_ca.service.SessionManagement;
 import edu.nus.java_ca.service.UserService;
 import edu.nus.java_ca.service.UserServiceImpl;
 import edu.nus.java_ca.validator.LeaveValidator;
@@ -53,6 +55,8 @@ public class StaffController {
 	private LeaveService lservice;
 	@Autowired
 	private EmailService eService;
+	@Autowired
+	private SessionManagement sess;
 	@Autowired
 	public void setLeaveService (LeaveServiceImpl lservice) {
 		this.lservice = lservice;
@@ -78,7 +82,8 @@ public class StaffController {
 	}
 	
 	@GetMapping(value = "/leave/balance")
-	public ModelAndView checkbalance(HttpSession ses) {
+	public ModelAndView checkbalance(HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
 		User u = user(ses);
 		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
 		ModelAndView mav = new ModelAndView("staff/leave-balance");
@@ -86,7 +91,8 @@ public class StaffController {
 		return mav;
 	}
 	@GetMapping(value = "/leave/new")
-	public ModelAndView newLeave(HttpSession ses) {
+	public ModelAndView newLeave(HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
 		User u = user(ses);
 		/**find leaves for current user and his leave types*/
 		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
@@ -105,7 +111,8 @@ public class StaffController {
 	}
 
 	@PostMapping(value = "/leave/new")
-	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses) {
+	public String createNewLeave(@ModelAttribute("leave")@Valid Leave leave, BindingResult result,Model model,HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		User u = user(ses);
 		
 		model.addAttribute("types",s);
@@ -145,7 +152,8 @@ public class StaffController {
 	}
 
 	@GetMapping(value = "/leave/edit/{id}")
-	public ModelAndView editLeavePage(@PathVariable ("id")long id,HttpSession ses) {
+	public ModelAndView editLeavePage(@PathVariable ("id")long id,HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
 		User u = user(ses);
 		Leave l = lservice.findLeaveById(id);
 		this.type=l.getType();
@@ -157,7 +165,8 @@ public class StaffController {
 	}
 
 	@PostMapping(value = "/leave/edit")
-	public String editLeave(@ModelAttribute ("leave")@Valid Leave l, BindingResult result, Model model,HttpSession ses){
+	public String editLeave(@ModelAttribute ("leave")@Valid Leave l, BindingResult result, Model model,HttpSession ses, SessionStatus status){
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		User u = user(ses);
 		model.addAttribute("types",s);
 		model.addAttribute("bal",t);
@@ -187,7 +196,8 @@ public class StaffController {
 	}
 	
 	@RequestMapping(value = "/leave/delete/{id}")
-	public String deleteLeave(@PathVariable("id") long id,HttpSession ses) {
+	public String deleteLeave(@PathVariable("id") long id,HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		User u = user(ses);
 		Leave l = lservice.findLeaveById(id);
 		/**To refund leave*/
@@ -197,7 +207,8 @@ public class StaffController {
 		return "redirect:/staff/leave/list";
 	}
 	@RequestMapping(value = "/leave/cancel/{id}")
-	public String cancelLeave(@PathVariable("id") long id,HttpSession ses) {
+	public String cancelLeave(@PathVariable("id") long id,HttpSession ses, SessionStatus status) {
+		if (!sess.isLoggedIn(ses, status)) return "redirect:/";
 		User u = user(ses);
 		Leave l = lservice.findLeaveById(id);
 
@@ -219,9 +230,9 @@ public class StaffController {
 	 * return "staff/staff-leave-history"; }
 	 */
 	@RequestMapping(value = "/leave/list")
-	public String list(Model model, HttpSession session) {
+	public String list(Model model, HttpSession session, SessionStatus status) {
 		
-	
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		this.pagesize = 10;
 		User u = user(session);
 		int currentpage = 0;
@@ -240,7 +251,8 @@ public class StaffController {
 	}
 
 	@RequestMapping(value = "/leave/navigate")
-	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session) {
+	public String customlist(@RequestParam(value = "pageNo") int pageNo, Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		User u = user(session);
 		List<Leave> listWithPagination = lservice.getAllLeaves(pageNo-1,pagesize,u);
 		Leave lea = (Leave) session.getAttribute("currentLeave");
@@ -263,7 +275,8 @@ public class StaffController {
 	}
 
 	@GetMapping(value = "/leave/forward/{currentPage}")
-	public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session) {
+	public String arrowlist(@PathVariable(value = "currentPage") String pageNo, Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		Integer i = Integer.parseInt(pageNo);
 		User u = user(session);
 		List<Leave> userList =lservice.findByUser(u);
@@ -293,7 +306,8 @@ public class StaffController {
 	}
 
 	@GetMapping(value = "/leave/backward/{currentPage}")
-	public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session) {
+	public String backlist(@PathVariable(value = "currentPage")String pageNo ,Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 		User u = user(session);
 		Integer i = Integer.parseInt(pageNo);
 		if (i == 0)
@@ -321,8 +335,8 @@ public class StaffController {
 	}
 	
 	@GetMapping(value = "/leave/list/{id}")
-	public String list(@PathVariable("id") int id ,Model model, HttpSession session) {
-
+	public String list(@PathVariable("id") int id ,Model model, HttpSession session, SessionStatus status) {
+		if (!sess.isLoggedIn(session, status)) return "redirect:/";
 	this.pagesize= id;
 		
 		User u = user(session);
