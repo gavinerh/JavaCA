@@ -1,4 +1,4 @@
-<!--Page for Manager approval/rejection of Leave-->
+<!--Page for Manager to SET approval/rejection of Leave-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragment/layout-admin.html :: html_head" />
@@ -9,17 +9,16 @@
 	
 	 <!--CONTENT-->
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div
-          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
-          <h1 class="h2">Approve/Reject Leave</h1>
-		 
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom ">
+           <h2 class="mt-3 h4">Approve/Reject Leave</h2>
+          
 		  <!-- some sessions code -->		
 	  	
 	  	</div>
 	  	
-	  	<div>
-	  	<table>
-		  	<tr >
+	   <div class="table-responsive">
+	  	<table  class="table table-hover">
+		  	<thead>
 				<th>Leave Id</th>
 				<th>Employee's Name</th>>
 				<th>Leave Type</th>
@@ -28,8 +27,8 @@
 				<th>End Date</th>
 				<th>Reason</th>
 				<th>Work Dissemination(if any)</th>
-			</tr>
-		  	<tr>
+			</thead>
+		  	<tbody>
 				<td th:text="${leaveapplied.leaveId}">Id</td>
 				<td th:text="${leaveapplied.user.firstName}"> Name</td>
 				<td th:text=${leaveapplied.type}>Leave Type</td>
@@ -38,8 +37,8 @@
 				<td th:text="${#temporals.format(leaveapplied.endDate, 'dd-MM-yyyy')}">End Date</td>
 				<td th:text=${leaveapplied.reason}>Reason</td>
 				<td th:text=${leaveapplied.workdissem}>Work Dissemination</td>
-			</tr>
-	  	</table>
+			</tbody>
+	  	</table >
 	  	</div><br /> <br />
 		
 	  	
