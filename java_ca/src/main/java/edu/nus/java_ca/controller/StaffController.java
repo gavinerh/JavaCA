@@ -160,7 +160,7 @@ public class StaffController {
 	public ModelAndView editLeavePage(@PathVariable ("id")long id,HttpSession ses, SessionStatus status) {
 		if (!sess.isLoggedIn(ses, status)) return new ModelAndView("redirect:/");
 		User u = user(ses);
-		ArrayList<LeaveBalance> lb = lbService.findByUser(u);
+		ArrayList<LeaveBalance> lb = lbservice.findByUser(u);
 		s.clear();
 		t.clear();
 		/**Save in private array in the controller class*/
