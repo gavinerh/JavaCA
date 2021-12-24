@@ -128,7 +128,7 @@ public class StaffController {
 		}
 		
 		if(u.getApprovingOfficer() == null) {
-			model.addAttribute("errormsg", "**You have no approving officer to approve your leave**");
+			model.addAttribute("errormsg", "**You have no approving officer to approve your leave, please create a manager in database**");
 			return("staff/staff-new-leave");
 		}
 		
