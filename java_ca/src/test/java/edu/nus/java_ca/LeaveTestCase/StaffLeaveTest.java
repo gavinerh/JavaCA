@@ -75,21 +75,20 @@ public class StaffLeaveTest {
 //		hservice.createHoliday(new Holidays(LocalDate.of(2021, 11, 20)));
 //    	hrepo.saveAllAndFlush(holidays);
 		
-		User u = uservice.findByUserId((long)14);
-		ArrayList<Leave> c = lservice.findByUser(u);
-		ArrayList<Leave> le = c.stream()
-				.filter(l-> !(l.getStatus().equals(LeaveStatus.DELETED)||
-					l.getStatus().equals(LeaveStatus.CANCELLED)))
-				.collect(Collectors
-	                    .toCollection(ArrayList::new));
-		ArrayList<LocalDate> userleave = new ArrayList<>();
-		for(Leave lea:le) {
-			userleave.addAll(lea.getStartDate().datesUntil(lea.getEndDate().plusDays(1))
-					.collect(Collectors
-		                    .toCollection(ArrayList::new)));}
-		userleave.forEach(System.out::println);
-		//Long count = lservice.countLeaves(LocalDate.of(2021, 12, 23), LocalDate.of(2021, 12, 25), u);
-		//System.out.println(count);
+		/*
+		 * User u = uservice.findByUserId((long)14); ArrayList<Leave> c =
+		 * lservice.findByUser(u); ArrayList<Leave> le = c.stream() .filter(l->
+		 * !(l.getStatus().equals(LeaveStatus.DELETED)||
+		 * l.getStatus().equals(LeaveStatus.CANCELLED))) .collect(Collectors
+		 * .toCollection(ArrayList::new)); ArrayList<LocalDate> userleave = new
+		 * ArrayList<>(); for(Leave lea:le) {
+		 * userleave.addAll(lea.getStartDate().datesUntil(lea.getEndDate().plusDays(1))
+		 * .collect(Collectors .toCollection(ArrayList::new)));}
+		 * userleave.forEach(System.out::println);
+		 */
+		 User u = uservice.findByUserId((long)14);
+		Long count = lservice.countLeaves(LocalDate.of(2021, 12, 29), LocalDate.of(2021, 12, 30), u);
+		System.out.println(count);
 
 		
 	}
